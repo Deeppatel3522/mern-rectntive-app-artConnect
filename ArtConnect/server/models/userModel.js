@@ -1,12 +1,5 @@
 const mongoose = require('mongoose')
 
-
-// TO DO: add arrays
-// 
-// -> arts
-// -> events
-// -> favorites
-
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -24,11 +17,25 @@ const userSchema = new mongoose.Schema({
         required: [true, 'please add password'],
         min: 6,
         max: 64,
-    },
-    role: {
-        type: String,
-        default: 'user',
+    }, favorites: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Art',
+            default: []
 
+            // // to store both "ART" and "EVENTS" in a same array
+            // type: mongoose.Schema.Types.Mixed, 
+        }
+    ],
+    type: {
+        type: String,
+        enum: ['Artist', 'User'],
+        required: true,
+        default: 'User'
+    },
+    image: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true })
 

@@ -14,11 +14,30 @@ const artSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        default: '',
+        required: true
     },
-    url: {
+    imgUrl: [
+        {
+            type: String,
+            required: [true, 'Please add image URL']
+        }
+    ],
+    price: {
+        type: Number,
+        required: true,
+    },
+    description: {
         type: String,
-        required: [true, 'Please add image URL']
+        required: true
+    },
+    artistID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    isAvailable: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true })
 
