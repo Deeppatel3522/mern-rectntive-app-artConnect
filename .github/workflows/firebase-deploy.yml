@@ -25,10 +25,13 @@ jobs:
         cd ../server  # Go to the server directory
         npm install
 
-    - name: Build client-side app (if applicable)
+    - name: Install EAS CLI
+      run: npm install -g eas-cli
+
+    - name: Build Android app using EAS
       run: |
         cd ArtConnect/client
-        npm run android --non-interactive
+        eas build --platform android --non-interactive  # Build APK using EAS
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
