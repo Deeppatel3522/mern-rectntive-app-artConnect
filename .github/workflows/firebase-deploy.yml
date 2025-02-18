@@ -32,6 +32,8 @@ jobs:
       run: |
         cd ArtConnect/client
         eas build --platform android --non-interactive  # Build APK using EAS
+      env:
+        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Set the Expo Token from secrets
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
