@@ -20,14 +20,14 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd client  # Go to the client directory if you have one
+        cd ArtConnect/client  # Go to the client directory
         npm install
         cd ../server  # Go to the server directory
         npm install
 
     - name: Build client-side app (if applicable)
       run: |
-        cd client
+        cd ArtConnect/client
         npm run android  
 
     - name: Install Firebase CLI
