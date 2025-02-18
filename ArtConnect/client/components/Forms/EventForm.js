@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { AuthContext } from '@/context/authContext';
+import axios from 'axios';
 
 const EventForm = ({ closeModal }) => {
     const [name, setName] = useState('');
@@ -11,13 +13,17 @@ const EventForm = ({ closeModal }) => {
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
     const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(false)
+
+    // global state
+    const [state, setState] = useContext(AuthContext)
+
 
     const uploadImage = async () => {
         try {
             await ImagePicker.requestMediaLibraryPermissionsAsync();
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
                 allowsMultipleSelection: true
@@ -32,9 +38,60 @@ const EventForm = ({ closeModal }) => {
         }
     };
 
-    const handleSubmit = () => {
-        console.log({ name, location, price, category, description, date, images });
-        closeModal();
+    const handleSubmit = async () => {
+        console.log(`Btn clicked!`);
+
+        const formData = new FormData();
+
+        if (!name || !location || !price || !category || !date || !description) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        if (images.length === 0) {
+            console.log('Upload images');
+
+            return;
+        }
+
+        images.forEach((imageUri, index) => {
+            formData.append('image', {
+                uri: imageUri,
+                type: 'image/jpeg',
+                name: `${name}-image${index}.jpg`,
+            });
+        });
+
+        formData.append('name', name);
+        formData.append('location', location);
+        formData.append('price', price);
+        formData.append('category', category);
+        formData.append('description', description);
+        formData.append('date', date);
+        formData.append('artistID', state?.user?._id);
+
+        try {
+            setLoading(true)
+
+            // console.log({ name, location, price, category, description, date, images });
+
+            console.log(formData);
+
+            const { data } = await axios.post(`/event/post-event`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            setLoading(false)
+            alert(data?.message);
+            closeModal();
+        } catch (error) {
+            alert(error.response.data.message)
+            setLoading(false)
+            console.log(error)
+            closeModal();
+        }
+
     };
 
     return (

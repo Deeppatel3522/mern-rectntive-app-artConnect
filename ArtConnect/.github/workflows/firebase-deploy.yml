@@ -1,0 +1,39 @@
+name: Artconncet App Firebase Deployment
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22.13.0'  # Specify the Node.js version
+
+    - name: Install dependencies
+      run: |
+        cd client  # Go to the client directory if you have one
+        npm install
+        cd ../server  # Go to the server directory
+        npm install
+
+    - name: Build client-side app (if applicable)
+      run: |
+        cd client
+        npm run android  
+
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+
+    - name: Deploy to Firebase
+      run: |
+        firebase use --add  # Use Firebase project if prompted
+        firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --only hosting,firestore,functions

@@ -1,12 +1,41 @@
 const eventModel = require("../models/eventModel");
+const multer = require('multer');
+const cloudinary = require('./../config/cloudinaryConfig.js');
 
+
+const storage = multer.memoryStorage(); // temp memory to store image before upload
+const upload = multer({ storage }).array('image', 10);
 
 // TO DO: add functionality to get "EVENTS BY USER"
 
 // post-event
 const postEventController = async (req, res) => {
     try {
-        const { name, price, category, location, description, date, image, artistID } = req.body
+
+        upload(req, res, async (err) => {
+            if (err) {
+                return res.status(500).send({
+                    success: false,
+                    message: 'Error uploading images.',
+                    error: err,
+                });
+            }
+        })
+
+        console.log('Request body:', req.body);
+        console.log('Request files:', req.files);
+
+        const { name, price, category, location, description, date, artistID } = req.body
+        const imageFiles = req.files;
+
+
+
+        if (!imageFiles || imageFiles.length === 0) {
+            return res.status(400).send({
+                success: false,
+                message: 'No images uploaded',
+            });
+        }
 
         // existing event
         const existingEvent = await eventModel.findOne({ name, location, date, price })
@@ -19,8 +48,34 @@ const postEventController = async (req, res) => {
             })
         }
 
+        // Upload images to Cloudinary
+        const cloudinaryImages = [];
+        for (let file of imageFiles) {
+            const uploadResponse = await cloudinary.uploader.upload_stream(
+                { resource_type: 'image', folder: 'artconnect-events' },
+                (error, result) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        cloudinaryImages.push(result.secure_url);
+                    }
+                }
+            );
+            // Upload to Cloudinary
+            file.stream.pipe(uploadResponse);
+        }
+
         // save user
-        const event = await eventModel({ name, location, date, price, category, image, description, artistID }).save()
+        const event = await eventModel({
+            name,
+            location,
+            date,
+            price,
+            category,
+            image: cloudinaryImages,
+            description,
+            artistID
+        }).save()
 
         return res.status(201).send({
             success: true,

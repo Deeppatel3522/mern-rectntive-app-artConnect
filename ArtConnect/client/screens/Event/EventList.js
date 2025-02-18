@@ -4,10 +4,13 @@ import { PostContext } from '@/context/postContext';
 import FooterMenu from '@/components/Menus/FooteMenu.js';
 import EventCard from '@/components/Cards/EventCard.js';
 import EventForm from '@/components/Forms/EventForm.js'; 
+import { AuthContext } from '@/context/authContext';
 
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { events } = useContext(PostContext);
+  const [state, setState] = useContext(AuthContext)
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
 const ArtForm = ({ closeModal }) => {
@@ -7,7 +8,7 @@ const ArtForm = ({ closeModal }) => {
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
-    const [image, setImage] = useState([]);
+    const [images, setImages] = useState([]);
 
     const uploadImage = async () => {
         try {
@@ -15,14 +16,14 @@ const ArtForm = ({ closeModal }) => {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [1, 1],
+                aspect: [4, 3],
                 quality: 1,
                 allowsMultipleSelection: true
             });
 
             if (!result.canceled) {
                 const selectedImages = result.assets.map(asset => asset.uri);
-                setImage(prevImages => [...prevImages, ...selectedImages]);
+                setImages(prevImages => [...prevImages, ...selectedImages]);
             }
         } catch (error) {
             alert(`Error uploading image: ${error}`);
@@ -30,87 +31,129 @@ const ArtForm = ({ closeModal }) => {
     };
 
     const handleSubmit = () => {
-        // Here you would typically send the data to your backend
-        // For now, I just log it and close the modal
-        console.log({ name, category, price, description, image });
+        console.log({ name, category, price, description, images });
         closeModal();
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Add New Art</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Art Name"
-                value={name}
-                onChangeText={setName}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Category"
-                value={category}
-                onChangeText={setCategory}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Price"
-                value={price}
-                onChangeText={setPrice}
-                keyboardType="numeric"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Description"
-                value={description}
-                onChangeText={setDescription}
-                multiline
-            />
-            <TouchableOpacity style={styles.imageButton} onPress={uploadImage}>
-                <Text>Upload Image</Text>
-            </TouchableOpacity>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}
+        >
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.title}>Add New Art</Text>
 
+                {renderInput("create-outline", "Art Name", name, setName)}
+                {renderInput("list-outline", "Category", category, setCategory)}
+                {renderInput("pricetag-outline", "Price", price, setPrice, "numeric")}
 
-            <View style={styles.imageContainer}>
-                {image.map((img, index) => (
-                    <Image key={index} source={{ uri: img }} style={styles.image} />
-                ))}
+                <View style={styles.inputContainer}>
+                    <Ionicons name="create-outline" size={24} color="#4A90E2" style={styles.icon} />
+                    <TextInput
+                        placeholder="Description"
+                        value={description}
+                        onChangeText={setDescription}
+                        style={[styles.input, styles.multilineInput]}
+                        multiline
+                    />
+                </View>
+
+                <TouchableOpacity style={styles.imageButton} onPress={uploadImage}>
+                    <Ionicons name="camera-outline" size={24} color="#FFFFFF" />
+                    <Text style={styles.imageButtonText}>Upload Image</Text>
+                </TouchableOpacity>
+
+                <View style={styles.imageContainer}>
+                    {images.map((img, index) => (
+                        <Image key={index} source={{ uri: img }} style={styles.image} />
+                    ))}
+                </View>
+            </ScrollView>
+
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Submit Art</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                    <Text style={styles.buttonText}>Close</Text>
+                </TouchableOpacity>
             </View>
-
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                <Text>Close</Text>
-            </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     );
+
+    function renderInput(iconName, placeholder, value, onChangeText, keyboardType = "default") {
+        return (
+            <View style={styles.inputContainer}>
+                <Ionicons name={iconName} size={24} color="#4A90E2" style={styles.icon} />
+                <TextInput
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={onChangeText}
+                    style={styles.input}
+                    keyboardType={keyboardType}
+                />
+            </View>
+        );
+    }
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        flex: 1,
+        backgroundColor: '#F5F5F5',
         padding: 20,
-        borderRadius: 10,
-        width: '90%',
+        borderRadius: 15,
+        width: '100%',
+        maxHeight: '90%',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 20,
+        color: '#4A90E2',
+        marginBottom: 25,
+        textAlign: 'center',
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        marginBottom: 15,
+        paddingHorizontal: 15,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+    },
+    icon: {
+        marginRight: 10,
     },
     input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        marginBottom: 10,
-        borderRadius: 5,
+        flex: 1,
+        height: 50,
+        fontSize: 16,
+        color: '#333',
+    },
+    multilineInput: {
+        height: 100,
+        textAlignVertical: 'top',
+        paddingTop: 15,
     },
     imageButton: {
-        backgroundColor: '#ddd',
-        padding: 10,
+        flexDirection: 'row',
+        backgroundColor: '#4A90E2',
+        padding: 15,
+        borderRadius: 10,
         alignItems: 'center',
-        borderRadius: 5,
-        marginBottom: 10,
+        justifyContent: 'center',
+        marginBottom: 15,
+    },
+    imageButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 10,
     },
     imageContainer: {
         flexDirection: 'row',
@@ -123,19 +166,31 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         borderRadius: 10,
     },
-    submitButton: {
-        backgroundColor: '#4A90E2',
-        padding: 15,
-        alignItems: 'center',
-        borderRadius: 5,
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
     },
-    submitButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
+    submitButton: {
+        flex: 1,
+        backgroundColor: '#4CAF50',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginRight: 10,
     },
     closeButton: {
-        marginTop: 10,
+        flex: 1,
+        backgroundColor: '#FF5252',
+        padding: 15,
+        borderRadius: 10,
         alignItems: 'center',
+        marginLeft: 10,
+    },
+    buttonText: {
+        color: '#FFFFFF',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 
