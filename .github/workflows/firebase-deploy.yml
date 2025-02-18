@@ -28,7 +28,7 @@ jobs:
     - name: Build client-side app (if applicable)
       run: |
         cd ArtConnect/client
-        npm run android  
+        npm run android --non-interactive
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
