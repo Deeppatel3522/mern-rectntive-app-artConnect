@@ -10,7 +10,8 @@ import ArtList from '@/screens/Art/ArtList'
 import ArtDetail from '@/screens/Art/ArtDetails'
 import HeaderMenu from './HeaderMenu.js'
 import { AuthContext } from '@/context/authContext.js'
-
+import { StatusBar } from 'react-native';
+StatusBar
 const ScreenMenu = () => {
     // global state
     const [state, setState] = useContext(AuthContext)
@@ -19,7 +20,6 @@ const ScreenMenu = () => {
     const stack = createNativeStackNavigator()
     return (
         <stack.Navigator initialRouteName='Login'>
-
             {/* check if user logged in or not  */}
 
             {authenticatedUser ?
@@ -30,7 +30,8 @@ const ScreenMenu = () => {
                         options={{
                             title: 'ArtConnect',
                             headerRight: () => <HeaderMenu />
-                        }} />
+                        }}
+                    />
 
                     <stack.Screen
                         name='Profile'
@@ -38,7 +39,8 @@ const ScreenMenu = () => {
                         options={{
                             title: 'ArtConnect',
                             headerRight: () => <HeaderMenu />
-                        }} />
+                        }}
+                    />
 
                     <stack.Screen
                         name='EventList'
@@ -46,7 +48,8 @@ const ScreenMenu = () => {
                         options={{
                             title: 'ArtConnect',
                             headerRight: () => <HeaderMenu />
-                        }} />
+                        }}
+                    />
 
                     <stack.Screen
                         name='ArtList'
@@ -54,30 +57,43 @@ const ScreenMenu = () => {
                         options={{
                             title: 'ArtConnect',
                             headerRight: () => <HeaderMenu />
-                        }} />
+                        }}
+                    />
 
                     <stack.Screen
                         name='EventDetail'
                         component={EventDetail}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
-                        }} />
+                            headerShown: false
+                        }}
+                    />
 
                     <stack.Screen
                         name='ArtDetail'
                         component={ArtDetail}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
-                        }} />
+                            headerShown: false
+                        }}
+                    />
                 </>)
 
                 :
 
                 (<>
-                    <stack.Screen name='Login' component={Login} />
-                    <stack.Screen name='SignUp' component={SignUp} />
+                    <stack.Screen
+                        name='Login'
+                        component={Login}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+                    <stack.Screen
+                        name='Register'
+                        component={SignUp}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
                 </>)
             }
         </stack.Navigator>

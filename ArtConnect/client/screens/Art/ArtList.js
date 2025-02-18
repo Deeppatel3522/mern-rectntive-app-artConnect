@@ -1,77 +1,97 @@
-import { View, Text, Image, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import * as ImagePicker from 'expo-image-picker';
+import React, { useContext, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
+import { PostContext } from '@/context/postContext';
+import FooterMenu from '@/components/Menus/FooteMenu';
+import ArtCard from '@/components/Cards/ArtCard.js';
+import ArtForm from '@/components/Forms/ArtForm.js';
 
-const ArtList = () => {
-  const [image, setImage] = useState();
-  const [images, setImages] = useState([])
+const ArtList = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const { arts } = useContext(PostContext);
 
-  // upload image from gallery
-  const uploadImage = async (mode) => {
-    try {
-      await ImagePicker.requestMediaLibraryPermissionsAsync()
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      })
-
-      if (!result.canceled) {
-        await saveImage(result.assets[0].uri)
-      }
-
-    } catch (error) {
-      alert(`uploading image Error: ${error}`)
-    }
-  }
-  // save uploded image 
-  const saveImage = (image) => {
-    try {
-      setImage(image)
-      setImages((prevImages) => [...prevImages, image]);
-
-    } catch (error) {
-      alert(`Saving image Error: ${error}`)
-    }
-  }
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text>ArtList</Text>
-      <Image
-        source={{ uri: image ? image : "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }}
-        style={{ height: 200, width: 200, borderWidth: .5, margin: 10 }}
-      />
-      <FontAwesome5
-        name='camera'
-        style={{
-          backgroundColor: '#fff1ff',
-          borderRadius: 5,
-          padding: 10,
-          fontSize: 24,
-          margin: 10,
-          borderWidth: 1,
-          color: 'gray'
-        }}
-        onPress={
-          () => { uploadImage() }
-        }
-      />
-      <Text>{image}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+          {arts.map((art, index) => (
+            <ArtCard key={index} art={art} navigation={navigation} />
+          ))}
+        </ScrollView>
 
-      <ScrollView style={{ margin: 20, width: '100%', height: 350, }}>
-        {images.map((img, index) => (
-          <Image
-            key={index}
-            source={{ uri: img }}
-            style={{ height: 100, width: 100, margin: 5, borderWidth: 0.5, }}
-          />
-        ))}
-      </ScrollView>
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+          <Text style={styles.addButtonText}>Add New Art</Text>
+        </TouchableOpacity>
 
-    </View>
-  )
-}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalView}>
+            <ArtForm closeModal={() => setModalVisible(false)} />
+          </View>
+        </Modal>
 
-export default ArtList
+        <View style={styles.footer}>
+          <FooterMenu />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    padding: 10,
+    paddingBottom: 100,
+  },
+  addButton: {
+    backgroundColor: '#4A90E2',
+    padding: 15,
+    borderRadius: 10,
+    margin: 20,
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 50,
+    left: 20,
+    right: 20,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  footer: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    height: 60, // Set a fixed height for the footer
+  },
+});
+
+export default ArtList;

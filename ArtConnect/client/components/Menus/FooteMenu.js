@@ -1,70 +1,94 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useContext } from 'react'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import { AuthContext } from '@/context/authContext'
+import React, { useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { AuthContext } from '@/context/authContext';
 
-const FooteMenu = () => {
-
-    // global state
+const FooterMenu = () => {
     const [state, setState] = useContext(AuthContext);
-    // function 
-    const logoutFunction = async () => {
-        console.log("log out button clicked");
+    const navigation = useNavigation();
+    const route = useRoute();
 
-        setState({ user: null, token: "" })
-        await AsyncStorage.removeItem('@auth')
-        alert('Logout Successfully')
+    const logoutFunction = async () => {
+        setState({ user: null, token: "" });
+        await AsyncStorage.removeItem('@auth');
+        alert('Logout Successfully');
     };
 
-    // hooks
-    const navigation = useNavigation()
-    const route = useRoute()
-
+    const menuItems = [
+        { name: 'Home', icon: 'home', route: 'Home' },
+        { name: 'Events', icon: 'calendar-alt', route: 'EventList' },
+        { name: 'Arts', icon: 'palette', route: 'ArtList' },
+        { name: 'Account', icon: 'user', route: 'Profile' },
+    ];
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                <FontAwesome5 name='home' style={styles.iconStyle} color={route.name === 'Home' && 'blue'} />
-                <Text>Home</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('EventList')}>
-                <FontAwesome5 name='plus-square' style={styles.iconStyle} color={route.name === 'Post' && 'blue'} />
-                <Text>Events</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('ArtList')}>
-                <FontAwesome5 name='list' style={styles.iconStyle} color={route.name === 'MyPosts' && 'blue'} />
-                <Text>Arts</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <FontAwesome5 name='user' style={styles.iconStyle} color={route.name === 'Account' && 'blue'} />
-                <Text>Account</Text>
-            </TouchableOpacity>
-
-            {/* // LOG OUT BUTTON  */}
-            <TouchableOpacity onPress={logoutFunction}>
-                <FontAwesome5 name='sign-out-alt' style={styles.iconStyle} color='tomato' />
-                <Text>Log out</Text>
+            {menuItems.map((item, index) => (
+                <TouchableOpacity
+                    key={index}
+                    style={styles.menuItem}
+                    onPress={() => navigation.navigate(item.route)}
+                >
+                    <FontAwesome5
+                        name={item.icon}
+                        style={[
+                            styles.iconStyle,
+                            route.name === item.route && styles.activeIcon
+                        ]}
+                    />
+                    <Text style={[
+                        styles.menuText,
+                        route.name === item.route && styles.activeText
+                    ]}>
+                        {item.name}
+                    </Text>
+                </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.menuItem} onPress={logoutFunction}>
+                <FontAwesome5 name='sign-out-alt' style={[styles.iconStyle, styles.logoutIcon]} />
+                <Text style={[styles.menuText, styles.logoutText]}>Logout</Text>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        margin: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#e0e0e0',
+    },
+    menuItem: {
+        alignItems: 'center',
     },
     iconStyle: {
-        marginBottom: 3,
-        alignSelf: 'center',
-        fontSize: 25,
-    }
-})
+        fontSize: 24,
+        marginBottom: 4,
+        color: '#757575',
+    },
+    activeIcon: {
+        color: '#4a90e2',
+    },
+    menuText: {
+        fontSize: 12,
+        color: '#757575',
+    },
+    activeText: {
+        color: '#4a90e2',
+        fontWeight: 'bold',
+    },
+    logoutIcon: {
+        color: '#ff6b6b',
+    },
+    logoutText: {
+        color: '#ff6b6b',
+    },
+});
 
-export default FooteMenu
+export default FooterMenu;

@@ -3,10 +3,22 @@ const artModel = require("../models/artModel");
 // add image
 const uploadImageController = async (req, res) => {
     try {
-        const { name, url } = req.body
+        const { name, imgUrl, category, price, description, artistID, isAvailable } = req.body
+
+
+        // existing Art
+        const existingArt = await artModel.findOne({ name, category, price, artistID })
+
+        if (existingArt) {
+            return res.status(500).send({
+                success: false,
+                message: 'User Already posted simillar Art',
+                existingArt
+            })
+        }
 
         // validate url
-        if (!url) {
+        if (!imgUrl) {
             return res.status(400).send({
                 success: false,
                 message: 'Image URL is required'
@@ -21,7 +33,7 @@ const uploadImageController = async (req, res) => {
             })
         }
 
-        const art = await artModel({ name: name, url: url }).save()
+        const art = await artModel({ name: name, imgUrl: imgUrl, category, price, description, artistID, isAvailable }).save()
 
         return res.status(201).send({
             success: true,

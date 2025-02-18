@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerController, loginController, updateUserController, requireSignIn } = require('../controllers/userControllers')
+const { registerController, loginController, updateUserController, requireSignIn, updateProfileImgController, updateUserFavoriteListController } = require('../controllers/userControllers')
 
 // ROUTER OBJ
 const router = express.Router()
@@ -14,5 +14,11 @@ router.post('/login', loginController)
 
 // update-user
 router.put('/update-user', requireSignIn, updateUserController)
+
+// update-user-profile
+router.put('/update-user-profile', requireSignIn, updateProfileImgController)
+
+// update-user-profile
+router.put('/update-user-favorites', requireSignIn, updateUserFavoriteListController)
 
 module.exports = router

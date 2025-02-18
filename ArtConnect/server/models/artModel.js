@@ -1,10 +1,5 @@
 const mongoose = require('mongoose')
 
-// TO DO: add other elements 
-
-// -> user 
-// -> description 
-// -> img-story(optionl)
 
 const artSchema = new mongoose.Schema({
     name: {
@@ -19,9 +14,10 @@ const artSchema = new mongoose.Schema({
     imgUrl: [
         {
             type: String,
-            required: [true, 'Please add image URL']
+            required: true
         }
-    ],
+    ]
+    ,
     price: {
         type: Number,
         required: true,

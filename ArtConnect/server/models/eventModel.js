@@ -35,8 +35,8 @@ const eventSchema = new mongoose.Schema({
     },
     artistID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
 }, { timestamps: true })
 

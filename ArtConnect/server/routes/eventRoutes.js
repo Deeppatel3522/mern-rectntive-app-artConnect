@@ -15,6 +15,6 @@ router.get('/fetch-event/:id', fetchEventController)
 router.get('/fetch-all-event', fetchAllEventController)
 
 // update-event
-router.put('/update-event/:id', updateEventController)
+router.put('/update-event/:eventId', updateEventController)
 
 module.exports = router

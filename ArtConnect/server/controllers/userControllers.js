@@ -180,6 +180,13 @@ const updateProfileImgController = async (req, res) => {
             })
         }
 
+        if (!imgUrl) {
+            return res.status(404).send({
+                success: false,
+                message: 'Image not found!',
+            })
+        }
+
         // updated user
         const updatedUser = await userModel.findOneAndUpdate({ email }, {
             image: imgUrl || user.image

@@ -20,14 +20,6 @@ const Home = ({ navigation }) => {
                     <Text>Profile</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.btnStyle} onPress={() => { navigation.navigate('ArtList') }}>
-                    <Text> ArtList</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.btnStyle} onPress={() => { navigation.navigate('ArtDetail') }}>
-                    <Text>ArtDetail</Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity style={styles.btnStyle} onPress={() => { navigation.navigate('EventList') }}>
                     <Text>EventList</Text>
                 </TouchableOpacity>
@@ -36,6 +28,9 @@ const Home = ({ navigation }) => {
                     <Text>EventDetail</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styles.btnStyle} onPress={() => { navigation.navigate('ArtDetail') }}>
+                    <Text>Art Detail</Text>
+                </TouchableOpacity>
             </View>
             <FooterMenu />
         </View>
