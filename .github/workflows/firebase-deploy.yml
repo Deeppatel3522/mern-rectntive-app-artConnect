@@ -1,9 +1,9 @@
-name: Artconncet App Firebase Deployment
+name: ArtConnect App Firebase Deployment
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
@@ -16,29 +16,30 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '22.13.0'  # Specify the Node.js version
+        node-version: '22.13.0'
 
     - name: Install dependencies
       run: |
-        cd ArtConnect/client  # Go to the client directory
+        cd ArtConnect/client
         npm install
-        cd ../server  # Go to the server directory
+        cd ../server
         npm install
 
     - name: Install EAS CLI
-      run: npm install -g eas-cli
+      run: npm install -g eas-cli  # Install EAS CLI
 
-    - name: Build Android app using EAS
+    - name: Authenticate with Expo using Token
+      run: eas login --token ${{ secrets.EXPO_TOKEN }}  # Authenticate using the Expo token
+
+    - name: Build the app (Production)
       run: |
         cd ArtConnect/client
-        eas build --platform android --non-interactive  # Build APK using EAS
-      env:
-        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}  # Set the Expo Token from secrets
+        eas build --platform android --profile production  # Adjust profile based on your `eas.json`
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
 
     - name: Deploy to Firebase
       run: |
-        firebase use --add  # Use Firebase project if prompted
+        firebase use --add
         firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --only hosting,firestore,functions
