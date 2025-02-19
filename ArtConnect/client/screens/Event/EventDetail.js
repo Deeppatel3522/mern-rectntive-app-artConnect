@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
 import { PostContext } from '@/context/postContext';
+import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
+import { AuthContext } from '@/context/authContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,6 +18,16 @@ const EventDetails = ({ route }) => {
 
   const { eventId } = route.params;
   const { fetchEvent } = useContext(PostContext);
+  const [state] = useContext(AuthContext)
+
+  const handleFavorite = async () => {
+    try {
+      await toggleFavorite({ postId: eventId, userId: state?.user?._id });
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   useEffect(() => {
     const getEvent = async () => {
@@ -37,7 +49,6 @@ const EventDetails = ({ route }) => {
     getEvent();
   }, [eventId]);
 
-  const toggleFavorite = () => setIsFavorite(!isFavorite);
   const toggleFollow = () => setIsFollowing(!isFollowing);
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
@@ -45,7 +56,6 @@ const EventDetails = ({ route }) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString)?.toLocaleDateString(undefined, options);
   };
-
 
 
   return (
@@ -82,7 +92,7 @@ const EventDetails = ({ route }) => {
             <View style={styles.contentContainer}>
               <View style={styles.header}>
                 <Text style={styles.title}>{eventDetails?.name}</Text>
-                <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+                <TouchableOpacity onPress={handleFavorite} style={styles.favoriteButton}>
                   <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={28} color={isFavorite ? "#FF6B6B" : "#fff"} />
                 </TouchableOpacity>
               </View>

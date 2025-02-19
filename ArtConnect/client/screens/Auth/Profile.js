@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView, Alert, Platform } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
@@ -21,30 +21,30 @@ const Profile = () => {
   const [type, setType] = useState(user?.type);
   const [loading, setLoading] = useState(false);
 
-  // upload image from gallery
-  const uploadImage = async () => {
-    try {
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
+  // // upload image from gallery
+  // const uploadImage = async () => {
+  //   try {
+  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     let result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       allowsEditing: true,
+  //       aspect: [1, 1],
+  //       quality: 1,
+  //     });
 
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
-    } catch (error) {
-      alert(`Error uploading image: ${error}`);
-    }
-  };
+  //     if (!result.canceled) {
+  //       setImage(result.assets[0].uri);
+  //     }
+  //   } catch (error) {
+  //     alert(`Error uploading image: ${error}`);
+  //   }
+  // };
 
   // UPDATE Profile
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.put('/auth/update-user', { name, password, email, type, image });
+      const { data } = await axios.put('/auth/update-user', { name, password, email, type });
       setLoading(false);
       setState({ ...state, user: data?.updatedUser });
       alert(data && data.message);
@@ -52,6 +52,56 @@ const Profile = () => {
       alert(error.response.data.message);
       setLoading(false);
       console.log(error);
+    }
+  };
+
+  const selectImage = async () => {
+    // Request permission to access the media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Permission to access gallery is required!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.6,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      uploadImage(result.assets[0].uri);
+    }
+  };
+
+  const uploadImage = async (uri) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("image", {
+        uri: uri,
+        type: "image/jpeg",
+        name: `${user?.name}-profile.jpg`,
+      });
+      formData.append("email", email);
+
+      const response = await axios.put(`/auth/update-user-profile`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setLoading(false);
+      // setState({ ...state, user: response?.user });
+      setState((prevState) => ({ ...prevState, user: response?.user }));
+      Alert.alert("Success", "Profile updated successfully!");
+      setImage(response.data.user.image);
+
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setLoading(false);
+      Alert.alert("Error", "Failed to upload image");
     }
   };
 
@@ -65,7 +115,7 @@ const Profile = () => {
               source={{ uri: image || "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }}
               style={styles.profileImage}
             />
-            <TouchableOpacity style={styles.cameraButton} onPress={uploadImage}>
+            <TouchableOpacity style={styles.cameraButton} onPress={selectImage}>
               <FontAwesome5 name='camera' style={styles.cameraIcon} />
             </TouchableOpacity>
           </View>

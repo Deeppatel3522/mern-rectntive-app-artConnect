@@ -1,16 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
-import { PostContext } from '@/context/postContext'; 
+import { PostContext } from '@/context/postContext';
 import FooterMenu from '@/components/Menus/FooteMenu.js';
 import EventCard from '@/components/Cards/EventCard.js';
-import EventForm from '@/components/Forms/EventForm.js'; 
+import EventForm from '@/components/Forms/EventForm.js';
 import { AuthContext } from '@/context/authContext';
 
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { events } = useContext(PostContext);
   const [state, setState] = useContext(AuthContext)
-  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -20,9 +20,14 @@ const EventList = ({ navigation }) => {
           ))}
         </ScrollView>
 
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.addButtonText}>Add New Event</Text>
-        </TouchableOpacity>
+
+        {
+          state?.user?.type === "Artist" && (
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+              <Text style={styles.addButtonText}>Add New Event</Text>
+            </TouchableOpacity>
+          )
+        }
 
         <Modal
           animationType="slide"

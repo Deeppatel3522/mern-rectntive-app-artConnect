@@ -4,8 +4,11 @@ import { PostContext } from '@/context/postContext';
 import FooterMenu from '@/components/Menus/FooteMenu';
 import ArtCard from '@/components/Cards/ArtCard.js';
 import ArtForm from '@/components/Forms/ArtForm.js';
+import { AuthContext } from '@/context/authContext';
 
 const ArtList = ({ navigation }) => {
+
+  const [state] = useContext(AuthContext)
   const [modalVisible, setModalVisible] = useState(false);
   const { arts } = useContext(PostContext);
 
@@ -18,9 +21,13 @@ const ArtList = ({ navigation }) => {
           ))}
         </ScrollView>
 
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.addButtonText}>Add New Art</Text>
-        </TouchableOpacity>
+        {
+          state?.user?.type === "Artist" && (
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+              <Text style={styles.addButtonText}>Add New Art</Text>
+            </TouchableOpacity>
+          )
+        }
 
         <Modal
           animationType="slide"

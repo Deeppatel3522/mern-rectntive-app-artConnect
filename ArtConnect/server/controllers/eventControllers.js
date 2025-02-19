@@ -154,7 +154,7 @@ const fetchAllEventController = async (req, res) => {
     }
 }
 
-// UPDATE EVENT (name || d)
+// UPDATE EVENT ()
 const updateEventController = async (req, res) => {
     try {
         const { name, price, category, location, description, date, image } = req.body

@@ -3,6 +3,7 @@ const userModel = require("../models/userModel")
 const JWT = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
 const { toggleFavoriteArt } = require("../helper/userHelper");
+const cloudinary = require('../config/cloudinaryConfig.js');
 
 // MIDDLEWARE
 const requireSignIn = jwt({
@@ -167,51 +168,65 @@ const updateUserController = async (req, res) => {
     }
 }
 
-const updateProfileImgController = async (req, res) => {
+// UPDATE || (PROFILE IMG)
+const updateUserProfileController = async (req, res) => {
+    const { email } = req.body;
+
+    // Validate the uploaded file
+    if (!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "No image uploaded",
+        });
+    }
+
     try {
-        const { imgUrl, email } = req.body
-        // user find
-        const user = await userModel.findOne({ email })
+        // Upload image to Cloudinary
+        const cloudResult = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream({ folder: "artConncet_profile_pics" }, (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(result);
+            }).end(req.file.buffer);
+        });
+
+        const user = await userModel.findOneAndUpdate(
+            { email },
+            { image: cloudResult.secure_url },
+            { new: true }
+        );
 
         if (!user) {
-            return res.status(404).send({
-                success: false,
-                message: 'Profile not found!',
-            })
+            return res.status(404).json({ error: "User not found" });
         }
 
-        if (!imgUrl) {
-            return res.status(404).send({
-                success: false,
-                message: 'Image not found!',
-            })
-        }
-
-        // updated user
-        const updatedUser = await userModel.findOneAndUpdate({ email }, {
-            image: imgUrl || user.image
-        }, { new: true })
-
-        updatedUser.password = undefined;
-
-        res.status(200).send({
+        res.status(200).json({
             success: true,
-            message: 'Profile Image updated!',
-            updatedUser
-        })
+            message: "Profile updated successfully",
+            user,
+        });
     } catch (error) {
-        console.log(error)
-        res.status(500).send({
+        console.error("Error updating user profile:", error);
+        res.status(500).json({
             success: false,
-            message: 'Error in User profile Image update API',
-            error
-        })
+            message: "Internal server error",
+            error: error.message,
+        });
     }
-}
+};
 
+// UPDATE || (FAVORITE LIST) 
 const updateUserFavoriteListController = async (req, res) => {
     try {
-        const { userId, artId } = req.body
+        const { userId, postId } = req.body
+
+        if (!userId || !postId) {
+            return res.status(400).send({
+                success: false,
+                message: 'User or post ID not found!',
+            })
+        }
 
         // user find
         const user = await userModel.findById(userId)
@@ -224,7 +239,7 @@ const updateUserFavoriteListController = async (req, res) => {
         }
 
         // toggle result
-        const result = await toggleFavoriteArt(userId, artId)
+        const result = await toggleFavoriteArt(userId, postId)
 
         if (!result.success) {
             return res.status(500).send({
@@ -234,7 +249,7 @@ const updateUserFavoriteListController = async (req, res) => {
         }
 
         const newUser = result.updatedUser
-        updatedUser.password = undefined;
+        newUser.password = undefined;
 
         return res.status(200).send({
             success: true,
@@ -251,4 +266,4 @@ const updateUserFavoriteListController = async (req, res) => {
     }
 }
 
-module.exports = { requireSignIn, registerController, loginController, updateUserController, updateProfileImgController, updateUserFavoriteListController }
+module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController }

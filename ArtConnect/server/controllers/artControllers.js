@@ -88,7 +88,6 @@ const fetchImageController = async (req, res) => {
     }
 }
 
-// TO DO: modify this func to get all arts by user
 
 // fetch all image
 const fetchAllImageController = async (req, res) => {
