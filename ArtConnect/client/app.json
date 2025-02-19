@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#121212"
-      }
+      },
+      "package": "com.deeppatel910.client"
     },
     "web": {
       "bundler": "metro",

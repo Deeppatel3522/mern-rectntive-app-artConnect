@@ -17,10 +17,10 @@ const FooterMenu = () => {
     };
 
     const menuItems = [
-        { name: 'Home', icon: 'home', route: 'Home' },
+        { name: 'Explore', icon: 'compass', route: 'Explore' },
         { name: 'Events', icon: 'calendar-alt', route: 'EventList' },
         { name: 'Arts', icon: 'palette', route: 'ArtList' },
-        { name: 'Account', icon: 'user', route: 'Profile' },
+        { name: 'Profile', icon: 'user', route: 'Profile' },
     ];
 
     return (

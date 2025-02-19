@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '@/screens/Auth/Home'
+import Explore from '@/screens/Auth/Explore'
 import Login from '@/screens/Auth/Login'
+import Welcome from '@/screens/Auth/Welcome.js'
 import SignUp from '@/screens/Auth/SignUp'
 import Profile from '@/screens/Auth/Profile'
 import EventList from '@/screens/Event/EventList'
@@ -19,17 +20,16 @@ const ScreenMenu = () => {
     const authenticatedUser = state?.user && state?.token
     const stack = createNativeStackNavigator()
     return (
-        <stack.Navigator initialRouteName='Login'>
+        <stack.Navigator initialRouteName='Welcome'>
             {/* check if user logged in or not  */}
 
             {authenticatedUser ?
                 (<>
                     <stack.Screen
-                        name='Home'
-                        component={Home}
+                        name='Explore'
+                        component={Explore}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
+                            headerShown: false
                         }}
                     />
 
@@ -80,6 +80,13 @@ const ScreenMenu = () => {
                 :
 
                 (<>
+                    <stack.Screen
+                        name='Welcome'
+                        component={Welcome}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
                     <stack.Screen
                         name='Login'
                         component={Login}
