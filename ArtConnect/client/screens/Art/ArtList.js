@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
 import { PostContext } from '@/context/postContext';
 import FooterMenu from '@/components/Menus/FooteMenu';
@@ -10,7 +10,11 @@ const ArtList = ({ navigation }) => {
 
   const [state] = useContext(AuthContext)
   const [modalVisible, setModalVisible] = useState(false);
-  const { arts } = useContext(PostContext);
+  const { arts, getAllArts } = useContext(PostContext);
+
+  useEffect(() => {
+    getAllArts()
+  }, [])
 
   return (
     <SafeAreaView style={styles.safeArea}>

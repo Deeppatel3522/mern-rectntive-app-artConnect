@@ -1,10 +1,11 @@
+const cloudinary = require('../config/cloudinaryConfig.js');
 const artModel = require("../models/artModel");
 
 // add image
 const uploadImageController = async (req, res) => {
     try {
-        const { name, imgUrl, category, price, description, artistID, isAvailable } = req.body
-
+        const { name, category, price, description, artistID } = req.body;
+        const images = req.files;
 
         // existing Art
         const existingArt = await artModel.findOne({ name, category, price, artistID })
@@ -17,27 +18,60 @@ const uploadImageController = async (req, res) => {
             })
         }
 
-        // validate url
-        if (!imgUrl) {
+        // validate images
+        if (!images || images.length === 0) {
             return res.status(400).send({
                 success: false,
-                message: 'Image URL is required'
+                message: 'At least one image is required'
+            });
+        }
+
+        // validate artistID
+        if (!artistID) {
+            return res.status(400).send({
+                success: false,
+                message: 'Artist ID not found!'
             })
         }
 
-        // validate name
-        if (!name) {
+        // validate other details
+        if (!name || !category || !description || !price) {
             return res.status(400).send({
                 success: false,
-                message: 'Image name is required'
+                message: 'Please fill all the fields!'
             })
         }
 
-        const art = await artModel({ name: name, imgUrl: imgUrl, category, price, description, artistID, isAvailable }).save()
+        const imageUploadPromises = images.map(image => {
+            return new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "artConncet_profile_pics" },
+                    (error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result.secure_url);
+                        }
+                    }
+                ).end(image.buffer);
+            });
+        });
+
+        const imageUrls = await Promise.all(imageUploadPromises);
+
+        const art = await artModel({
+            name,
+            imgUrl: imageUrls,
+            category,
+            price,
+            description,
+            artistID
+        }).save()
 
         return res.status(201).send({
             success: true,
-            message: `Image upload Successfully! \n Art id: ${art._id}`
+            message: `Image upload Successfully! \n Art id: ${art._id}`,
+            art
         })
 
     } catch (error) {

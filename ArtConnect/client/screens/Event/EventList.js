@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
 import { PostContext } from '@/context/postContext';
 import FooterMenu from '@/components/Menus/FooteMenu.js';
@@ -8,8 +8,12 @@ import { AuthContext } from '@/context/authContext';
 
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { events } = useContext(PostContext);
+  const { events, getAllEvents } = useContext(PostContext);
   const [state, setState] = useContext(AuthContext)
+
+  useEffect(() => {
+    getAllEvents()
+  }, [])
 
   return (
     <SafeAreaView style={styles.safeArea}>

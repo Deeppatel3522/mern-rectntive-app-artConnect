@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
 import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 import { AuthContext } from '@/context/authContext';
@@ -66,7 +65,7 @@ const EventDetails = ({ route }) => {
         ) : (
           <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.swiperContainer}>
-              <Swiper
+              {/* <Swiper
                 showsButtons={false}
                 loop={false}
                 dot={<View style={styles.dot} />}
@@ -81,7 +80,13 @@ const EventDetails = ({ route }) => {
                     />
                   </TouchableOpacity>
                 ))}
-              </Swiper>
+              </Swiper> */}
+
+              <Image
+                style={styles.image}
+                source={{ uri: eventDetails?.image[0] }}
+                resizeMode='cover'
+              />
             </View>
 
             <LinearGradient
@@ -155,7 +160,7 @@ const EventDetails = ({ route }) => {
                 >
                   <Ionicons name="close" size={30} color="#fff" />
                 </TouchableOpacity>
-                <Swiper
+                {/* <Swiper
                   showsButtons={false}
                   loop={false}
                   dot={<View style={styles.dot} />}
@@ -169,7 +174,13 @@ const EventDetails = ({ route }) => {
                       resizeMode="contain"
                     />
                   ))}
-                </Swiper>
+                </Swiper> */}
+
+                <Image
+                  style={styles.fullScreenImage}
+                    source={{ uri: eventDetails?.image[0] }}
+                  resizeMode="contain"
+                />
               </View>
             </Modal>
           </ScrollView>

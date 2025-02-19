@@ -1,5 +1,7 @@
 const express = require('express')
 const { uploadImageController, fetchImageController, fetchAllImageController, updateImageController } = require('../controllers/artControllers')
+const multer = require('multer');
+const upload = multer();
 
 // ROUTER OBJ
 const router = express.Router()
@@ -7,7 +9,7 @@ const router = express.Router()
 // ROUTES
 
 // upload image
-router.post('/upload-img', uploadImageController)
+router.post('/upload-img', upload.array('image'), uploadImageController)
 
 // fetch-image
 router.get('/fetch-img/:id', fetchImageController)

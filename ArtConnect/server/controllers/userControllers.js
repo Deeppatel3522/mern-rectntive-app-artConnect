@@ -183,12 +183,14 @@ const updateUserProfileController = async (req, res) => {
     try {
         // Upload image to Cloudinary
         const cloudResult = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload_stream({ folder: "artConncet_profile_pics" }, (error, result) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(result);
-            }).end(req.file.buffer);
+            cloudinary.uploader.upload_stream(
+                { folder: "artConncet_profile_pics" },
+                (error, result) => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    resolve(result);
+                }).end(req.file.buffer);
         });
 
         const user = await userModel.findOneAndUpdate(

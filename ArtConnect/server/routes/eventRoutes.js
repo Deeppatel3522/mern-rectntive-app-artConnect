@@ -1,12 +1,15 @@
 const express = require('express')
 const { postEventController, updateEventController, fetchAllEventController, fetchEventController } = require('../controllers/eventControllers')
+const multer = require('multer');
+const upload = multer();
+
 // ROUTER OBJ
 const router = express.Router()
 
 // ROUTES
 
 // post event
-router.post('/post-event', postEventController)
+router.post('/post-event', upload.array('image'), postEventController)
 
 // fetch-event
 router.get('/fetch-event/:id', fetchEventController)

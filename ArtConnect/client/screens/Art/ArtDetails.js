@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
 import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 import { AuthContext } from '@/context/authContext';
@@ -37,7 +36,6 @@ const ArtDetails = ({ route }) => {
         const data = await fetchArt(artId);
         if (data) {
           setArtDetails(data);
-          console.log(JSON.stringify(data, null, 4));
         } else {
           console.log('No data found');
           setArtDetails(null);
@@ -69,7 +67,7 @@ const ArtDetails = ({ route }) => {
         ) : (
           <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.swiperContainer}>
-              <Swiper
+              {/* <Swiper
                 showsButtons={false}
                 loop={false}
                 dot={<View style={styles.dot} />}
@@ -84,7 +82,13 @@ const ArtDetails = ({ route }) => {
                     />
                   </TouchableOpacity>
                 ))}
-              </Swiper>
+              </Swiper> */}
+
+              <Image
+                style={styles.image}
+                source={{ uri: artDetails?.imgUrl[0] }}
+                resizeMode="cover"
+              />
             </View>
 
             <LinearGradient
@@ -148,7 +152,7 @@ const ArtDetails = ({ route }) => {
                 >
                   <Ionicons name="close" size={30} color="#fff" />
                 </TouchableOpacity>
-                <Swiper
+                {/* <Swiper
                   showsButtons={false}
                   loop={false}
                   dot={<View style={styles.dot} />}
@@ -162,7 +166,13 @@ const ArtDetails = ({ route }) => {
                       resizeMode="contain"
                     />
                   ))}
-                </Swiper>
+                </Swiper> */}
+
+                <Image
+                  style={styles.fullScreenImage}
+                  source={{ uri: artDetails?.imgUrl[0] }}
+                  resizeMode="contain"
+                />
               </View>
             </Modal>
           </ScrollView>

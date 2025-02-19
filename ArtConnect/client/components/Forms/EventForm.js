@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '@/context/authContext';
 import axios from 'axios';
 
@@ -11,19 +12,22 @@ const EventForm = ({ closeModal }) => {
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState();
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false)
+
+    const categories = ["Painting", "Sculpture", "Photography", "Digital Art", "Mixed Media"];
 
     // global state
     const [state, setState] = useContext(AuthContext)
 
 
-    const uploadImage = async () => {
+    const saveImage = async () => {
         try {
             await ImagePicker.requestMediaLibraryPermissionsAsync();
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
                 allowsMultipleSelection: true
@@ -32,67 +36,50 @@ const EventForm = ({ closeModal }) => {
             if (!result.canceled) {
                 const selectedImages = result.assets.map(asset => asset.uri);
                 setImages(prevImages => [...prevImages, ...selectedImages]);
+                // uploadImage(selectedImages)
             }
         } catch (error) {
             alert(`Error uploading image: ${error}`);
         }
     };
 
-    const handleSubmit = async () => {
-        console.log(`Btn clicked!`);
-
-        const formData = new FormData();
-
-        if (!name || !location || !price || !category || !date || !description) {
-            alert("Please fill in all required fields.");
-            return;
-        }
-
-        if (images.length === 0) {
-            console.log('Upload images');
-
-            return;
-        }
-
-        images.forEach((imageUri, index) => {
-            formData.append('image', {
-                uri: imageUri,
-                type: 'image/jpeg',
-                name: `${name}-image${index}.jpg`,
-            });
-        });
-
-        formData.append('name', name);
-        formData.append('location', location);
-        formData.append('price', price);
-        formData.append('category', category);
-        formData.append('description', description);
-        formData.append('date', date);
-        formData.append('artistID', state?.user?._id);
-
+    const handleSubmit = async (uris) => {
         try {
             setLoading(true)
 
-            // console.log({ name, location, price, category, description, date, images });
-
-            console.log(formData);
-
-            const { data } = await axios.post(`/event/post-event`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const formData = new FormData();
+            uris.forEach((uri, index) => {
+                formData.append("image", {
+                    uri: uri,
+                    type: "image/jpeg",
+                    name: `event-${name}-${index + 1}.jpg`,
+                });
             });
-            setLoading(false)
-            alert(data?.message);
-            closeModal();
-        } catch (error) {
-            alert(error.response.data.message)
-            setLoading(false)
-            console.log(error)
-            closeModal();
-        }
 
+            formData.append("name", name);
+            formData.append("location", location);
+            formData.append("price", price);
+            formData.append("category", category);
+            formData.append("description", description);
+            formData.append("date", date);
+            formData.append("artistID", state?.user?._id);
+
+            const response = await axios.post(`/event/post-event`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setLoading(false)
+            console.log(response.data.event);
+            Alert.alert("Success", `Event Posted successfully!`);
+            closeModal()
+        } catch (error) {
+            console.error("Error posting Event:", error);
+            setLoading(false)
+            Alert.alert("Error", "Failed to post Event");
+            closeModal()
+        }
     };
+
 
     return (
         <KeyboardAvoidingView
@@ -106,8 +93,22 @@ const EventForm = ({ closeModal }) => {
                 {renderInput("location-outline", "Location", location, setLocation)}
                 {renderInput("pricetag-outline", "Price", price, setPrice, "numeric")}
                 {renderInput("list-outline", "Category", category, setCategory)}
+                <View style={styles.pickerContainer}>
+                    <Ionicons name="list-outline" size={24} color="#4A90E2" style={styles.icon} />
+                    <Picker
+                        selectedValue={category}
+                        onValueChange={(itemValue) => setCategory(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Select Category" value="" />
+                        {categories.map((cat, index) => (
+                            <Picker.Item key={index} label={cat} value={cat} />
+                        ))}
+                    </Picker>
+                </View>
                 {renderInput("calendar-outline", "Date (YYYY-MM-DD)", date, setDate)}
 
+                
                 <View style={styles.inputContainer}>
                     <Ionicons name="create-outline" size={24} color="#4A90E2" style={styles.icon} />
                     <TextInput
@@ -119,7 +120,7 @@ const EventForm = ({ closeModal }) => {
                     />
                 </View>
 
-                <TouchableOpacity style={styles.imageButton} onPress={uploadImage}>
+                <TouchableOpacity style={styles.imageButton} onPress={saveImage}>
                     <Ionicons name="camera-outline" size={24} color="#FFFFFF" />
                     <Text style={styles.imageButtonText}>Upload Image</Text>
                 </TouchableOpacity>
@@ -133,8 +134,8 @@ const EventForm = ({ closeModal }) => {
             </ScrollView>
 
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Create Event</Text>
+                <TouchableOpacity style={styles.submitButton} onPress={() => { handleSubmit(images) }}>
+                    <Text style={styles.buttonText}>{loading ? "Loading..." : "Create Event"}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
                     <Text style={styles.buttonText}>Close</Text>
@@ -187,6 +188,34 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
+    },
+    pickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        marginBottom: 15,
+        paddingHorizontal: 15,
+        elevation: 2,
+    },
+    picker: {
+        flex: 1,
+        height: 50,
+    },
+    dateButton: {
+        flexDirection: 'row',
+        backgroundColor: '#4A90E2',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 15,
+    },
+    dateButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 10,
     },
     icon: {
         marginRight: 10,

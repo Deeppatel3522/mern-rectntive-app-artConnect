@@ -12,30 +12,8 @@ const upload = multer({ storage }).array('image', 10);
 const postEventController = async (req, res) => {
     try {
 
-        upload(req, res, async (err) => {
-            if (err) {
-                return res.status(500).send({
-                    success: false,
-                    message: 'Error uploading images.',
-                    error: err,
-                });
-            }
-        })
-
-        console.log('Request body:', req.body);
-        console.log('Request files:', req.files);
-
         const { name, price, category, location, description, date, artistID } = req.body
-        const imageFiles = req.files;
-
-
-
-        if (!imageFiles || imageFiles.length === 0) {
-            return res.status(400).send({
-                success: false,
-                message: 'No images uploaded',
-            });
-        }
+        const images = req.files;
 
         // existing event
         const existingEvent = await eventModel.findOne({ name, location, date, price })
@@ -48,32 +26,57 @@ const postEventController = async (req, res) => {
             })
         }
 
-        // Upload images to Cloudinary
-        const cloudinaryImages = [];
-        for (let file of imageFiles) {
-            const uploadResponse = await cloudinary.uploader.upload_stream(
-                { resource_type: 'image', folder: 'artconnect-events' },
-                (error, result) => {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        cloudinaryImages.push(result.secure_url);
-                    }
-                }
-            );
-            // Upload to Cloudinary
-            file.stream.pipe(uploadResponse);
+        // validate images
+        if (!images || images.length === 0) {
+            return res.status(400).send({
+                success: false,
+                message: 'No images uploaded',
+            });
         }
+
+        // validate artistID
+        if (!artistID) {
+            return res.status(400).send({
+                success: false,
+                message: 'Artist ID not found!'
+            })
+        }
+
+        // validate other details
+        if (!name || !category || !description || !price || !location || !date) {
+            return res.status(400).send({
+                success: false,
+                message: 'Please fill all the fields!'
+            })
+        }
+
+        // Upload images to Cloudinary
+        const imageUploadPromises = images.map(image => {
+            return new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "artConncet_profile_pics" },
+                    (error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result.secure_url);
+                        }
+                    }
+                ).end(image.buffer);
+            });
+        });
+
+        const imageUrls = await Promise.all(imageUploadPromises);
 
         // save user
         const event = await eventModel({
             name,
             location,
-            date,
             price,
             category,
-            image: cloudinaryImages,
+            image: imageUrls,
             description,
+            date,
             artistID
         }).save()
 
