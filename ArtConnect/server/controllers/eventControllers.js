@@ -26,6 +26,9 @@ const postEventController = async (req, res) => {
             })
         }
 
+        //
+
+
         // validate images
         if (!images || images.length === 0) {
             return res.status(400).send({
@@ -43,10 +46,29 @@ const postEventController = async (req, res) => {
         }
 
         // validate other details
-        if (!name || !category || !description || !price || !location || !date) {
+        if (!name || !category || !description || !price || !location) {
             return res.status(400).send({
                 success: false,
                 message: 'Please fill all the fields!'
+            })
+        }
+
+
+        // validate time
+        try {
+            console.log(date);
+
+            const dateObject = new Date(date)
+
+            if ((dateObject instanceof Date) || isNaN(dateObject.getTime()) || dateObject.getHours || dateObject.getMinutes) {
+                console.log("Valid date formate", dateObject);
+            }
+            console.log("Valid Date: ", dateObject);
+
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: 'Date is not valid!!'
             })
         }
 

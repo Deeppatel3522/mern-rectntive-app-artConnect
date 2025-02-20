@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Image, Alert, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '@/context/authContext';
+// import DateTimePickerModal from "react-native-modal-datetime-picker";
 import axios from 'axios';
 
 const EventForm = ({ closeModal }) => {
@@ -12,6 +13,7 @@ const EventForm = ({ closeModal }) => {
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
+    // const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [date, setDate] = useState();
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false)
@@ -20,6 +22,22 @@ const EventForm = ({ closeModal }) => {
 
     // global state
     const [state, setState] = useContext(AuthContext)
+
+
+    // ------------------------ ERROR: RNCMaterialDatePicker could not be found --------------------------------
+    // // date Picker
+    // const showDatePicker = () => {
+    //     setDatePickerVisibility(true);
+    // };
+
+    // const hideDatePicker = () => {
+    //     setDatePickerVisibility(false);
+    // };
+
+    // const handleConfirm = (date) => {
+    //     console.warn("A date has been picked: ", date);
+    //     hideDatePicker();
+    // }
 
 
     const saveImage = async () => {
@@ -70,12 +88,12 @@ const EventForm = ({ closeModal }) => {
 
             setLoading(false)
             console.log(response.data.event);
-            Alert.alert("Success", `Event Posted successfully!`);
+            Alert.alert("Success", response.data.message || "Event Posted Successfully!");
             closeModal()
         } catch (error) {
             console.error("Error posting Event:", error);
             setLoading(false)
-            Alert.alert("Error", "Failed to post Event");
+            Alert.alert("Error", error.response.data.message);
             closeModal()
         }
     };
@@ -106,9 +124,17 @@ const EventForm = ({ closeModal }) => {
                         ))}
                     </Picker>
                 </View>
-                {renderInput("calendar-outline", "Date (YYYY-MM-DD)", date, setDate)}
+                {renderInput("calendar-outline", "Date (YYYY-MM-DDTHH:MM:SS)", date, setDate)}
 
-                
+                {/* <Button title="Show Date Picker" onPress={showDatePicker} />
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}
+                /> */}
+
+
                 <View style={styles.inputContainer}>
                     <Ionicons name="create-outline" size={24} color="#4A90E2" style={styles.icon} />
                     <TextInput

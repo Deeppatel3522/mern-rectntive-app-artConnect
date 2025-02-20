@@ -30,9 +30,9 @@ const ExhibitionCard = ({ event, navigation }) => {
                     <TouchableOpacity style={styles.viewMoreButton}>
                         <Text style={styles.viewMoreText}>${event.price}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.addToCartButton}>
+                    {/* <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.addToCartText}>Book Ticket</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         </TouchableOpacity>
@@ -72,11 +72,13 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
+        width: '75%',
         fontWeight: 'bold',
         color: '#333',
     },
     description: {
         fontSize: 12,
+        width: '75%',
         color: 'gray',
         marginBottom: 5,
     },

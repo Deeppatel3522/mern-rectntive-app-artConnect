@@ -92,7 +92,7 @@ const Login = ({ navigation }) => {
           {loading ? (
             <ActivityIndicator color="#4c669f" />
           ) : (
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.loginButtonText}>{loading ? "Loading..." : "Login"}</Text>
           )}
         </TouchableOpacity>
 
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 16,
     textDecorationLine: 'underline',
   },
 });

@@ -32,9 +32,12 @@ const Explore = ({ navigation }) => {
                 <View style={styles.container}>
                     {/* Header Section */}
                     <View style={styles.headerContainer}>
-                        <TouchableOpacity style={styles.filterButton}>
+                        {/* <TouchableOpacity style={styles.filterButton}>
                             <Ionicons name="options-outline" size={24} color="black" />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        <View style={styles.greetingContainer}>
+                            <Text style={styles.greetingText}>Hello, {state?.user?.name.toUpperCase()}</Text>
+                        </View>
                         <TouchableOpacity>
                             <Image source={{ uri: state?.user?.image ? state?.user?.image : "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }} style={styles.profileIcon} />
                         </TouchableOpacity>
@@ -66,13 +69,21 @@ const Explore = ({ navigation }) => {
                         contentContainerStyle={styles.scrollViewContent}
                     >
                         {searchQuery === '' ? (
-                            arts.map((art, index) => (
-                                <PopularArtCard key={index} art={art} navigation={navigation} />
-                            ))
+                            arts.length === 0 ? (
+                                <Text style={styles.noArtsMessage}>No arts available.</Text>
+                            ) : (
+                                arts.map((art, index) => (
+                                    <PopularArtCard key={index} art={art} navigation={navigation} />
+                                ))
+                            )
                         ) : (
-                            artSearchResult.map((art, index) => (
-                                <PopularArtCard key={index} art={art} navigation={navigation} />
-                            ))
+                            artSearchResult.length === 0 ? (
+                                <Text style={styles.noArtsMessage}>No arts found for "{searchQuery}"</Text>
+                            ) : (
+                                artSearchResult.map((art, index) => (
+                                    <PopularArtCard key={index} art={art} navigation={navigation} />
+                                ))
+                            )
                         )}
                     </ScrollView>
 
@@ -85,15 +96,24 @@ const Explore = ({ navigation }) => {
                     </View>
                     <View style={styles.exhibitionsScrollView}>
                         {searchQuery === '' ? (
-                            events.map((event, index) => (
-                                <ExhibitionCard key={index} event={event} navigation={navigation} />
-                            ))
+                            events.length === 0 ? (
+                                <Text style={styles.noArtsMessage}>No exhibitions available.</Text>
+                            ) : (
+                                events.map((event, index) => (
+                                    <ExhibitionCard key={index} event={event} navigation={navigation} />
+                                ))
+                            )
                         ) : (
-                            eventSearchResult.map((event, index) => (
-                                <ExhibitionCard key={index} event={event} navigation={navigation} />
-                            ))
+                            eventSearchResult.length === 0 ? (
+                                <Text style={styles.noArtsMessage}>No exhibitions found for "{searchQuery}"</Text>
+                            ) : (
+                                eventSearchResult.map((event, index) => (
+                                    <ExhibitionCard key={index} event={event} navigation={navigation} />
+                                ))
+                            )
                         )}
                     </View>
+
                 </View>
             </ScrollView>
             <FooterMenu />
@@ -120,16 +140,28 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 10,
-        // backgroundColor: '#f5f5f5',
-        borderRadius: 15,
     },
-    filterButton: {
-        padding: 8,
+    greetingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10
+    },
+    greetingText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    userName: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
     },
     profileIcon: {
-        width: 35,
-        height: 35,
-        borderRadius: 15,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: '#fff',
     },
     searchBarContainer: {
         flexDirection: 'row',
@@ -152,6 +184,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 10,
+    },
+    noArtsMessage: {
+        fontSize: 18,
+        color: '#999',
+        textAlign: 'center',
+        marginTop: 20,
     },
     sectionTitle: {
         fontSize: 20,

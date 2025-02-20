@@ -14,7 +14,7 @@ const requireSignIn = jwt({
 // REGISTER
 const registerController = async (req, res) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password, type } = req.body
 
         // validate info
         if (!name) {
@@ -35,6 +35,12 @@ const registerController = async (req, res) => {
                 message: 'Password is required and must be 6 cahracters'
             })
         }
+        if (!type) {
+            return res.status(400).send({
+                success: false,
+                message: 'Invalid user type!'
+            });
+        }
 
         // existing user
         const existingUSer = await userModel.findOne({ email: email })
@@ -50,7 +56,7 @@ const registerController = async (req, res) => {
         const hashedPassword = await hashPassword(password);
 
         // save user
-        const user = await userModel({ name, email, password: hashedPassword }).save()
+        const user = await userModel({ name, email, password: hashedPassword, type }).save()
 
         return res.status(201).send({
             success: true,

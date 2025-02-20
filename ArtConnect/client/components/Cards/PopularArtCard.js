@@ -35,9 +35,9 @@ const PopularArtCard = ({ art, navigation }) => {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.buyButton}>
+                {/* <TouchableOpacity style={styles.buyButton}>
                     <Text style={styles.buyButtonText}>Buy</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
 
             <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>

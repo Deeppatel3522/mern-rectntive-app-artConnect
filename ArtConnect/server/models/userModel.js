@@ -19,12 +19,10 @@ const userSchema = new mongoose.Schema({
         max: 64,
     }, favorites: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.Mixed,
             ref: 'Art',
             default: []
 
-            // // to store both "ART" and "EVENTS" in a same array
-            // type: mongoose.Schema.Types.Mixed, 
         }
     ],
     type: {
@@ -35,7 +33,7 @@ const userSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: ''
+        default: 'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg'
     }
 }, { timestamps: true })
 

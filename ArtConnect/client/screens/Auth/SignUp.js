@@ -13,11 +13,13 @@ import {
 import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 const SignUp = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [type, setType] = useState('User');
   const [loading, setLoading] = useState(false);
 
   const registrationFunction = async () => {
@@ -29,17 +31,21 @@ const SignUp = ({ navigation }) => {
         return;
       }
 
-      const { data } = await axios.post('/auth/register', { name, email, password });
+      const { data } = await axios.post('/auth/register', { name, email, password, type });
       Alert.alert("Success", data.message);
       navigation.navigate("Login");
       setName('');
       setEmail('');
       setPassword('');
+      setType('User')
     } catch (err) {
-      Alert.alert("Error", err.response?.data?.message || "An error occurred");
-      console.log(err);
-    } finally {
       setLoading(false);
+      Alert.alert("Error", err.response?.data?.message || "An error occurred");
+      setName('');
+      setEmail('');
+      setPassword('');
+      setType('User')
+      console.log(err);
     }
   };
 
@@ -93,6 +99,20 @@ const SignUp = ({ navigation }) => {
           />
         </View>
 
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={type}
+            onValueChange={setType}
+            style={styles.picker}
+            dropdownIconColor='#ffffff'
+          >
+            <Picker.Item label="Artist" value="Artist" />
+            <Picker.Item label="User" value="User" />
+          </Picker>
+        </View>
+
+
+
         <TouchableOpacity
           style={styles.signUpButton}
           onPress={registrationFunction}
@@ -101,7 +121,7 @@ const SignUp = ({ navigation }) => {
           {loading ? (
             <ActivityIndicator color="#4c669f" />
           ) : (
-            <Text style={styles.signUpButtonText}>Sign Up</Text>
+            <Text style={styles.signUpButtonText}>{loading ? "Loading..." : "Sign Up"}</Text>
           )}
         </TouchableOpacity>
 
@@ -154,6 +174,17 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     fontSize: 16,
   },
+  pickerContainer: {
+    width: '100%',
+    marginBottom: 15,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+  },
+  picker: {
+    fontSize: 16,
+    color: '#ffffff',
+  },
   signUpButton: {
     backgroundColor: '#ffffff',
     borderRadius: 25,
@@ -173,7 +204,7 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 16,
     textDecorationLine: 'underline',
   },
 });
