@@ -21,13 +21,13 @@ app.use(morgan("dev"))
 
 // ROUTES
 
-// default
-// app.get('', (req, res) => {
-//     res.status(200).json({
-//         success: true,
-//         message: 'Welcome to ArtConnect App'
-//     })
-// })
+default
+app.get('/', (req, res) => {
+    res.status(200).json({
+        "success": true,
+        "message": 'Welcome to ArtConnect App'
+    })
+})
 
 app.use('/api/g2/auth', require('./routes/userRoutes'))
 app.use('/api/g2/art', require('./routes/artRoutes'))
