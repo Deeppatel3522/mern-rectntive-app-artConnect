@@ -2,7 +2,7 @@ const { hashPassword, comparePassword } = require("../helper/authHelper")
 const userModel = require("../models/userModel")
 const JWT = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
-const { toggleFavoriteArt } = require("../helper/userHelper");
+const { toggleFavoriteArt, toggleFollowing } = require("../helper/userHelper");
 const cloudinary = require('../config/cloudinaryConfig.js');
 
 // MIDDLEWARE
@@ -274,4 +274,93 @@ const updateUserFavoriteListController = async (req, res) => {
     }
 }
 
-module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController }
+// UPDATE || (FAVORITE LIST) 
+const updateUserFollowingListController = async (req, res) => {
+    try {
+        const { CurrentUserId, userId } = req.body
+
+        console.log(CurrentUserId, userId);
+
+        if (!CurrentUserId || !userId) {
+            return res.status(400).send({
+                success: false,
+                message: 'User or post ID not found!',
+            })
+        }
+
+        // user find
+        const user = await userModel.findById(CurrentUserId)
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'Profile not found!',
+            })
+        }
+
+        // toggle result
+        const result = await toggleFollowing(CurrentUserId, userId)
+
+        if (!result.success) {
+            return res.status(500).send({
+                success: false,
+                message: `Error in toggleFavorite function!: ${result.error}`,
+            })
+        }
+
+        const newUser = result.updatedUser
+        newUser.password = undefined;
+
+        return res.status(200).send({
+            success: true,
+            message: 'Favorite list updated!',
+            newUser
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            message: 'Error in favorite list update API',
+            error
+        })
+    }
+}
+
+// GET USER
+const fetchUserController = async (req, res) => {
+    try {
+        const id = req.params.id
+
+        // validate ID
+        if (!id) {
+            return res.status(400).send({
+                success: false,
+                message: 'Event ID is required!'
+            })
+        }
+
+        const user = await userModel.findById(id)
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        res.status(200).send({
+            success: true,
+            message: 'User fetched successfully!',
+            user,
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: 'Error in GET-EVENT API',
+            error,
+        })
+    }
+}
+
+module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController }

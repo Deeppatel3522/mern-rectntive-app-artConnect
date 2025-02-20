@@ -42,4 +42,45 @@ const toggleFavoriteArt = async (userId, artId) => {
     }
 }
 
-module.exports = { toggleFavoriteArt }
+const toggleFollowing = async (CurrentUserId, userId) => {
+    try {
+        const user = await userModel.findById(CurrentUserId)
+
+        if (!user) {
+            return {
+                success: false,
+                message: 'User not found!',
+            }
+        }
+
+        // convert string to Objcet-Id (for person whome user gonna follow)
+        const userObjId = new mongoose.Types.ObjectId(userId);
+        const isAlreadyFollowed = user.following.some(fav => fav.toString() === userObjId.toString());
+
+
+        if (isAlreadyFollowed) {
+            user.following = user.following.filter(fav => fav.toString() !== userObjId.toString())
+        } else {
+            user.following.push(userObjId)
+        }
+
+        const updatedUser = await user.save();
+
+        // const list = updatedUser.favorites
+
+        return {
+            success: true,
+            message: 'Following list updated!',
+            updatedUser
+        }
+    } catch (error) {
+        console.log(`ERROR in toggle-Following-Status: ${error}`);
+        return {
+            success: false,
+            message: 'ERROR in toggle-Following-Status API',
+            error
+        }
+    }
+}
+
+module.exports = { toggleFavoriteArt, toggleFollowing }

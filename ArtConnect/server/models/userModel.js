@@ -25,6 +25,14 @@ const userSchema = new mongoose.Schema({
 
         }
     ],
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: []
+
+        }
+    ],
     type: {
         type: String,
         enum: ['Artist', 'User'],

@@ -179,6 +179,43 @@ const fetchAllEventController = async (req, res) => {
     }
 }
 
+// fetch all events by user
+const fetchAllEventByUserController = async (req, res) => {
+    try {
+        const { artistID } = req.body;
+
+        if (!artistID) {
+            return res.status(400).send({
+                success: false,
+                message: 'Artist ID is required',
+            });
+        }
+
+        const events = await eventModel.find({ artistID })
+
+        if (!events || events.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: `No Arts found for ${artistID}`,
+            });
+        }
+
+        return res.status(201).send({
+            success: true,
+            message: `ALL Events fetched Successfully! `,
+            events,
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({
+            success: false,
+            message: 'Error in FETCH-ALL-EVENTS-BY-USER API',
+            error: error,
+        })
+    }
+}
+
 // UPDATE EVENT ()
 const updateEventController = async (req, res) => {
     try {
@@ -224,4 +261,4 @@ const updateEventController = async (req, res) => {
 }
 
 
-module.exports = { postEventController, fetchEventController, fetchAllEventController, updateEventController }
+module.exports = { postEventController, fetchEventController, fetchAllEventController, fetchAllEventByUserController, updateEventController }

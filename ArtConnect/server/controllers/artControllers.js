@@ -122,7 +122,6 @@ const fetchImageController = async (req, res) => {
     }
 }
 
-
 // fetch all image
 const fetchAllImageController = async (req, res) => {
     try {
@@ -152,7 +151,43 @@ const fetchAllImageController = async (req, res) => {
     }
 }
 
-// TO DO: add all other elements except name and url to change
+// fetch all images by user
+const fetchAllImageByUserController = async (req, res) => {
+    try {
+        const { artistID } = req.body;
+
+        if (!artistID) {
+            return res.status(400).send({
+                success: false,
+                message: 'Artist ID is required',
+            });
+        }
+
+        const arts = await artModel.find({ artistID })
+
+        if (!arts || arts.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: `No Arts found for ${artistID}`,
+            });
+        }
+
+        return res.status(201).send({
+            success: true,
+            message: `ALL Images fetched Successfully! `,
+            arts,
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({
+            success: false,
+            message: 'Error in FETCH-ALL-IMG-BY-USER API',
+            error: error,
+        })
+    }
+}
+
 // update-art
 const updateImageController = async (req, res) => {
     try {
@@ -208,4 +243,4 @@ const updateImageController = async (req, res) => {
     }
 }
 
-module.exports = { uploadImageController, fetchImageController, fetchAllImageController, updateImageController }
+module.exports = { uploadImageController, fetchImageController, fetchAllImageController, fetchAllImageByUserController, updateImageController }

@@ -1,5 +1,5 @@
 const express = require('express')
-const { uploadImageController, fetchImageController, fetchAllImageController, updateImageController } = require('../controllers/artControllers')
+const { uploadImageController, fetchImageController, fetchAllImageController, updateImageController, fetchAllImageByUserController } = require('../controllers/artControllers')
 const multer = require('multer');
 const upload = multer();
 
@@ -16,6 +16,9 @@ router.get('/fetch-img/:id', fetchImageController)
 
 // fetch-all-images
 router.get('/fetch-all-img', fetchAllImageController)
+
+// fetch-all-images-by-user
+router.get('/fetch-all-img-by-user', fetchAllImageByUserController)
 
 // update-image
 router.put('/update-img/:id', updateImageController)
