@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { PostContext } from '@/context/postContext';
@@ -132,7 +132,7 @@ const ArtDetails = ({ route }) => {
                 )}
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.bookButton}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => { Alert.alert("SUCCESS", "Congratulation! 🎆") }}>
                 <Text style={styles.bookButtonText}>PURCHASE ARTWORK</Text>
               </TouchableOpacity>
 

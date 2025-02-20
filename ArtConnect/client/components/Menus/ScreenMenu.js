@@ -37,8 +37,7 @@ const ScreenMenu = () => {
                         name='Profile'
                         component={Profile}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
+                            headerShown: false
                         }}
                     />
 
@@ -46,8 +45,7 @@ const ScreenMenu = () => {
                         name='EventList'
                         component={EventList}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
+                            headerShown: false
                         }}
                     />
 
@@ -55,8 +53,7 @@ const ScreenMenu = () => {
                         name='ArtList'
                         component={ArtList}
                         options={{
-                            title: 'ArtConnect',
-                            headerRight: () => <HeaderMenu />
+                            headerShown: false
                         }}
                     />
 

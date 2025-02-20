@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Modal, Dimensions, SafeAreaView, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { PostContext } from '@/context/postContext';
@@ -144,8 +144,11 @@ const EventDetails = ({ route }) => {
                   />
                 )}
               </TouchableOpacity>
-
-              <TouchableOpacity style={styles.bookButton}>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start', gap: 5 }}>
+                <Ionicons name="pin" size={18} color="#FF6B6B" />
+                <Text style={{ marginBottom: 20, color: '#6BFF6B', fontSize: 16, fontWeight: '500' }}>{eventDetails?.location}</Text>
+              </View>
+              <TouchableOpacity style={styles.bookButton} onPress={() => {Alert.alert("SUCCESS", "Event ticket booked!")}}>
                 <Text style={styles.bookButtonText}>BOOK NOW</Text>
               </TouchableOpacity>
 
@@ -155,13 +158,13 @@ const EventDetails = ({ route }) => {
                   <View style={styles.artistInfo}>
                     <Text style={styles.artistName}>Artist ID: {eventDetails?.artistID}</Text>
                   </View>
-                    {
-                      state?.user?._id && state?.user?._id !== eventDetails?.artistID && (
-                        <TouchableOpacity onPress={handleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
-                          <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
-                        </TouchableOpacity>
-                      )
-                    }
+                  {
+                    state?.user?._id && state?.user?._id !== eventDetails?.artistID && (
+                      <TouchableOpacity onPress={handleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
+                        <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
+                      </TouchableOpacity>
+                    )
+                  }
                 </View>
               </View>
             </View>
@@ -286,7 +289,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#e0e0e0',
     lineHeight: 24,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   descriptionGradient: {
     position: 'absolute',

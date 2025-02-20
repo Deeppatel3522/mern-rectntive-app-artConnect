@@ -8,7 +8,7 @@ const EventCard = ({ event, navigation }) => {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-    
+
 
     return (
         <TouchableOpacity
