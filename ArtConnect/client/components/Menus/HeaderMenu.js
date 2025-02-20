@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const HeaderMenu = () => {
-    const [state, setState] = useContext(AuthContext);
+    const { state, setState } = useContext(AuthContext);
 
     // function 
     const logoutFunction = async () => {

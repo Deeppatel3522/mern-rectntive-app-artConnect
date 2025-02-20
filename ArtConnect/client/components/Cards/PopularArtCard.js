@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
@@ -6,7 +6,11 @@ import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 
 const PopularArtCard = ({ art, navigation }) => {
 
-    const [state] = useContext(AuthContext)
+    const { state } = useContext(AuthContext)
+    const [isFavorite, setIsFavorite] = useState(() => {
+        return state.user.favorites.some(fav => fav.toString() === art._id.toString());
+    });
+
     const handleFavorite = async () => {
         try {
             await toggleFavorite({ postId: art._id, userId: state?.user?._id });
@@ -41,7 +45,7 @@ const PopularArtCard = ({ art, navigation }) => {
             </View>
 
             <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>
-                <Ionicons name="heart-outline" size={24} color="white" />
+                <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "white"}`} />
             </TouchableOpacity>
 
         </TouchableOpacity>

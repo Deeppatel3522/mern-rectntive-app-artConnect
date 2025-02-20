@@ -13,6 +13,9 @@ const AuthProvider = ({ children }) => {
         token: "",
     });
 
+    const [loading, setLoading] = useState(false)
+    const [requiredUser, setRequiredUser] = useState()
+
 
     // initial local storage data
     useEffect(() => {
@@ -26,6 +29,20 @@ const AuthProvider = ({ children }) => {
 
     }, [])
 
+    // get user
+    const fetchUser = async (userId) => {
+        try {
+            setLoading(true)
+            const { data } = await axios.get(`/auth/fetch-user/${userId}`);
+            setLoading(false);
+            setRequiredUser(data?.user);
+            return data?.user;
+        } catch (error) {
+            console.log(error);
+            setLoading(false)
+        }
+    }
+
     //defualt axios setting
     axios.defaults.headers.common["Authorization"] = `Bearer ${state?.token}`
     axios.defaults.baseURL = "http://10.0.0.172:6969/api/g2"
@@ -33,7 +50,7 @@ const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={[state, setState]}>
+        <AuthContext.Provider value={{ state, setState, requiredUser, fetchUser }}>
             {children}
         </AuthContext.Provider>
     )

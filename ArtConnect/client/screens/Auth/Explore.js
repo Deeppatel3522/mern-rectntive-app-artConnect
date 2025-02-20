@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Image, SafeAreaView } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Image, SafeAreaView, RefreshControl } from 'react-native';
 import FooterMenu from '@/components/Menus/FooteMenu.js';
 import { PostContext } from '@/context/postContext';
 import PopularArtCard from '@/components/Cards/PopularArtCard';
@@ -8,27 +8,53 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
 
 const Explore = ({ navigation }) => {
-    const [state] = useContext(AuthContext)
-    const { events, arts } = useContext(PostContext);
+    const { state } = useContext(AuthContext)
+    const { events, arts, getAllEvents, getAllArts} = useContext(PostContext);
     const [artSearchResult, setArtSearchResult] = useState([])
     const [eventSearchResult, setEventSearchResult] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
+    const [refreshing, setRefreshing] = useState(false)
+
+    const [eventsToShow, setEventsToShow] = useState([])
+    const [artsToShow, setArtsToShow] = useState([])
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        try {
+            await getAllArts()
+            await getAllEvents();
+            setArtsToShow(arts)
+            setEventsToShow(events)
+            setRefreshing(false)
+            console.log('Refresh done.');
+        } catch (error) {
+            console.error("Error refreshing data:", error);
+            setRefreshing(false);
+        }
+    }, [])
+
+    useEffect(() => {
+        onRefresh();
+    }, [])
 
     const handleSearch = (text) => {
         setSearchQuery(text);
-        const filteredArts = arts.filter((art) =>
+        const filteredArts = artsToShow.filter((art) =>
             art?.name.toLowerCase().includes(text.toLowerCase())
         );
         setArtSearchResult(filteredArts);
-        const filteredEvents = events.filter((event) =>
+        const filteredEvents = eventsToShow.filter((event) =>
             event?.name.toLowerCase().includes(text.toLowerCase())
         );
         setEventSearchResult(filteredEvents);
     };
 
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView style={styles.scrollView}>
+            <ScrollView style={styles.scrollView}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
                 <View style={styles.container}>
                     {/* Header Section */}
                     <View style={styles.headerContainer}>
@@ -69,10 +95,10 @@ const Explore = ({ navigation }) => {
                         contentContainerStyle={styles.scrollViewContent}
                     >
                         {searchQuery === '' ? (
-                            arts.length === 0 ? (
+                            artsToShow.length === 0 ? (
                                 <Text style={styles.noArtsMessage}>No arts available.</Text>
                             ) : (
-                                arts.map((art, index) => (
+                                artsToShow.map((art, index) => (
                                     <PopularArtCard key={index} art={art} navigation={navigation} />
                                 ))
                             )
@@ -96,10 +122,10 @@ const Explore = ({ navigation }) => {
                     </View>
                     <View style={styles.exhibitionsScrollView}>
                         {searchQuery === '' ? (
-                            events.length === 0 ? (
+                            eventsToShow.length === 0 ? (
                                 <Text style={styles.noArtsMessage}>No exhibitions available.</Text>
                             ) : (
-                                events.map((event, index) => (
+                                eventsToShow.map((event, index) => (
                                     <ExhibitionCard key={index} event={event} navigation={navigation} />
                                 ))
                             )
@@ -155,6 +181,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#333',
+    },
+    myPostsButton: {
+        backgroundColor: '#007BFF',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    myPostsText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
     profileIcon: {
         width: 40,

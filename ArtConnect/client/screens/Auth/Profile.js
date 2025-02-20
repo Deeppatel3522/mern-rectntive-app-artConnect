@@ -9,7 +9,7 @@ import FooteMenu from '@/components/Menus/FooteMenu';
 
 const Profile = () => {
   // Global state
-  const [state, setState] = useContext(AuthContext);
+  const { state, setState } = useContext(AuthContext);
   // extract values from "state"
   const { user, token } = state;
 

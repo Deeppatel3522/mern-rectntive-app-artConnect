@@ -4,20 +4,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
+import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus.js'
 import { AuthContext } from '@/context/authContext';
 
 const { width, height } = Dimensions.get('window');
 
 const EventDetails = ({ route }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { fetchEvent, isFavorite } = useContext(PostContext);
+  const { state, requiredUser, fetchUser } = useContext(AuthContext)
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
-
+  const [artIsFavorite, setArtIsFavorite] = useState(false);
   const { eventId } = route.params;
-  const { fetchEvent } = useContext(PostContext);
-  const [state] = useContext(AuthContext)
 
   const handleFavorite = async () => {
     try {
@@ -25,6 +26,17 @@ const EventDetails = ({ route }) => {
       setIsFavorite(!isFavorite);
     } catch (error) {
       console.error('Error toggling favorite:', error);
+    }
+  };
+
+  const handleFollow = async () => {
+    try {
+      console.log(toggleFollowStatus);
+
+      await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: eventDetails?.artistID });
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
     }
   };
 
@@ -48,7 +60,10 @@ const EventDetails = ({ route }) => {
     getEvent();
   }, [eventId]);
 
-  const toggleFollow = () => setIsFollowing(!isFollowing);
+  useEffect(() => {
+    setArtIsFavorite(isFavorite)
+  }, [isFavorite]);
+
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
   const formatDate = (dateString) => {
@@ -98,7 +113,7 @@ const EventDetails = ({ route }) => {
               <View style={styles.header}>
                 <Text style={styles.title}>{eventDetails?.name}</Text>
                 <TouchableOpacity onPress={handleFavorite} style={styles.favoriteButton}>
-                  <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={28} color={isFavorite ? "#FF6B6B" : "#fff"} />
+                  <Ionicons name={setArtIsFavorite ? 'heart' : 'heart-outline'} size={28} color={setArtIsFavorite ? "#FF6B6B" : "#fff"} />
                 </TouchableOpacity>
               </View>
 
@@ -140,9 +155,13 @@ const EventDetails = ({ route }) => {
                   <View style={styles.artistInfo}>
                     <Text style={styles.artistName}>Artist ID: {eventDetails?.artistID}</Text>
                   </View>
-                  <TouchableOpacity onPress={toggleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
-                    <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
-                  </TouchableOpacity>
+                    {
+                      state?.user?._id && state?.user?._id !== eventDetails?.artistID && (
+                        <TouchableOpacity onPress={handleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
+                          <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
+                        </TouchableOpacity>
+                      )
+                    }
                 </View>
               </View>
             </View>
@@ -178,7 +197,7 @@ const EventDetails = ({ route }) => {
 
                 <Image
                   style={styles.fullScreenImage}
-                    source={{ uri: eventDetails?.image[0] }}
+                  source={{ uri: eventDetails?.image[0] }}
                   resizeMode="contain"
                 />
               </View>

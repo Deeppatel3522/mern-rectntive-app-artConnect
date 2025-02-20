@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
@@ -6,7 +6,10 @@ import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 
 const ExhibitionCard = ({ event, navigation }) => {
 
-    const [state] = useContext(AuthContext)
+    const { state } = useContext(AuthContext)
+    const [isFavorite, setIsFavorite] = useState(() => {
+        return state.user.favorites.some(fav => fav.toString() === event._id.toString());
+    });
 
     const handleFavorite = async () => {
         try {
@@ -22,7 +25,7 @@ const ExhibitionCard = ({ event, navigation }) => {
                 <View style={styles.header}>
                     <Text style={styles.title} numberOfLines={1}>{event.name}</Text>
                     <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>
-                        <Ionicons name="heart-outline" size={20} color="black" />
+                        <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "black"}`} />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.description} numberOfLines={2}>{event.description}</Text>

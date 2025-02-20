@@ -21,7 +21,7 @@ const EventForm = ({ closeModal }) => {
     const categories = ["Painting", "Sculpture", "Photography", "Digital Art", "Mixed Media"];
 
     // global state
-    const [state, setState] = useContext(AuthContext)
+    const { state, setState } = useContext(AuthContext)
 
 
     // ------------------------ ERROR: RNCMaterialDatePicker could not be found --------------------------------

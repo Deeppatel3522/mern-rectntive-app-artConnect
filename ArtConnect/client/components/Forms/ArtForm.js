@@ -14,7 +14,7 @@ const ArtForm = ({ closeModal }) => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false)
 
-    const [state] = useContext(AuthContext)
+    const { state } = useContext(AuthContext)
 
     const saveImage = async () => {
         try {

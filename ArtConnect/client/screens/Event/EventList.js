@@ -9,7 +9,7 @@ import { AuthContext } from '@/context/authContext';
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { events, getAllEvents } = useContext(PostContext);
-  const [state, setState] = useContext(AuthContext)
+  const { state, setState } = useContext(AuthContext)
 
   useEffect(() => {
     getAllEvents()

@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { AuthContext } from '@/context/authContext';
 
 const FooterMenu = () => {
-    const [state, setState] = useContext(AuthContext);
+    const { state, setState } = useContext(AuthContext);
     const navigation = useNavigation();
     const route = useRoute();
 

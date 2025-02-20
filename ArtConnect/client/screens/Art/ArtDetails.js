@@ -4,31 +4,45 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
+import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus.js'
 import { AuthContext } from '@/context/authContext';
 
 const { width, height } = Dimensions.get('window');
 
 const ArtDetails = ({ route }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { state } = useContext(AuthContext)
+  const { fetchArt, isFavorite } = useContext(PostContext);
+
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [artDetails, setArtDetails] = useState(null);
+  const [artIsFavorite, setArtIsFavorite] = useState(isFavorite);
 
-  const [state] = useContext(AuthContext)
+
   const { artId } = route.params;
-  const { fetchArt } = useContext(PostContext);
 
 
   const handleFavorite = async () => {
     try {
       await toggleFavorite({ postId: artId, userId: state?.user?._id });
-      setIsFavorite(!isFavorite);
+      setArtIsFavorite(!artIsFavorite);
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }
   };
 
+  const handleFollow = async () => {
+    try {
+      console.log(toggleFollowStatus);
+
+      await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: artDetails?.artistID });
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+    }
+  };
 
   useEffect(() => {
     const getArt = async () => {
@@ -40,6 +54,8 @@ const ArtDetails = ({ route }) => {
           console.log('No data found');
           setArtDetails(null);
         }
+
+
       } catch (error) {
         console.error("Error fetching art:", error);
         setArtDetails(null);
@@ -47,17 +63,11 @@ const ArtDetails = ({ route }) => {
     };
 
     getArt();
-  }, [artId]);
+  }, [artId, artIsFavorite]);
 
-  // const toggleFavorite = () => setIsFavorite(!isFavorite);
-  const toggleFollow = () => setIsFollowing(!isFollowing);
+
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString)?.toLocaleDateString(undefined, options);
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -100,7 +110,7 @@ const ArtDetails = ({ route }) => {
               <View style={styles.header}>
                 <Text style={styles.title}>{artDetails?.name}</Text>
                 <TouchableOpacity onPress={handleFavorite} style={styles.favoriteButton}>
-                  <Ionicons name={isFavorite ? 'heart' : 'heart-outline'} size={28} color={isFavorite ? "#FF6B6B" : "#fff"} />
+                  <Ionicons name={setArtIsFavorite ? 'heart' : 'heart-outline'} size={28} color={setArtIsFavorite ? "#FF6B6B" : "#fff"} />
                 </TouchableOpacity>
               </View>
 
@@ -132,9 +142,13 @@ const ArtDetails = ({ route }) => {
                   <View style={styles.artistInfo}>
                     <Text style={styles.artistName}>Artist ID: {artDetails?.artistID}</Text>
                   </View>
-                  <TouchableOpacity onPress={toggleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
-                    <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
-                  </TouchableOpacity>
+                  {
+                    state?.user?._id && state?.user?._id !== artDetails?.artistID && (
+                      <TouchableOpacity onPress={handleFollow} style={[styles.followButton, isFollowing && styles.followingButton]}>
+                        <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
+                      </TouchableOpacity>
+                    )
+                  }
                 </View>
               </View>
             </View>

@@ -1,29 +1,29 @@
 import React from 'react';
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Welcome = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ImageBackground
-                source={{ uri: '' }} // place background img url
-                style={styles.backgroundImage}
-                resizeMode="cover"
+            <LinearGradient
+                colors={['#323232', '#181818']}
+                style={styles.background}
             >
-                <StatusBar barStyle="dark-content" />
                 <View style={styles.container}>
-                    <Text style={styles.title}>Dope Art</Text>
-                    <Text style={styles.subtitle}>Collections</Text>
+                    <Text style={styles.title}>ArtConnect</Text>
+                    <Text style={styles.subtitle}>Discover. Connect. Create.</Text>
                     <Text style={styles.quote}>
-                        “Creativity is intelligence having fun.”
-                        {'\n'}
-                        - Albert Einstein
+                        "Every artist was first an amateur."
                     </Text>
-                    <TouchableOpacity style={styles.getStartedButton} onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity
+                        style={styles.getStartedButton}
+                        onPress={() => navigation.navigate('Login')}
+                    >
                         <Text style={styles.getStartedButtonText}>Get Started</Text>
                     </TouchableOpacity>
                 </View>
-            </ImageBackground>
+            </LinearGradient>
         </SafeAreaView>
     );
 };
@@ -32,47 +32,52 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
     },
-    backgroundImage: {
+    background: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     container: {
         flex: 1,
-        height: '100%',
-        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(177, 180, 120, 0.7)', // Adjust transparency as needed
+        padding: 20,
     },
     title: {
-        fontSize: 42,
+        fontSize: 48,
         fontWeight: 'bold',
-        color: '#D41A45',
+        color: '#ffffff',
         marginBottom: 10,
+        letterSpacing: 1,
     },
     subtitle: {
         fontSize: 24,
-        color: '#000',
-        marginBottom: 20,
+        color: '#e6e6e6',
+        marginBottom: 40,
+        textAlign: 'center',
     },
     quote: {
-        fontSize: 16,
-        color: '#000',
+        fontSize: 18,
+        color: '#656565',
         textAlign: 'center',
-        marginBottom: 40,
+        marginBottom: 60,
         fontStyle: 'italic',
+        paddingHorizontal: 20,
     },
     getStartedButton: {
-        backgroundColor: '#4A4A5A',
+        backgroundColor: '#4b4b4b',
         paddingVertical: 15,
         paddingHorizontal: 50,
-        borderRadius: 15,
+        borderRadius: 30,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
     },
     getStartedButtonText: {
-        color: 'white',
+        color: '#ffffff',
         fontSize: 18,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

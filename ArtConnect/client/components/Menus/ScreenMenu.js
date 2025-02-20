@@ -15,7 +15,7 @@ import { StatusBar } from 'react-native';
 StatusBar
 const ScreenMenu = () => {
     // global state
-    const [state, setState] = useContext(AuthContext)
+    const { state, setState } = useContext(AuthContext)
 
     const authenticatedUser = state?.user && state?.token
     const stack = createNativeStackNavigator()

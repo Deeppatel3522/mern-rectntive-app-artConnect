@@ -8,7 +8,7 @@ import { AuthContext } from '@/context/authContext';
 
 const ArtList = ({ navigation }) => {
 
-  const [state] = useContext(AuthContext)
+  const { state } = useContext(AuthContext)
   const [modalVisible, setModalVisible] = useState(false);
   const { arts, getAllArts } = useContext(PostContext);
 
