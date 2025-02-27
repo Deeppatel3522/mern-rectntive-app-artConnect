@@ -1,5 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const userModel = require("../models/userModel");
+const ArtModel = require("../models/artModel.js")
+const EventModel = require("../models/eventModel.js")
 
 const toggleFavoriteArt = async (userId, artId) => {
     try {
@@ -12,15 +14,29 @@ const toggleFavoriteArt = async (userId, artId) => {
             }
         }
 
+        // Check if artId belongs to Art or Event
+        const isArt = await ArtModel.exists({ _id: artId });
+        const isEvent = await EventModel.exists({ _id: artId });
+
+        if (!isArt && !isEvent) {
+            return {
+                success: false,
+                message: 'The provided ID does not belong to either an Art or Event!',
+            };
+        }
+
+        const type = isArt ? 'Art' : 'Event';
+        
+
         // convert string to Objcet-Id
         const artObjId = new mongoose.Types.ObjectId(artId);
-        const isAlreadyFavorite = user.favorites.some(fav => fav.toString() === artObjId.toString());
+        const isAlreadyFavorite = user.favorites.some(fav => fav.postId.toString() === artObjId.toString());
 
 
         if (isAlreadyFavorite) {
-            user.favorites = user.favorites.filter(fav => fav.toString() !== artObjId.toString())
+            user.favorites = user.favorites.filter(fav => fav.postId.toString() !== artObjId.toString())
         } else {
-            user.favorites.push(artObjId)
+            user.favorites.push({ postId: artId, type })
         }
 
         const updatedUser = await user.save();

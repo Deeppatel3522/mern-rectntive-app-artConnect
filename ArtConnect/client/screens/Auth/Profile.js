@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FooteMenu from '@/components/Menus/FooteMenu';
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   // Global state
   const { state, setState } = useContext(AuthContext);
   // extract values from "state"
@@ -38,13 +38,27 @@ const Profile = () => {
 
   const selectImage = async () => {
     // Request permission to access the media library
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status: galleryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
 
-    if (status !== "granted") {
-      Alert.alert("Permission required", "Permission to access gallery is required!");
+    if (cameraStatus !== "granted" || galleryStatus !== "granted") {
+      Alert.alert(
+        "Permission Required",
+        "We need access to your camera and gallery. Please enable permissions in settings.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings", onPress: () => {
+              ImagePicker.requestMediaLibraryPermissionsAsync()
+              ImagePicker.requestCameraPermissionsAsync()
+            }
+          }
+        ]
+      );
       return;
     }
 
+    // get image from the library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -142,6 +156,14 @@ const Profile = () => {
               <Picker.Item label="Artist" value="Artist" />
             </Picker>
           </View>
+
+          <TouchableOpacity style={styles.updateButton} onPress={() => { navigation.navigate('Favorites') }} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text style={styles.updateButtonText}>Favorites</Text>
+            )}
+          </TouchableOpacity>
 
           <TouchableOpacity style={styles.updateButton} onPress={handleUpdate} disabled={loading}>
             {loading ? (

@@ -1,9 +1,12 @@
 const { hashPassword, comparePassword } = require("../helper/authHelper")
 const userModel = require("../models/userModel")
+const ArtModel = require("../models/artModel.js")
+const EventModel = require("../models/eventModel.js")
 const JWT = require('jsonwebtoken');
 var { expressjwt: jwt } = require("express-jwt");
 const { toggleFavoriteArt, toggleFollowing } = require("../helper/userHelper");
 const cloudinary = require('../config/cloudinaryConfig.js');
+const { default: mongoose } = require("mongoose");
 
 // MIDDLEWARE
 const requireSignIn = jwt({
@@ -274,7 +277,7 @@ const updateUserFavoriteListController = async (req, res) => {
     }
 }
 
-// UPDATE || (FAVORITE LIST) 
+// UPDATE || (FOLLOWING LIST) 
 const updateUserFollowingListController = async (req, res) => {
     try {
         const { CurrentUserId, userId } = req.body
@@ -335,7 +338,7 @@ const fetchUserController = async (req, res) => {
         if (!id) {
             return res.status(400).send({
                 success: false,
-                message: 'Event ID is required!'
+                message: 'User ID is required!'
             })
         }
 
@@ -357,10 +360,64 @@ const fetchUserController = async (req, res) => {
         console.log(error);
         res.status(500).send({
             success: false,
-            message: 'Error in GET-EVENT API',
+            message: 'Error in GET-USER API',
             error,
         })
     }
 }
 
-module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController }
+// GET USER FAVORITES
+const fetchUserFavoriteController = async (req, res) => {
+    try {
+        const { userId } = req.params
+        console.log("Chcecking favorites for : ", userId);
+
+
+        const user = await userModel.findById(userId)
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'User not found!',
+            });
+        }
+
+        // Separate Art and Event favorites
+        const arts = [];
+        const events = [];
+
+        for (const favorite of user.favorites) {
+            // Check if the favorite type is Art or Event and fetch details accordingly
+            if (favorite.type === 'Art') {
+                const art = await ArtModel.findById(favorite.postId);
+                if (art) {
+                    arts.push(art);
+                }
+            } else if (favorite.type === 'Event') {
+                const event = await EventModel.findById(favorite.postId);
+                if (event) {
+                    events.push(event);
+                }
+            }
+        }
+
+        console.log("User's Art Favorites: ", arts.length);
+        console.log("User's Event Favorites: ", events.length);
+
+        return res.status(200).send({
+            success: true,
+            message: 'Favorites fetched successfully!',
+            arts,
+            events,
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: 'Error in GET-FAVORITES API',
+            error,
+        })
+    }
+}
+
+module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController, fetchUserFavoriteController }

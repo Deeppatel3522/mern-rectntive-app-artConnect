@@ -10,23 +10,28 @@ import { AuthContext } from '@/context/authContext';
 const { width, height } = Dimensions.get('window');
 
 const ArtDetails = ({ route }) => {
-  const { state } = useContext(AuthContext)
-  const { fetchArt, isFavorite } = useContext(PostContext);
+  const { loading: authLoading, state, refreshUser } = useContext(AuthContext)
+  const { fetchArt } = useContext(PostContext);
+  // const { fetchArt, isFavorite } = useContext(PostContext);
 
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [artDetails, setArtDetails] = useState(null);
-  const [artIsFavorite, setArtIsFavorite] = useState(isFavorite);
-
-
   const { artId } = route.params;
+
+  const [artIsFavorite, setArtIsFavorite] = useState(
+    state?.user?.favorites.some(fav => fav.postId === artId)
+  );
+
+
 
 
   const handleFavorite = async () => {
     try {
       await toggleFavorite({ postId: artId, userId: state?.user?._id });
+      await refreshUser();
       setArtIsFavorite(!artIsFavorite);
     } catch (error) {
       console.error('Error toggling favorite:', error);
@@ -63,7 +68,19 @@ const ArtDetails = ({ route }) => {
     };
 
     getArt();
-  }, [artId, artIsFavorite]);
+  }, [artId]);
+
+  useEffect(() => {
+    if (!authLoading) {
+      console.log("Art Detail:");
+
+      console.log(state.user.name);
+      console.log("Favorites: ", state.user.favorites.length);
+
+
+
+    }
+  }, [authLoading, artIsFavorite])
 
 
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
@@ -110,12 +127,13 @@ const ArtDetails = ({ route }) => {
               <View style={styles.header}>
                 <Text style={styles.title}>{artDetails?.name}</Text>
                 <TouchableOpacity onPress={handleFavorite} style={styles.favoriteButton}>
-                  <Ionicons name={setArtIsFavorite ? 'heart' : 'heart-outline'} size={28} color={setArtIsFavorite ? "#FF6B6B" : "#fff"} />
+                  <Ionicons name={artIsFavorite ? 'heart' : 'heart-outline'} size={28} color={artIsFavorite ? "#FF6B6B" : "#fff"} />
                 </TouchableOpacity>
               </View>
 
               <Text style={styles.category}>{artDetails?.category}</Text>
               <Text style={styles.price}>Price: ${artDetails?.price}</Text>
+              <Text style={styles.price}>Is favorite: {artIsFavorite ? "Yes" : "No"}</Text>
 
               <TouchableOpacity onPress={toggleDescription}>
                 <Text

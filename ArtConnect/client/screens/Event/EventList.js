@@ -5,15 +5,26 @@ import FooterMenu from '@/components/Menus/FooteMenu.js';
 import EventCard from '@/components/Cards/EventCard.js';
 import EventForm from '@/components/Forms/EventForm.js';
 import { AuthContext } from '@/context/authContext';
+import { MyPostContext } from '@/context/myPostContext';
 
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { events, getAllEvents } = useContext(PostContext);
-  const { state, setState } = useContext(AuthContext)
+  const { loading: myPostLoading, events, getAllEvents } = useContext(PostContext);
+  const { loading: authLoading, state, setState } = useContext(AuthContext)
 
   useEffect(() => {
-    getAllEvents()
-  }, [])
+    if (!myPostLoading && events) {
+      console.log("Total EVENTS in EVENTLIST screen: ", events.length);
+    }
+  }, [myPostLoading])
+
+  useEffect(() => {
+    if (!authLoading) {
+      console.log(state.user.name);
+      console.log(state.user.favorites.length);
+
+    }
+  }, [authLoading])
 
   return (
     <SafeAreaView style={styles.safeArea}>

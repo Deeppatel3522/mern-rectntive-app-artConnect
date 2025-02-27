@@ -10,20 +10,27 @@ import { AuthContext } from '@/context/authContext';
 const { width, height } = Dimensions.get('window');
 
 const EventDetails = ({ route }) => {
-  const { fetchEvent, isFavorite } = useContext(PostContext);
-  const { state, requiredUser, fetchUser } = useContext(AuthContext)
+  // const { fetchEvent, isFavorite } = useContext(PostContext);
+  const { fetchEvent } = useContext(PostContext);
+  const { loading: authLoading, state, refreshUser } = useContext(AuthContext)
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
-  const [artIsFavorite, setArtIsFavorite] = useState(false);
+
   const { eventId } = route.params;
+
+  const [artIsFavorite, setArtIsFavorite] = useState(
+    state?.user?.favorites.some(fav => fav.postId === eventId)
+  );
+
 
   const handleFavorite = async () => {
     try {
       await toggleFavorite({ postId: eventId, userId: state?.user?._id });
-      setIsFavorite(!isFavorite);
+      await refreshUser()
+      setArtIsFavorite(!artIsFavorite)
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }
@@ -46,7 +53,7 @@ const EventDetails = ({ route }) => {
         const data = await fetchEvent(eventId);
         if (data) {
           setEventDetails(data);
-          console.log(JSON.stringify(data, null, 4));
+          // console.log(JSON.stringify(data, null, 4));
         } else {
           console.log('No data found');
           setEventDetails(null);
@@ -61,8 +68,16 @@ const EventDetails = ({ route }) => {
   }, [eventId]);
 
   useEffect(() => {
-    setArtIsFavorite(isFavorite)
-  }, [isFavorite]);
+    if (!authLoading) {
+      console.log("Event Detail:");
+
+      console.log(state.user.name);
+      console.log("Favorites: ", state.user.favorites.length);
+
+
+
+    }
+  }, [authLoading, artIsFavorite])
 
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
@@ -113,7 +128,7 @@ const EventDetails = ({ route }) => {
               <View style={styles.header}>
                 <Text style={styles.title}>{eventDetails?.name}</Text>
                 <TouchableOpacity onPress={handleFavorite} style={styles.favoriteButton}>
-                  <Ionicons name={setArtIsFavorite ? 'heart' : 'heart-outline'} size={28} color={setArtIsFavorite ? "#FF6B6B" : "#fff"} />
+                  <Ionicons name={artIsFavorite ? 'heart' : 'heart-outline'} size={28} color={artIsFavorite ? "#FF6B6B" : "#fff"} />
                 </TouchableOpacity>
               </View>
 
@@ -148,7 +163,7 @@ const EventDetails = ({ route }) => {
                 <Ionicons name="pin" size={18} color="#FF6B6B" />
                 <Text style={{ marginBottom: 20, color: '#6BFF6B', fontSize: 16, fontWeight: '500' }}>{eventDetails?.location}</Text>
               </View>
-              <TouchableOpacity style={styles.bookButton} onPress={() => {Alert.alert("SUCCESS", "Event ticket booked!")}}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => { Alert.alert("SUCCESS", "Event ticket booked!") }}>
                 <Text style={styles.bookButtonText}>BOOK NOW</Text>
               </TouchableOpacity>
 

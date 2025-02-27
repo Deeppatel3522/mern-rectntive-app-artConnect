@@ -6,10 +6,11 @@ import PopularArtCard from '@/components/Cards/PopularArtCard';
 import ExhibitionCard from '@/components/Cards/ExhibitionCard.js';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
+import { MyPostContext } from '@/context/myPostContext';
 
 const Explore = ({ navigation }) => {
-    const { state } = useContext(AuthContext)
-    const { events, arts, getAllEvents, getAllArts} = useContext(PostContext);
+    const { loading: authLoading, state } = useContext(AuthContext)
+    const { loading: myPostLoading, events, arts, getAllEvents, getAllArts } = useContext(PostContext);
     const [artSearchResult, setArtSearchResult] = useState([])
     const [eventSearchResult, setEventSearchResult] = useState([])
     const [searchQuery, setSearchQuery] = useState('');
@@ -26,16 +27,32 @@ const Explore = ({ navigation }) => {
             setArtsToShow(arts)
             setEventsToShow(events)
             setRefreshing(false)
-            console.log('Refresh done.');
+            console.log('Explore page Refreshing done.');
         } catch (error) {
             console.error("Error refreshing data:", error);
             setRefreshing(false);
         }
     }, [])
 
+
     useEffect(() => {
-        onRefresh();
+        if (!authLoading && !myPostLoading) {
+            // onRefresh();
+            const getPosts = async () => {
+                await getAllArts()
+                await getAllEvents()
+            }
+            // getPosts();
+        }
     }, [])
+
+    useEffect(() => {
+        setArtsToShow(arts);
+        setEventsToShow(events);
+
+        console.log("In EXPLORE page ========>\n ==========> EVENTS = ", eventsToShow.length);
+        console.log("In EXPLORE page ========>\n ==========> ARTS = ", artsToShow.length);
+    }, [arts, events]);
 
     const handleSearch = (text) => {
         setSearchQuery(text);

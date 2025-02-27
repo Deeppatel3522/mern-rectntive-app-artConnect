@@ -19,10 +19,16 @@ const userSchema = new mongoose.Schema({
         max: 64,
     }, favorites: [
         {
-            type: mongoose.Schema.Types.Mixed,
-            ref: 'Art',
-            default: []
-
+            postId: {
+                type: mongoose.Schema.Types.ObjectId,
+                refPath: 'type',  // Use the type to dynamically select the model
+                required: true
+            },
+            type: {
+                type: String,
+                enum: ['Art', 'Event'],  // Only allow Art or Event
+                required: true
+            }
         }
     ],
     following: [

@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerController, loginController, updateUserController, requireSignIn, updateProfileImgController, updateUserFavoriteListController, updateUserProfileController, fetchUserController, updateUserFollowingListController } = require('../controllers/userControllers')
+const { registerController, loginController, updateUserController, requireSignIn, updateProfileImgController, updateUserFavoriteListController, updateUserProfileController, fetchUserController, updateUserFollowingListController, fetchUserFavoriteController } = require('../controllers/userControllers')
 const multer = require('multer');
 const upload = multer();
 
@@ -25,6 +25,9 @@ router.put('/update-user-profile', upload.single('image'), requireSignIn, update
 
 // update-user-profile
 router.put('/update-user-favorites', requireSignIn, updateUserFavoriteListController)
+
+// fetch-user-profile
+router.get('/fetch-user-favorites/:userId', requireSignIn, fetchUserFavoriteController)
 
 // update-user-following
 router.put('/update-user-following', updateUserFollowingListController)

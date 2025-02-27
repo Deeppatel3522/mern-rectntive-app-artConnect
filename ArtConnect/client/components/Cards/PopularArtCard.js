@@ -8,7 +8,7 @@ const PopularArtCard = ({ art, navigation }) => {
 
     const { state } = useContext(AuthContext)
     const [isFavorite, setIsFavorite] = useState(() => {
-        return state.user.favorites.some(fav => fav.toString() === art._id.toString());
+        return state.user.favorites.some(fav => fav.postId.toString() === art._id.toString());
     });
 
     const handleFavorite = async () => {
