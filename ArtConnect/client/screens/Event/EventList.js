@@ -5,7 +5,6 @@ import FooterMenu from '@/components/Menus/FooteMenu.js';
 import EventCard from '@/components/Cards/EventCard.js';
 import EventForm from '@/components/Forms/EventForm.js';
 import { AuthContext } from '@/context/authContext';
-import { MyPostContext } from '@/context/myPostContext';
 
 const EventList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);

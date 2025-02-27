@@ -6,7 +6,6 @@ import PopularArtCard from '@/components/Cards/PopularArtCard';
 import ExhibitionCard from '@/components/Cards/ExhibitionCard.js';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
-import { MyPostContext } from '@/context/myPostContext';
 
 const Explore = ({ navigation }) => {
     const { loading: authLoading, state } = useContext(AuthContext)
