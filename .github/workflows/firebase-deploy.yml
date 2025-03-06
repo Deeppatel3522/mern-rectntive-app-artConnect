@@ -34,7 +34,7 @@ jobs:
     - name: Build the app (Production)
       run: |
         cd ArtConnect/client
-        eas build --platform android --profile production  # Adjust profile based on your `eas.json`
+        eas build --platform android --profile preview # Adjust profile based on your `eas.json`
 
     # - name: Install Firebase CLI
     #   run: npm install -g firebase-tools
