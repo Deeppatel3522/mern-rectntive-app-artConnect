@@ -109,7 +109,8 @@ const loginController = async (req, res) => {
 
         //TOKEN JWT
 
-        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d', })
+        const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d', })
+        const expiryDate = Math.floor(Date.now() / 1000) + 1 * 24 * 60 * 60;
 
         // undefined password
         user.password = undefined
@@ -117,6 +118,7 @@ const loginController = async (req, res) => {
             success: true,
             message: 'Login successfully',
             token,
+            expiresAt: expiryDate,
             user,
         })
 
