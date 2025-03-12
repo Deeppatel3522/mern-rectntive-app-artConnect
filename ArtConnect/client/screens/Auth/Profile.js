@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView, Alert, Platform } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView, Alert, Platform, Share } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
@@ -100,6 +100,30 @@ const Profile = ({ navigation }) => {
     }
   };
 
+
+  // SHARE
+
+  const shareInfo = async () => {
+    try {
+      const shareContent = {
+        title: 'Youtube',
+        message: `Check out this cool app! User: ${user.image} (${user.email}) - Type: ${user.type}\nhttps://www.youtube.com/`,
+        url: 'https://www.youtube.com/'
+      };
+
+      const shareOptions = {
+        dialogTitle: 'Share via'
+      };
+
+      // The correct syntax is to pass two separate arguments
+      const result = await Share.share(shareContent, shareOptions);
+
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -171,6 +195,10 @@ const Profile = ({ navigation }) => {
             ) : (
               <Text style={styles.updateButtonText}>Update Profile</Text>
             )}
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.updateButton} onPress={() => { shareInfo() }} disabled={loading}>
+            <Text style={styles.updateButtonText}>Share Information</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

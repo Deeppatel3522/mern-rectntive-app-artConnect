@@ -11,7 +11,7 @@ const artSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imgUrl: [
+    image: [
         {
             type: String,
             required: true

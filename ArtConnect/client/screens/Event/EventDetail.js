@@ -6,10 +6,11 @@ import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus.js'
 import { AuthContext } from '@/context/authContext';
+import FlightsSwiper from '@/components/Cards/Swiper';
 
 const { width, height } = Dimensions.get('window');
 
-const EventDetails = ({ route }) => {
+const EventDetails = ({ route, navigation }) => {
   // const { fetchEvent, isFavorite } = useContext(PostContext);
   const { fetchEvent } = useContext(PostContext);
   const { loading: authLoading, state, refreshUser } = useContext(AuthContext)
@@ -46,6 +47,7 @@ const EventDetails = ({ route }) => {
       console.error('Error toggling follow status:', error);
     }
   };
+
 
   useEffect(() => {
     const getEvent = async () => {
@@ -95,28 +97,9 @@ const EventDetails = ({ route }) => {
         ) : (
           <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.swiperContainer}>
-              {/* <Swiper
-                showsButtons={false}
-                loop={false}
-                dot={<View style={styles.dot} />}
-                activeDot={<View style={styles.activeDot} />}
-              >
-                {eventDetails?.image?.map((img, index) => (
-                  <TouchableOpacity key={index} onPress={() => setModalVisible(true)}>
-                    <Image
-                      style={styles.image}
-                      source={{ uri: img }}
-                      resizeMode='cover'
-                    />
-                  </TouchableOpacity>
-                ))}
-              </Swiper> */}
 
-              <Image
-                style={styles.image}
-                source={{ uri: eventDetails?.image[0] }}
-                resizeMode='cover'
-              />
+              <FlightsSwiper images={eventDetails?.image || []} />
+
             </View>
 
             <LinearGradient
@@ -163,7 +146,7 @@ const EventDetails = ({ route }) => {
                 <Ionicons name="pin" size={18} color="#FF6B6B" />
                 <Text style={{ marginBottom: 20, color: '#6BFF6B', fontSize: 16, fontWeight: '500' }}>{eventDetails?.location}</Text>
               </View>
-              <TouchableOpacity style={styles.bookButton} onPress={() => { Alert.alert("SUCCESS", "Event ticket booked!") }}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('OrderSummary', { item: eventDetails }) }}>
                 <Text style={styles.bookButtonText}>BOOK NOW</Text>
               </TouchableOpacity>
 
@@ -197,22 +180,6 @@ const EventDetails = ({ route }) => {
                 >
                   <Ionicons name="close" size={30} color="#fff" />
                 </TouchableOpacity>
-                {/* <Swiper
-                  showsButtons={false}
-                  loop={false}
-                  dot={<View style={styles.dot} />}
-                  activeDot={<View style={styles.activeDot} />}
-                >
-                  {eventDetails?.image?.map((img, index) => (
-                    <Image
-                      key={index}
-                      style={styles.fullScreenImage}
-                      source={{ uri: img }}
-                      resizeMode="contain"
-                    />
-                  ))}
-                </Swiper> */}
-
                 <Image
                   style={styles.fullScreenImage}
                   source={{ uri: eventDetails?.image[0] }}
@@ -220,6 +187,7 @@ const EventDetails = ({ route }) => {
                 />
               </View>
             </Modal>
+
           </ScrollView>
         )}
       </View>

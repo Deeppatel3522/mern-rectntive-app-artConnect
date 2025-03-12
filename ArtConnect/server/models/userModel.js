@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         {
             postId: {
                 type: mongoose.Schema.Types.ObjectId,
-                refPath: 'type',  // Use the type to dynamically select the model
+                refPath: 'type', 
                 required: true
             },
             type: {

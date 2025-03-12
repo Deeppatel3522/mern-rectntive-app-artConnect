@@ -18,7 +18,7 @@ const ArtCard = ({ art, navigation }) => {
     return (
         <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
             <Image
-                source={{ uri: art.imgUrl[0] }}
+                source={{ uri: art.image[0] }}
                 style={styles.artImage}
                 resizeMode="cover"
             />

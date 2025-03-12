@@ -10,6 +10,8 @@ import EventList from '@/screens/Event/EventList'
 import EventDetail from '@/screens/Event/EventDetail'
 import ArtList from '@/screens/Art/ArtList'
 import ArtDetail from '@/screens/Art/ArtDetails'
+import OrderSummary from '@/screens/Purchase/OrderSummary.js'
+import Checkout from '@/screens/Purchase/Checkout.js'
 import HeaderMenu from './HeaderMenu.js'
 import { AuthContext } from '@/context/authContext.js'
 import { StatusBar } from 'react-native';
@@ -18,7 +20,22 @@ const ScreenMenu = () => {
     // global state
     const { state, setState } = useContext(AuthContext)
 
-    const authenticatedUser = state?.user && state?.token
+    const isAuthenticated = (token) => {
+        if (!token) return false;
+
+        try {
+            const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+
+            const expiryDate = new Date(decoded.exp * 1000).toLocaleString();
+            console.log("Token Expiry Date:", expiryDate);
+
+            return decoded.exp > Math.floor(Date.now() / 1000); // Check expiry
+        } catch (error) {
+            return false; // Invalid token
+        }
+    };
+
+    const authenticatedUser = state?.user && isAuthenticated(state?.token)
     const stack = createNativeStackNavigator()
     return (
         <stack.Navigator initialRouteName='Welcome'>
@@ -81,6 +98,23 @@ const ScreenMenu = () => {
                             headerShown: false
                         }}
                     />
+
+                    <stack.Screen
+                        name='OrderSummary'
+                        component={OrderSummary}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+
+                    <stack.Screen
+                        name='Checkout'
+                        component={Checkout}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+
                 </>)
 
                 :

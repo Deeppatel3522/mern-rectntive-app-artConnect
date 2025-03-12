@@ -20,12 +20,12 @@ const PopularArtCard = ({ art, navigation }) => {
     };
     return (
         <TouchableOpacity style={styles.popularArtCard} onPress={() => navigation.navigate('ArtDetail', { artId: art._id })}>
-            <Image source={{ uri: art.imgUrl[0] }} style={styles.popularArtImage} />
+            <Image source={{ uri: art.image[0] }} style={styles.popularArtImage} />
 
 
             <View style={styles.artistInfoOverlay}>
                 <View style={styles.artistDetails}>
-                    <Image source={{ uri: art.imgUrl[0] }} style={styles.artistImage} />
+                    <Image source={{ uri: art.image[0] }} style={styles.artistImage} />
                     <View>
                         <Text
                             style={styles.artName}

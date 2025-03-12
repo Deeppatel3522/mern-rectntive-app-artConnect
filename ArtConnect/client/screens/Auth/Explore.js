@@ -48,9 +48,6 @@ const Explore = ({ navigation }) => {
     useEffect(() => {
         setArtsToShow(arts);
         setEventsToShow(events);
-
-        console.log("In EXPLORE page ========>\n ==========> EVENTS = ", eventsToShow.length);
-        console.log("In EXPLORE page ========>\n ==========> ARTS = ", artsToShow.length);
     }, [arts, events]);
 
     const handleSearch = (text) => {
@@ -63,6 +60,7 @@ const Explore = ({ navigation }) => {
             event?.name.toLowerCase().includes(text.toLowerCase())
         );
         setEventSearchResult(filteredEvents);
+
     };
 
 

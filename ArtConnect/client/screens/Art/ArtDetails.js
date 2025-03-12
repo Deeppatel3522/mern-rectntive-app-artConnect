@@ -5,14 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { PostContext } from '@/context/postContext';
 import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus.js'
-import { AuthContext } from '@/context/authContext';
+import { AuthContext } from '@/context/authContext.js';
+import FlightsSwiper from '@/components/Cards/Swiper.js';
 
 const { width, height } = Dimensions.get('window');
 
-const ArtDetails = ({ route }) => {
+const ArtDetails = ({ route, navigation }) => {
   const { loading: authLoading, state, refreshUser } = useContext(AuthContext)
   const { fetchArt } = useContext(PostContext);
-  // const { fetchArt, isFavorite } = useContext(PostContext);
 
 
   const [isFollowing, setIsFollowing] = useState(false);
@@ -20,12 +20,11 @@ const ArtDetails = ({ route }) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [artDetails, setArtDetails] = useState(null);
   const { artId } = route.params;
+  const [purchaseModelVisible, setPurchaseModelVisible] = useState(false)
 
   const [artIsFavorite, setArtIsFavorite] = useState(
     state?.user?.favorites.some(fav => fav.postId === artId)
   );
-
-
 
 
   const handleFavorite = async () => {
@@ -72,13 +71,7 @@ const ArtDetails = ({ route }) => {
 
   useEffect(() => {
     if (!authLoading) {
-      console.log("Art Detail:");
-
       console.log(state.user.name);
-      console.log("Favorites: ", state.user.favorites.length);
-
-
-
     }
   }, [authLoading, artIsFavorite])
 
@@ -94,28 +87,9 @@ const ArtDetails = ({ route }) => {
         ) : (
           <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.swiperContainer}>
-              {/* <Swiper
-                showsButtons={false}
-                loop={false}
-                dot={<View style={styles.dot} />}
-                activeDot={<View style={styles.activeDot} />}
-              >
-                {artDetails?.imgUrl?.map((imageUri, index) => (
-                  <TouchableOpacity key={index} onPress={() => setModalVisible(true)}>
-                    <Image
-                      style={styles.image}
-                      source={{ uri: imageUri }}
-                      resizeMode="cover"
-                    />
-                  </TouchableOpacity>
-                ))}
-              </Swiper> */}
 
-              <Image
-                style={styles.image}
-                source={{ uri: artDetails?.imgUrl[0] }}
-                resizeMode="cover"
-              />
+              <FlightsSwiper images={artDetails?.image || []} />
+
             </View>
 
             <LinearGradient
@@ -133,7 +107,6 @@ const ArtDetails = ({ route }) => {
 
               <Text style={styles.category}>{artDetails?.category}</Text>
               <Text style={styles.price}>Price: ${artDetails?.price}</Text>
-              <Text style={styles.price}>Is favorite: {artIsFavorite ? "Yes" : "No"}</Text>
 
               <TouchableOpacity onPress={toggleDescription}>
                 <Text
@@ -150,9 +123,13 @@ const ArtDetails = ({ route }) => {
                 )}
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.bookButton} onPress={() => { Alert.alert("SUCCESS", "Congratulation! 🎆") }}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('OrderSummary', { item: artDetails }) }}>
                 <Text style={styles.bookButtonText}>PURCHASE ARTWORK</Text>
               </TouchableOpacity>
+
+              {/* <TouchableOpacity style={styles.bookButton} onPress={() => { setPurchaseModelVisible(true) }}>
+                <Text style={styles.bookButtonText}>PURCHASE ARTWORK</Text>
+              </TouchableOpacity> */}
 
               <View style={styles.artistSection}>
                 <Text style={styles.artistInfoHeader}>Artist</Text>
@@ -190,7 +167,7 @@ const ArtDetails = ({ route }) => {
                   dot={<View style={styles.dot} />}
                   activeDot={<View style={styles.activeDot} />}
                 >
-                  {artDetails?.imgUrl?.map((imageUri, index) => (
+                  {artDetails?.iamge?.map((imageUri, index) => (
                     <Image
                       key={index}
                       style={styles.fullScreenImage}
@@ -202,11 +179,18 @@ const ArtDetails = ({ route }) => {
 
                 <Image
                   style={styles.fullScreenImage}
-                  source={{ uri: artDetails?.imgUrl[0] }}
+                  source={{ uri: artDetails?.image[0] }}
                   resizeMode="contain"
                 />
               </View>
             </Modal>
+
+
+            {/* <OrderSummary
+              item={artDetails}
+              closeModal={() => setPurchaseModelVisible(false)}
+              visible={purchaseModelVisible}
+            /> */}
           </ScrollView>
         )}
       </View>
