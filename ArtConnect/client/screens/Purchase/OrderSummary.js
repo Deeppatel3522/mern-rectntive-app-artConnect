@@ -40,6 +40,26 @@ const OrderSummary = ({ route, navigation }) => {
     };
 
     const handlePurchase = () => {
+        if (!item || !item.price) {
+            alert("Item details are missing!");
+            return;
+        }
+
+        // Validate user details
+        for (const key in userDetails) {
+            if (!userDetails[key]) {
+                alert(`Please enter your ${key}`);
+                return;
+            }
+        }
+
+        // Validate address
+        for (const key in address) {
+            if (!address[key]) {
+                alert(`Please enter your ${key}`);
+                return;
+            }
+        }
         const orderToPlace = {
             itemDetails: item,  
             userInfo: userDetails,

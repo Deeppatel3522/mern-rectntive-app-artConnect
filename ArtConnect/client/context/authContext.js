@@ -25,16 +25,12 @@ const AuthProvider = ({ children }) => {
             setLoading(true)
             let data = await AsyncStorage.getItem('@auth')
             let loginData = JSON.parse(data) // convert to object
-            setState({ ...state, user: loginData?.user, userId: loginData?.user?._id, token: loginData?.token });
+            setState({ ...state, user: loginData?.user, userId: loginData?.user?._id, token: loginData?.token })
             setLoading(false)
         }
         getLocalStorageData()
 
     }, [])
-
-    // useEffect(() => {
-    //     console.log("New Auth Context, STATE values:\n ======> ", state.user?.name);
-    // }, [])
 
     // get user
     const fetchUser = async (userId) => {
@@ -66,7 +62,6 @@ const AuthProvider = ({ children }) => {
     const refreshUser = async () => {
         try {
             console.log("User refreshing...");
-
             const { data } = await axios.get(`/auth/fetch-user/${state?.user?._id}`);
             setState(prevState => ({
                 ...prevState,

@@ -54,22 +54,13 @@ const postEventController = async (req, res) => {
         }
 
 
-        // validate time
-        try {
-            console.log(date);
-
-            const dateObject = new Date(date)
-
-            if ((dateObject instanceof Date) || isNaN(dateObject.getTime()) || dateObject.getHours || dateObject.getMinutes) {
-                console.log("Valid date formate", dateObject);
-            }
-            console.log("Valid Date: ", dateObject);
-
-        } catch (error) {
+        // Validate date
+        const eventDate = new Date(date);
+        if (isNaN(eventDate.getTime())) {
             return res.status(400).send({
                 success: false,
-                message: 'Date is not valid!!'
-            })
+                message: 'Invalid date format!',
+            });
         }
 
         // Upload images to Cloudinary
@@ -98,7 +89,7 @@ const postEventController = async (req, res) => {
             category,
             image: imageUrls,
             description,
-            date,
+            date: eventDate,
             artistID
         }).save()
 

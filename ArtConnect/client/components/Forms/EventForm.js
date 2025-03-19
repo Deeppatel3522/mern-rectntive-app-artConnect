@@ -4,41 +4,48 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '@/context/authContext';
-// import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const EventForm = ({ closeModal }) => {
+    // global state
+    const { state, setState } = useContext(AuthContext)
+
     const [name, setName] = useState('');
     const [location, setLocation] = useState('');
     const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('Painting');
     const [description, setDescription] = useState('');
-    // const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [date, setDate] = useState();
+    const [date, setDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false)
 
     const categories = ["Painting", "Sculpture", "Photography", "Digital Art", "Mixed Media"];
 
-    // global state
-    const { state, setState } = useContext(AuthContext)
 
+    const onChangeDate = (event, selectedDate) => {
+        if (selectedDate) {
+            setShowDatePicker(false);
+            setDate(prevDate => {
+                const updatedDate = new Date(prevDate);
+                updatedDate.setFullYear(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+                return updatedDate;
+            });
+        }
+    };
 
-    // ------------------------ ERROR: RNCMaterialDatePicker could not be found --------------------------------
-    // // date Picker
-    // const showDatePicker = () => {
-    //     setDatePickerVisibility(true);
-    // };
-
-    // const hideDatePicker = () => {
-    //     setDatePickerVisibility(false);
-    // };
-
-    // const handleConfirm = (date) => {
-    //     console.warn("A date has been picked: ", date);
-    //     hideDatePicker();
-    // }
-
+    const onChangeTime = (event, selectedTime) => {
+        if (selectedTime) {
+            setShowTimePicker(false);
+            setDate(prevDate => {
+                const updatedDate = new Date(prevDate);
+                updatedDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+                return updatedDate;
+            });
+        }
+    };
 
     const saveImage = async () => {
         try {
@@ -78,7 +85,7 @@ const EventForm = ({ closeModal }) => {
             formData.append("price", price);
             formData.append("category", category);
             formData.append("description", description);
-            formData.append("date", date);
+            formData.append("date", date.toISOString());
             formData.append("artistID", state?.user?._id);
 
             const response = await axios.post(`/event/post-event`, formData, {
@@ -109,7 +116,8 @@ const EventForm = ({ closeModal }) => {
                 {renderInput("create-outline", "Event Name", name, setName)}
                 {renderInput("location-outline", "Location", location, setLocation)}
                 {renderInput("pricetag-outline", "Price", price, setPrice, "numeric")}
-                {renderInput("list-outline", "Category", category, setCategory)}
+                {/* <Text style={[styles.selectedDateTime, {textAlign: 'left'}] }>Category: {category}</Text> */}
+
                 <View style={styles.pickerContainer}>
                     <Ionicons name="list-outline" size={24} color="#4A90E2" style={styles.icon} />
                     <Picker
@@ -117,21 +125,26 @@ const EventForm = ({ closeModal }) => {
                         onValueChange={(itemValue) => setCategory(itemValue)}
                         style={styles.picker}
                     >
-                        <Picker.Item label="Select Category" value="" />
                         {categories.map((cat, index) => (
                             <Picker.Item key={index} label={cat} value={cat} />
                         ))}
                     </Picker>
                 </View>
-                {renderInput("calendar-outline", "Date (YYYY-MM-DDTHH:MM:SS)", date, setDate)}
 
-                {/* <Button title="Show Date Picker" onPress={showDatePicker} />
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleConfirm}
-                    onCancel={hideDatePicker}
-                /> */}
+                <View style={styles.dateTimeContainer}>
+                    <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowDatePicker(true)}>
+                        <Ionicons name="calendar-outline" size={24} color="#FFFFFF" />
+                        <Text style={styles.dateTimeButtonText}>Select Date</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.dateTimeButton} onPress={() => setShowTimePicker(true)}>
+                        <Ionicons name="time-outline" size={24} color="#FFFFFF" />
+                        <Text style={styles.dateTimeButtonText}>Select Time</Text>
+                    </TouchableOpacity>
+                </View>
+                {showDatePicker && <DateTimePicker value={date} mode="date" display="default" onChange={onChangeDate} minimumDate={new Date() } />}
+                {showTimePicker && <DateTimePicker value={date} mode="time" display="default" onChange={onChangeTime} />}
+
+                <Text style={styles.selectedDateTime}>Date: {date.toLocaleString()}</Text>
 
 
                 <View style={styles.inputContainer}>
@@ -227,20 +240,40 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 50,
     },
-    dateButton: {
+    dateTimeContainer: {
         flexDirection: 'row',
-        backgroundColor: '#4A90E2',
-        padding: 15,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         marginBottom: 15,
     },
-    dateButtonText: {
+    dateTimeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#4A90E2',
+        padding: 12,
+        borderRadius: 10,
+        flex: 0.48,
+    },
+    dateTimeButtonText: {
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: 'bold',
         marginLeft: 10,
+    },
+    selectedDateTime: {
+        fontSize: 18,
+        justifyContent: 'center',
+        color: '#4A90E2',
+        marginBottom: 20,
+        textAlign: 'center',
+        padding: 15,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     icon: {
         marginRight: 10,

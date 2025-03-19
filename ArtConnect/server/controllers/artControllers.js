@@ -61,7 +61,7 @@ const uploadImageController = async (req, res) => {
 
         const art = await artModel({
             name,
-            imgUrl: imageUrls,
+            image: imageUrls,
             category,
             price,
             description,
@@ -93,7 +93,7 @@ const fetchImageController = async (req, res) => {
         if (!id) {
             return res.status(400).send({
                 success: false,
-                message: 'Image ID is required'
+                message: 'Art ID is required'
             })
         }
 
@@ -102,13 +102,13 @@ const fetchImageController = async (req, res) => {
         if (!art) {
             return res.status(404).send({
                 success: false,
-                message: 'Image not found',
+                message: 'Art not found',
             });
         }
 
         return res.status(201).send({
             success: true,
-            message: `Image fetched Successfully! `,
+            message: `Art fetched Successfully! `,
             art,
         })
 
@@ -116,7 +116,7 @@ const fetchImageController = async (req, res) => {
         console.log(error)
         return res.status(500).send({
             success: false,
-            message: 'Error in FETCH IMG API',
+            message: 'Error in FETCH ART API',
             error: error,
         })
     }
@@ -131,13 +131,13 @@ const fetchAllImageController = async (req, res) => {
         if (!arts || arts.length === 0) {
             return res.status(404).send({
                 success: false,
-                message: 'Images not found',
+                message: 'Arts not found',
             });
         }
 
         return res.status(201).send({
             success: true,
-            message: `ALL Images fetched Successfully! `,
+            message: `ALL Arts fetched Successfully! `,
             arts,
         })
 
@@ -145,7 +145,7 @@ const fetchAllImageController = async (req, res) => {
         console.log(error)
         return res.status(500).send({
             success: false,
-            message: 'Error in FETCH ALL IMG API',
+            message: 'Error in FETCH ALL ARTS API',
             error: error,
         })
     }

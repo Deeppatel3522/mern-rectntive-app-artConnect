@@ -8,8 +8,6 @@ const EventCard = ({ event, navigation }) => {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-
-
     return (
         <TouchableOpacity
             style={styles.card}
@@ -33,7 +31,7 @@ const EventCard = ({ event, navigation }) => {
                     <View style={styles.categoryContainer}>
                         <Text style={styles.category}>{event.category}</Text>
                     </View>
-                    <TouchableOpacity style={styles.bookButton}>
+                    <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('OrderSummary', { item: event }) }}>
                         <Text style={styles.bookButtonText}>Book Now</Text>
                     </TouchableOpacity>
                 </View>

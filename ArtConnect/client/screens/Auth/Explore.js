@@ -36,7 +36,7 @@ const Explore = ({ navigation }) => {
 
     useEffect(() => {
         if (!authLoading && !myPostLoading) {
-            // onRefresh();
+            onRefresh();
             const getPosts = async () => {
                 await getAllArts()
                 await getAllEvents()

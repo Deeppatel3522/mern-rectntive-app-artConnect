@@ -8,12 +8,12 @@ import { Picker } from '@react-native-picker/picker';
 
 const ArtForm = ({ closeModal }) => {
     const [name, setName] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('Painting');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(false)
-
+    const categories = ["Painting", "Sculpture", "Photography", "Digital Art", "Mixed Media"];
     const { state } = useContext(AuthContext)
 
     const saveImage = async () => {
@@ -87,11 +87,9 @@ const ArtForm = ({ closeModal }) => {
                         onValueChange={(itemValue) => setCategory(itemValue)}
                         style={styles.picker}
                     >
-                        <Picker.Item label="Painting" value="painting" />
-                        <Picker.Item label="Sculpture" value="sculpture" />
-                        <Picker.Item label="Photography" value="photography" />
-                        <Picker.Item label="Digital Art" value="digital-art" />
-                        <Picker.Item label="Craft" value="craft" />
+                        {categories.map((cat, index) => (
+                            <Picker.Item key={index} label={cat} value={cat} />
+                        ))}
                     </Picker>
                 </View>
                 {renderInput("pricetag-outline", "Price", price, setPrice, "numeric")}

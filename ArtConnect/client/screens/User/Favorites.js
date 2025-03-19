@@ -2,9 +2,7 @@ import { View, Text, ScrollView, RefreshControl, Platform, Button } from 'react-
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import ArtCard from '@/components/Cards/ArtCard';
 import { AuthContext } from '@/context/authContext';
-import { PostContext } from '@/context/postContext';
 import EventCard from '@/components/Cards/EventCard';
-import FlightsSwiper from '@/components/Cards/Swiper.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Favorites = ({ navigation }) => {

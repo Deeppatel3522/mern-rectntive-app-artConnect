@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, FlatList, Image, Modal, TouchableOpacity, View, StyleSheet, ActivityIndicator } from "react-native";
+import { Animated, Dimensions, FlatList, Image, Modal, TouchableOpacity, View, StyleSheet, ActivityIndicator, Text, Share } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
 const FlightsSwiper = ({ images }) => {
@@ -60,6 +60,21 @@ const FlightsSwiper = ({ images }) => {
         </TouchableOpacity>
     );
 
+
+
+    const shareImage = async () => {
+        try {
+            const shareContent = {
+                message: `Check out this artwork:\n${selectedImage}`,
+                url: selectedImage
+            };
+
+            await Share.share(shareContent);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <View style={{ width: screenWidth, height: 400 }}>
             <FlatList
@@ -104,6 +119,11 @@ const FlightsSwiper = ({ images }) => {
                             <Ionicons name="close" size={30} color="white" />
                         </TouchableOpacity>
                         <Image source={{ uri: selectedImage }} style={styles.fullScreenImage} resizeMode="contain" />
+
+                        <TouchableOpacity style={styles.shareButton} onPress={shareImage}>
+                            <Ionicons name="share-social-outline" size={30} color="white" />
+                        </TouchableOpacity>
+
                     </View>
                 </Modal>
             )}
@@ -141,13 +161,22 @@ const styles = StyleSheet.create({
     },
     fullScreenImage: {
         width: '90%',
-        height: '80%',
+        height: '70%',
     },
     closeButton: {
         position: 'absolute',
         top: 50,
         right: 20,
-    }
+    },
+    shareButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 50,
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        padding: 10,
+        borderRadius: 12,
+    },
 });
 
 export default FlightsSwiper;
