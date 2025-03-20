@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderTopWidth: 2,
         // borderTopColor: '#e0e0e0',
-        borderTopColor: 'rgba(100, 100, 100, 1)',
+        borderTopColor: 'rgba(58, 58, 58, 1)',
     },
     menuItem: {
         alignItems: 'center',
