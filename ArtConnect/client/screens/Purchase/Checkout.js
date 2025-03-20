@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button, Alert, TouchableOpacity } from 'react-native'
+import { View, Text, Modal, Button, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { useStripe } from '@stripe/stripe-react-native';
 import axios from 'axios';
@@ -108,28 +108,105 @@ const Checkout = ({ route, navigation }) => {
 
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>User Data</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Name: {orderToPlace.userInfo.name}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Email: {orderToPlace.userInfo.email}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Phone: {orderToPlace.userInfo.phone}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Address: {orderToPlace.userInfo.phone}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Data</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Name: {orderToPlace.itemDetails.name}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>SubTotal: {orderToPlace.subtotal}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Tax: {orderToPlace.tax}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Total: {orderToPlace.total}</Text>
-            <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Purchase Date: {orderToPlace.date.toLocaleString()}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>User Data</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Name: {orderToPlace.userInfo.name}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Email: {orderToPlace.userInfo.email}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Phone: {orderToPlace.userInfo.phone}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Address: {orderToPlace.userInfo.phone}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Data</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Name: {orderToPlace.itemDetails.name}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>SubTotal: {orderToPlace.subtotal}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Tax: {orderToPlace.tax}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Total: {orderToPlace.total}</Text>
+        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Purchase Date: {orderToPlace.date.toLocaleString()}</Text>
+        //     <Button
+        //         variant="primary"
+        //         disabled={!loading}
+        //         title="Checkout"
+        //         onPress={openPaymentSheet}
+        //     />
+
+        // </View>
+
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.title}>Final Order Review</Text>
+
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>User Data</Text>
+                <Text style={styles.text}>Name: {orderToPlace.userInfo.name}</Text>
+                <Text style={styles.text}>Email: {orderToPlace.userInfo.email}</Text>
+                <Text style={styles.text}>Phone: {orderToPlace.userInfo.phone}</Text>
+                <Text style={styles.text}>
+                    Address: {orderToPlace.deliveryAddress.streetNumber} {orderToPlace.deliveryAddress.streetName},
+                    {orderToPlace.deliveryAddress.unitNumber ? ` Unit ${orderToPlace.deliveryAddress.unitNumber},` : ''}
+                    {orderToPlace.deliveryAddress.postalCode}, {orderToPlace.deliveryAddress.city}, {orderToPlace.deliveryAddress.country}
+                </Text>
+            </View>
+
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Item Data</Text>
+                <Text style={styles.text}>Item Name: {orderToPlace.itemDetails.name}</Text>
+                <Text style={styles.text}>SubTotal: {orderToPlace.subtotal}</Text>
+                <Text style={styles.text}>Tax: {orderToPlace.tax}</Text>
+                <Text style={styles.text}>Total: {orderToPlace.total}</Text>
+                <Text style={styles.text}>Item Purchase Date: {orderToPlace.date}</Text>
+            </View>
+
             <Button
-                variant="primary"
-                disabled={!loading}
-                title="Checkout"
+                title={loading ? "Processing..." : "Checkout"}
                 onPress={openPaymentSheet}
+                disabled={loading}
             />
-
-        </View>
+        </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    section: {
+        width: '100%',
+        marginBottom: 20,
+        padding: 15,
+        borderRadius: 8,
+        backgroundColor: '#f9f9f9',
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    text: {
+        fontSize: 16,
+        lineHeight: 24,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        color: '#fff',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 20,
+    },
+    disabledButton: {
+        backgroundColor: '#ccc',
+    },
+});
 
 export default Checkout

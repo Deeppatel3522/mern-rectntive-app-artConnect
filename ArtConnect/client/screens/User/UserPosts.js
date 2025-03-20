@@ -1,3 +1,8 @@
+import ArtCard from '@/components/Cards/ArtCard';
+import EventCard from '@/components/Cards/EventCard';
+import FooterMenu from '@/components/Menus/FooteMenu';
+import { AuthContext } from '@/context/authContext';
+import { PostContext } from '@/context/postContext';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
     View,
@@ -7,50 +12,35 @@ import {
     StyleSheet,
     SafeAreaView,
 } from 'react-native';
-import { AuthContext } from '@/context/authContext';
-import ArtCard from '@/components/Cards/ArtCard';
-import EventCard from '@/components/Cards/EventCard';
-import FooterMenu from '@/components/Menus/FooteMenu';
 
-const Favorites = ({ navigation }) => {
-    const { loading: authLoading, state, fetchUserFavorites } = useContext(AuthContext);
-    const [favorites, setFavorites] = useState([]);
+const UserPosts = ({ navigation }) => {
+
+    const { state } = useContext(AuthContext);
+    const { myArts, getAllArtsByUser, myEvents, getAllEventsByUser } = useContext(PostContext);
+    const [posts, setPosts] = useState([])
     const [refreshing, setRefreshing] = useState(false);
 
+    const handleGetAllPosts = () => {
+        getAllArtsByUser(state?.user?._id)
+        getAllEventsByUser(state?.user?._id)
 
-    const getFavorites = async () => {
-        try {
-            const { arts, events } = await fetchUserFavorites(state.user._id);
+        const artsWithType = myArts.map(art => ({ ...art, type: 'art' }));
+        const eventsWithType = myEvents.map(event => ({ ...event, type: 'event' }));
 
-            // Merge Arts & Events into a Single Array
-            let combinedFavorites = [
-                ...arts.map((art) => ({ ...art, type: "art" })),
-                ...events.map((event) => ({ ...event, type: "event" }))
-            ];
+        // Merge the arrays
+        let mergedArray = [...artsWithType, ...eventsWithType];
+        setPosts(mergedArray)
+    }
 
-            // Fisher-Yates Shuffle Algorithm
-            for (let i = combinedFavorites.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [combinedFavorites[i], combinedFavorites[j]] = [combinedFavorites[j], combinedFavorites[i]];
-            }
-
-            setFavorites(combinedFavorites);
-        } catch (error) {
-            console.error("Error fetching favorites:", error);
-        }
-    };
-
-    // Pull-to-Refresh
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        await getFavorites();
+        handleGetAllPosts();
         setRefreshing(false);
     }, []);
 
     useEffect(() => {
-        getFavorites();
-        console.log('Favorites Screen Loaded');
-    }, []);
+        handleGetAllPosts()
+    }, [])
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -59,14 +49,15 @@ const Favorites = ({ navigation }) => {
                     style={styles.scrollViewStyle}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 >
-                    <Text style={styles.header}>Your Favorites</Text>
+                    <Text style={styles.header}>Your Posts</Text>
 
-                    {favorites.length === 0 ? (
+
+                    {posts.length === 0 ? (
                         <View style={styles.emptyContainer}>
-                            <Text style={styles.emptyText}>No favorites yet! Start adding some.</Text>
+                            <Text style={styles.emptyText}>No Posts yet! Start adding some.</Text>
                         </View>
                     ) : (
-                        favorites.map((item, index) =>
+                        posts.map((item, index) =>
                             item.type === "art" ? (
                                 <ArtCard key={index} art={item} navigation={navigation} />
                             ) : (
@@ -74,6 +65,7 @@ const Favorites = ({ navigation }) => {
                             )
                         )
                     )}
+
                 </ScrollView>
                 <View style={styles.footer}>
                     <FooterMenu />
@@ -130,6 +122,4 @@ const styles = StyleSheet.create({
         height: 60,
     },
 });
-
-export default Favorites;
-
+export default UserPosts

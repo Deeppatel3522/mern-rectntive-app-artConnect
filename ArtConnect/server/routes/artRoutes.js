@@ -18,7 +18,7 @@ router.get('/fetch-img/:id', fetchImageController)
 router.get('/fetch-all-img', fetchAllImageController)
 
 // fetch-all-images-by-user
-router.get('/fetch-all-img-by-user', fetchAllImageByUserController)
+router.post('/fetch-all-img-by-user', fetchAllImageByUserController)
 
 // update-image
 router.put('/update-img/:id', updateImageController)

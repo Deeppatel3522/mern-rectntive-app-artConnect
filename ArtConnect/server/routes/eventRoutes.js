@@ -18,7 +18,7 @@ router.get('/fetch-event/:id', fetchEventController)
 router.get('/fetch-all-event', fetchAllEventController)
 
 // fetch-all-events-by-user
-router.get('/fetch-all-event-by-user', fetchAllEventByUserController)
+router.post('/fetch-all-event-by-user', fetchAllEventByUserController)
 
 // update-event
 router.put('/update-event/:eventId', updateEventController)

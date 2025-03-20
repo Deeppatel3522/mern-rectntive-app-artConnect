@@ -157,6 +157,8 @@ const fetchAllImageByUserController = async (req, res) => {
         const { artistID } = req.body;
 
         if (!artistID) {
+            console.log("Id is unavailable!");
+            
             return res.status(400).send({
                 success: false,
                 message: 'Artist ID is required',

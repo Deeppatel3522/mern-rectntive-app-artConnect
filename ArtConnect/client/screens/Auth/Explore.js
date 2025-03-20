@@ -72,13 +72,10 @@ const Explore = ({ navigation }) => {
                 <View style={styles.container}>
                     {/* Header Section */}
                     <View style={styles.headerContainer}>
-                        {/* <TouchableOpacity style={styles.filterButton}>
-                            <Ionicons name="options-outline" size={24} color="black" />
-                        </TouchableOpacity> */}
                         <View style={styles.greetingContainer}>
-                            <Text style={styles.greetingText}>Hello, {state?.user?.name.toUpperCase()}</Text>
+                            <Text style={styles.greetingText}>Hello, {state?.user?.name.toUpperCase()} 👋</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => {navigation.navigate('Profile')}}>
                             <Image source={{ uri: state?.user?.image ? state?.user?.image : "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }} style={styles.profileIcon} />
                         </TouchableOpacity>
                     </View>

@@ -189,6 +189,10 @@ const Profile = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
+          <TouchableOpacity style={styles.updateButton} onPress={() => { navigation.navigate('UserPosts') }} disabled={loading}>
+              <Text style={styles.updateButtonText}>User Posts</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.updateButton} onPress={handleUpdate} disabled={loading}>
             {loading ? (
               <ActivityIndicator color="#ffffff" />
@@ -197,9 +201,6 @@ const Profile = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.updateButton} onPress={() => { shareInfo() }} disabled={loading}>
-            <Text style={styles.updateButtonText}>Share Information</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
       <View style={styles.footer}>

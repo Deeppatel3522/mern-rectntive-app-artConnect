@@ -46,16 +46,16 @@ const ArtCard = ({ art, navigation }) => {
 
 const styles = StyleSheet.create({
     cardContainer: {
-        flexDirection: 'row',
-        marginBottom: 15,
         backgroundColor: '#ffffff',
-        borderRadius: 12,
+        borderRadius: 15,
+        flexDirection: 'row',
+        marginBottom: 20,
+        overflow: 'hidden',
+        elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,
-        overflow: 'hidden',
     },
     artImage: {
         width: 120,

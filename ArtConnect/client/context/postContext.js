@@ -34,10 +34,10 @@ const PostProvider = ({ children }) => {
         }
     }
 
-    const getAllEventsByUser = async () => {
+    const getAllEventsByUser = async (currentUserID) => {
         try {
             setLoading(true)
-            const { data } = await axios.get('/event/fetch-all-event-by-user', { artistID: currentUserID.toString() });
+            const { data } = await axios.post('/event/fetch-all-event-by-user', { artistID: currentUserID.toString() });
             setMyEvents(data?.events);
             setLoading(false);
         } catch (error) {
@@ -59,11 +59,11 @@ const PostProvider = ({ children }) => {
     }
 
 
-    const getAllArtsByUser = async () => {
+    const getAllArtsByUser = async (currentUserID) => {
         try {
             console.log(currentUserID);
             setLoading(true)
-            const { data } = await axios.get('/art/fetch-all-img-by-user', { artistID: currentUserID.toString() });
+            const { data } = await axios.post('/art/fetch-all-img-by-user', { artistID: currentUserID });
             setLoading(false);
             setMyArts(data?.arts);
         } catch (error) {
