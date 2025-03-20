@@ -127,10 +127,6 @@ const ArtDetails = ({ route, navigation }) => {
                 <Text style={styles.bookButtonText}>PURCHASE ARTWORK</Text>
               </TouchableOpacity>
 
-              {/* <TouchableOpacity style={styles.bookButton} onPress={() => { setPurchaseModelVisible(true) }}>
-                <Text style={styles.bookButtonText}>PURCHASE ARTWORK</Text>
-              </TouchableOpacity> */}
-
               <View style={styles.artistSection}>
                 <Text style={styles.artistInfoHeader}>Artist</Text>
                 <View style={styles.artistContainer}>
@@ -161,21 +157,6 @@ const ArtDetails = ({ route, navigation }) => {
                 >
                   <Ionicons name="close" size={30} color="#fff" />
                 </TouchableOpacity>
-                {/* <Swiper
-                  showsButtons={false}
-                  loop={false}
-                  dot={<View style={styles.dot} />}
-                  activeDot={<View style={styles.activeDot} />}
-                >
-                  {artDetails?.iamge?.map((imageUri, index) => (
-                    <Image
-                      key={index}
-                      style={styles.fullScreenImage}
-                      source={{ uri: imageUri }}
-                      resizeMode="contain"
-                    />
-                  ))}
-                </Swiper> */}
 
                 <Image
                   style={styles.fullScreenImage}
@@ -185,12 +166,6 @@ const ArtDetails = ({ route, navigation }) => {
               </View>
             </Modal>
 
-
-            {/* <OrderSummary
-              item={artDetails}
-              closeModal={() => setPurchaseModelVisible(false)}
-              visible={purchaseModelVisible}
-            /> */}
           </ScrollView>
         )}
       </View>

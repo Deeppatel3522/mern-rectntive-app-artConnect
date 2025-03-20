@@ -59,10 +59,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#ffffff',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         paddingVertical: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#e0e0e0',
+        borderTopWidth: 2,
+        // borderTopColor: '#e0e0e0',
+        borderTopColor: 'rgba(100, 100, 100, 1)',
     },
     menuItem: {
         alignItems: 'center',
@@ -70,17 +72,21 @@ const styles = StyleSheet.create({
     iconStyle: {
         fontSize: 24,
         marginBottom: 4,
-        color: '#757575',
+        // color: '#757575',
+        color: '#cbd5e1',
     },
     activeIcon: {
-        color: '#4a90e2',
+        // color: '#4a90e2',
+        color: '#60a5fa',
     },
     menuText: {
         fontSize: 12,
-        color: '#757575',
+        // color: '#757575',
+        color: '#cbd5e1',
     },
     activeText: {
-        color: '#4a90e2',
+        // color: '#4a90e2',
+        color: '#60a5fa', 
         fontWeight: 'bold',
     },
     logoutIcon: {

@@ -60,6 +60,12 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 15,
         backgroundColor: 'transparent',
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 3,
+        
     },
     popularArtImage: {
         width: '100%',
@@ -85,7 +91,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 5,
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
+        backgroundColor: 'rgba(60, 60, 60, 1)',
         borderRadius: 15,
     },
     artistDetails: {
@@ -102,7 +109,8 @@ const styles = StyleSheet.create({
     artistName: {
         fontSize: 10,
         width: '80%',
-        color: 'gray',
+        // color: 'gray',
+        color: '#cbd5e1',
         overflow: 'hidden',
     },
     artName: {
@@ -110,7 +118,8 @@ const styles = StyleSheet.create({
         width: '80%',
         fontWeight: 'bold',
         overflow: 'hidden',
-        color: 'black'
+        // color: 'black'
+        color: '#f9fafb' 
     },
     buyButton: {
         backgroundColor: 'red',

@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         padding: 5,
-        backgroundColor: 'lightgrey',
+        // backgroundColor: 'lightgrey',
+        backgroundColor: '#121212',
     },
     scrollView: {
         flex: 1,
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 20,
         paddingHorizontal: 10,
+        backgroundColor: '#121212',
     },
     headerContainer: {
         flexDirection: 'row',
@@ -186,7 +188,8 @@ const styles = StyleSheet.create({
     greetingText: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        // color: '#333',
+        color: '#fff',
     },
     userName: {
         fontSize: 24,
@@ -213,7 +216,8 @@ const styles = StyleSheet.create({
     searchBarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F2F2F2',
+        // backgroundColor: '#F2F2F2',
+        backgroundColor: '#1E1E1E',
         borderRadius: 10,
         paddingHorizontal: 10,
         marginBottom: 20,
@@ -224,7 +228,9 @@ const styles = StyleSheet.create({
     searchBar: {
         flex: 1,
         height: 40,
-        color: 'gray',
+        fontSize: 16,
+        // color: 'gray',
+        color: '#e0e0e0',
     },
     sectionHeader: {
         flexDirection: 'row',
@@ -234,13 +240,15 @@ const styles = StyleSheet.create({
     },
     noArtsMessage: {
         fontSize: 18,
-        color: '#999',
+        // color: '#999',
+        color: '#e0e0e0',
         textAlign: 'center',
         marginTop: 20,
     },
     sectionTitle: {
         fontSize: 20,
         fontWeight: 'bold',
+        color: '#fff',
     },
     horizontalScrollView: {
         marginBottom: 20,
@@ -255,10 +263,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     seeAllText: {
-        color: 'blue',
+        // color: 'blue',
+        color: '#4A90E2', // Light blue
+        fontSize: 16,
     },
     exhibitionsScrollView: {
-        marginBottom: 20,
+        marginBottom: 10,
     },
 });
 

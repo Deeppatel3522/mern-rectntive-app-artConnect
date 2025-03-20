@@ -25,14 +25,14 @@ const ExhibitionCard = ({ event, navigation }) => {
                 <View style={styles.header}>
                     <Text style={styles.title} numberOfLines={1}>{event.name}</Text>
                     <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>
-                        <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "black"}`} />
+                        <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "lightgrey"}`} />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.description} numberOfLines={2}>{event.description}</Text>
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.viewMoreButton}>
-                        <Text style={styles.viewMoreText}>${event.price}</Text>
-                    </TouchableOpacity>
+                    <View style={styles.priceTag}>
+                        <Text style={styles.priceTagText}>${event.price}</Text>
+                    </View>
                     {/* <TouchableOpacity style={styles.addToCartButton}>
                         <Text style={styles.addToCartText}>Book Ticket</Text>
                     </TouchableOpacity> */}
@@ -44,25 +44,22 @@ const ExhibitionCard = ({ event, navigation }) => {
 
 const styles = StyleSheet.create({
     exhibitionCard: {
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 15,
         flexDirection: 'row',
         padding: 10,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
     },
     exhibitionImage: {
         width: 80,
         height: 80,
         borderRadius: 10,
         marginRight: 10,
-        backgroundColor: '#eee',
+        // backgroundColor: '#eee',
+        backgroundColor: '#334155',
     },
     details: {
         flex: 1,
@@ -77,12 +74,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         width: '75%',
         fontWeight: 'bold',
-        color: '#333',
+        // color: '#333',
+        color: '#f9fafb',
     },
     description: {
         fontSize: 12,
         width: '75%',
-        color: 'gray',
+        // color: 'gray',
+        color: '#cbd5e1',
         marginBottom: 5,
     },
     footer: {
@@ -90,19 +89,22 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    viewMoreButton: {
+    priceTag: {
         paddingVertical: 6,
         paddingHorizontal: 10,
         borderRadius: 5,
-        backgroundColor: '#f0f0f0',
+        // backgroundColor: '#f0f0f0',
+        backgroundColor: '#334155',
         fontSize: 12
     },
-    viewMoreText: {
-        color: 'blue',
+    priceTagText: {
+        // color: 'blue',
+        color: '#60a5fa',
         fontSize: 12,
     },
     addToCartButton: {
-        backgroundColor: 'red',
+        // backgroundColor: 'red',
+        backgroundColor: '#FF6B6B',
         paddingVertical: 6,
         paddingHorizontal: 10,
         borderRadius: 5,
