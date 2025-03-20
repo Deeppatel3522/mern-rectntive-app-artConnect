@@ -34,7 +34,7 @@ jobs:
     - name: Build the app (Production)
       run: |
         cd ArtConnect/client
-        eas build --platform android --profile production --type app-bundle  # Use app-bundle to generate AAB
+        eas build --platform android --profile production
 
     # - name: Install Firebase CLI
     #   run: npm install -g firebase-tools
