@@ -42,8 +42,8 @@ jobs:
     - name: Authenticate Firebase CLI using Firebase Token
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      run: firebase login:ci --token ${{ secrets.FIREBASE_TOKEN }}
-
+      run: firebase auth:import --token ${{ secrets.FIREBASE_TOKEN }}
+      
     # - name: Upload to Firebase App Distribution
     #   run: |
     #     firebase appdistribution:distribute ArtConnect/client/app.aab \
