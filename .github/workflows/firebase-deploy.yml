@@ -31,17 +31,20 @@ jobs:
     - name: Authenticate with Expo using Token
       run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-    - name: Build the app (Production)
-      run: |
-        cd ArtConnect/client
-        eas build --platform android --profile production
+    # - name: Build the app (Production)
+    #   run: |
+    #     cd ArtConnect/client
+    #     eas build --platform android --profile production
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
 
-    - name: Upload to Firebase App Distribution
-      run: |
-        firebase appdistribution:distribute ArtConnect/client/app.aab \
-          --app ${{ secrets.FIREBASE_APP_ID }} \
-          --groups beta-tester \
-          --release-notes "New automated build from GitHub Actions 🚀"
+    - name: Authenticate Firebase CLI using Firebase Token
+      run: firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
+
+    # - name: Upload to Firebase App Distribution
+    #   run: |
+    #     firebase appdistribution:distribute ArtConnect/client/app.aab \
+    #       --app ${{ secrets.FIREBASE_APP_ID }} \
+    #       --groups beta-tester \
+    #       --release-notes "New automated build from GitHub Actions 🚀"
