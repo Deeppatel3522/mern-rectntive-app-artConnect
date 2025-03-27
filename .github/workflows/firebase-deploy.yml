@@ -1,4 +1,4 @@
-name: ArtConnect App Exo=po Build & Firebase App Distribution
+name: ArtConnect App Expo Build & Firebase App Distribution
 
 on:
   push:
@@ -42,17 +42,11 @@ jobs:
     # - name: Authenticate Firebase CLI using Firebase Token
     #   run: firebase auth:import --token ${{ secrets.FIREBASE_TOKEN }} --project <artconnect-mern-app>
       
-    # - name: Upload to Firebase App Distribution
-    #   run: |
-    #     firebase appdistribution:distribute ArtConnect/client/app.aab \
-    #       --app ${{ secrets.FIREBASE_APP_ID }} \
-    #       --groups beta-tester \
-    #       --release-notes "New automated build from GitHub Actions 🚀"
-
-     - name: Upload to Firebase App Distribution
-        run: |
-          firebase appdistribution:distribute ArtConnect/client/app.aab \
-            --app ${{ secrets.FIREBASE_APP_ID }} \
-            --groups beta-tester \
-            --release-notes "New automated build from GitHub Actions 🚀" \
-            --token ${{ env.FIREBASE_TOKEN }}
+    # Upload to Firebase App Distribution
+    - name: Upload to Firebase App Distribution
+      run: |
+        firebase appdistribution:distribute ArtConnect/client/app.aab \
+          --app ${{ secrets.FIREBASE_APP_ID }} \
+          --groups beta-tester \
+          --release-notes "New automated build from GitHub Actions 🚀" \
+          --token ${{ env.FIREBASE_TOKEN }}
