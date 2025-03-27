@@ -31,10 +31,10 @@ jobs:
     - name: Authenticate with Expo using Token
       run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-    # - name: Build the app (Production)
-    #   run: |
-    #     cd ArtConnect/client
-    #     eas build --platform android --profile production
+    - name: Build the app (Production)
+      run: |
+        cd ArtConnect/client
+        eas build --platform android --profile production
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
