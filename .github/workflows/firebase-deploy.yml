@@ -49,10 +49,10 @@ jobs:
     #       --groups beta-tester \
     #       --release-notes "New automated build from GitHub Actions 🚀"
 
-   - name: Upload to Firebase App Distribution
-      run: |
-        firebase appdistribution:distribute ArtConnect/client/app.aab \
-          --app ${{ secrets.FIREBASE_APP_ID }} \
-          --groups beta-tester \
-          --release-notes "New automated build from GitHub Actions 🚀" \
-          --token ${{ env.FIREBASE_TOKEN }}
+     - name: Upload to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute ArtConnect/client/app.aab \
+            --app ${{ secrets.FIREBASE_APP_ID }} \
+            --groups beta-tester \
+            --release-notes "New automated build from GitHub Actions 🚀" \
+            --token ${{ env.FIREBASE_TOKEN }}
