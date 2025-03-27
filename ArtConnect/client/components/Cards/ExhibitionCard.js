@@ -33,9 +33,6 @@ const ExhibitionCard = ({ event, navigation }) => {
                     <View style={styles.priceTag}>
                         <Text style={styles.priceTagText}>${event.price}</Text>
                     </View>
-                    {/* <TouchableOpacity style={styles.addToCartButton}>
-                        <Text style={styles.addToCartText}>Book Ticket</Text>
-                    </TouchableOpacity> */}
                 </View>
             </View>
         </TouchableOpacity>
@@ -44,7 +41,6 @@ const ExhibitionCard = ({ event, navigation }) => {
 
 const styles = StyleSheet.create({
     exhibitionCard: {
-        // backgroundColor: 'white',
         backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 10,
         overflow: 'hidden',
@@ -60,6 +56,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         // backgroundColor: '#eee',
         backgroundColor: '#334155',
+        borderColor: 'gray',
+        borderWidth: 1
     },
     details: {
         flex: 1,
@@ -74,7 +72,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         width: '75%',
         fontWeight: 'bold',
-        // color: '#333',
         color: '#f9fafb',
     },
     description: {
@@ -88,9 +85,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginVertical: 2
     },
     priceTag: {
-        paddingVertical: 6,
+        paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 5,
         // backgroundColor: '#f0f0f0',
@@ -98,22 +96,8 @@ const styles = StyleSheet.create({
         fontSize: 12
     },
     priceTagText: {
-        // color: 'blue',
-        color: '#60a5fa',
-        fontSize: 12,
-    },
-    addToCartButton: {
-        // backgroundColor: 'red',
-        backgroundColor: '#FF6B6B',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    addToCartText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 12,
+        color: '#cbd5e1',
+        fontSize: 14,
     },
     heartIcon: {
         position: 'absolute',

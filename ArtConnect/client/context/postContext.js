@@ -121,6 +121,16 @@ const PostProvider = ({ children }) => {
     }, [authLoading])
 
     useEffect(() => {
+        if (!authLoading && state?.user) {
+            const getAllPostsByUser = async () => {
+                await getAllArtsByUser( state?.user?._id)
+                await getAllEventsByUser( state?.user?._id)
+            }
+            getAllPostsByUser()
+        }
+    }, [authLoading])
+
+    useEffect(() => {
         setLoading(true)
         console.log("Total Arts: ", arts.length);
         console.log("Total Evetns: ", events.length);

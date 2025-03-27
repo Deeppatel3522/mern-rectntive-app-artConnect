@@ -141,7 +141,7 @@ const EventForm = ({ closeModal }) => {
                         <Text style={styles.dateTimeButtonText}>Select Time</Text>
                     </TouchableOpacity>
                 </View>
-                {showDatePicker && <DateTimePicker value={date} mode="date" display="default" onChange={onChangeDate} minimumDate={new Date() } />}
+                {showDatePicker && <DateTimePicker value={date} mode="date" display="default" onChange={onChangeDate} minimumDate={new Date()} />}
                 {showTimePicker && <DateTimePicker value={date} mode="time" display="default" onChange={onChangeTime} />}
 
                 <Text style={styles.selectedDateTime}>Date: {date.toLocaleString()}</Text>
@@ -151,10 +151,13 @@ const EventForm = ({ closeModal }) => {
                     <Ionicons name="create-outline" size={24} color="#4A90E2" style={styles.icon} />
                     <TextInput
                         placeholder="Description"
+                        placeholderTextColor="gray"
+                        editable
+                        multiline
+                        numberOfLines={4}
                         value={description}
                         onChangeText={setDescription}
                         style={[styles.input, styles.multilineInput]}
-                        multiline
                     />
                 </View>
 
@@ -165,9 +168,22 @@ const EventForm = ({ closeModal }) => {
 
                 <View style={styles.imageContainer}>
 
-                    {images.map((img, index) => (
-                        <Image key={index} source={{ uri: img }} style={styles.image} />
-                    ))}
+                    {images.length > 0 ? (
+                        images.map((img, index) => (
+                            <Image key={index} source={{ uri: img }} style={styles.image} />
+                        ))
+                    ) : (
+
+                        <Text style={{
+                            fontSize: 16,
+                            color: '#888',
+                            textAlign: 'center',
+                            marginVertical: 20,
+                        }}>
+                            There are no images
+                        </Text>
+
+                    )}
                 </View>
             </ScrollView>
 
@@ -188,6 +204,7 @@ const EventForm = ({ closeModal }) => {
                 <Ionicons name={iconName} size={24} color="#4A90E2" style={styles.icon} />
                 <TextInput
                     placeholder={placeholder}
+                    placeholderTextColor="gray"
                     value={value}
                     onChangeText={onChangeText}
                     style={styles.input}
@@ -201,7 +218,7 @@ const EventForm = ({ closeModal }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#121212',
         padding: 20,
         borderRadius: 15,
         width: '100%',
@@ -217,28 +234,23 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 10,
         marginBottom: 15,
         paddingHorizontal: 15,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
     },
     pickerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 10,
         marginBottom: 15,
         paddingHorizontal: 15,
-        elevation: 2,
     },
     picker: {
         flex: 1,
-        height: 50,
+        height: 55,
+        color: '#cbd5e1',
     },
     dateTimeContainer: {
         flexDirection: 'row',
@@ -266,14 +278,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 8,
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
     icon: {
         marginRight: 10,
@@ -282,7 +289,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 50,
         fontSize: 16,
-        color: '#333',
+        color: '#cbd5e1',
     },
     multilineInput: {
         height: 100,

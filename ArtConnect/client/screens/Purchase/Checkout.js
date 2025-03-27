@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, Modal, Button, Alert, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { useStripe } from '@stripe/stripe-react-native';
 import axios from 'axios';
@@ -69,7 +69,7 @@ const Checkout = ({ route, navigation }) => {
 
 
         if (!error) {
-            setLoading(true);
+            setLoading(false);
         } else {
             console.log('Error initializing payment sheet:', error);
         }
@@ -154,20 +154,23 @@ const Checkout = ({ route, navigation }) => {
                 <Text style={styles.text}>Item Purchase Date: {orderToPlace.date}</Text>
             </View>
 
-            <Button
+            {/* <Button
                 title={loading ? "Processing..." : "Checkout"}
                 onPress={openPaymentSheet}
                 disabled={loading}
-            />
+            /> */}
+            <TouchableOpacity style={styles.purchaseButton} onPress={openPaymentSheet}>
+                <Text style={styles.purchaseButtonText}>{loading ? "Processing..." : "Checkout"}</Text>
+            </TouchableOpacity>
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
+        flex: 1,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#121212',
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
@@ -176,37 +179,52 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
+        color: '#f9fafb',
     },
     section: {
         width: '100%',
         marginBottom: 20,
         padding: 15,
         borderRadius: 8,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
     },
     sectionTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#f9fafb',
     },
     text: {
         fontSize: 16,
         lineHeight: 24,
+        color: '#cbd5e1',
     },
-    button: {
-        backgroundColor: '#007bff',
-        color: '#fff',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
+    // button: {
+    //     backgroundColor: '#007bff',
+    //     paddingVertical: 12,
+    //     paddingHorizontal: 20,
+    //     borderRadius: 5,
+    //     fontSize: 18,
+    //     fontWeight: 'bold',
+    //     textAlign: 'center',
+    //     marginTop: 20,
+    // },
+    purchaseButton: {
+        backgroundColor: "#4A90E2",
+        padding: 15,
+        width: '100%',
+        borderRadius: 10,
         marginTop: 20,
+        alignItems: 'center',
     },
-    disabledButton: {
-        backgroundColor: '#ccc',
+    purchaseButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
+    // disabledButton: {
+    //     backgroundColor: '#ccc',
+    // },
 });
 
 export default Checkout

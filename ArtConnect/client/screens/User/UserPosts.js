@@ -28,8 +28,14 @@ const UserPosts = ({ navigation }) => {
         const eventsWithType = myEvents.map(event => ({ ...event, type: 'event' }));
 
         // Merge the arrays
-        let mergedArray = [...artsWithType, ...eventsWithType];
-        setPosts(mergedArray)
+        let combinedFavorites = [...artsWithType, ...eventsWithType];
+
+        // Fisher-Yates Shuffle Algorithm
+        for (let i = combinedFavorites.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [combinedFavorites[i], combinedFavorites[j]] = [combinedFavorites[j], combinedFavorites[i]];
+        }
+        setPosts(combinedFavorites)
     }
 
     const onRefresh = useCallback(async () => {
@@ -67,9 +73,7 @@ const UserPosts = ({ navigation }) => {
                     )}
 
                 </ScrollView>
-                <View style={styles.footer}>
-                    <FooterMenu />
-                </View>
+                <FooterMenu />
             </View>
         </SafeAreaView>
     );
@@ -78,24 +82,23 @@ const UserPosts = ({ navigation }) => {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#121212',
     },
     container: {
         flex: 1,
     },
     scrollViewStyle: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#121212',
         padding: 15,
         paddingBottom: 25,
-        marginBottom: 60
     },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 15,
-        color: '#333',
+        color: '#fff',
     },
     emptyContainer: {
         alignItems: 'center',
@@ -106,20 +109,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#777',
         textAlign: 'center',
-    },
-    footer: {
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#ffffff',
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        height: 60,
-    },
+    }
 });
 export default UserPosts

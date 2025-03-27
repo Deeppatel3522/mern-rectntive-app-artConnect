@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(false)
     const [requiredUser, setRequiredUser] = useState(null)
+    const [userFollowings, setUserFollowings] = useState([])
 
 
     // initial local storage data
@@ -59,6 +60,19 @@ const AuthProvider = ({ children }) => {
         }
     }
 
+    const fetchUserFollowings = async (userId) => {
+        try {
+            setLoading(true)
+            const { data } = await axios.get(`/auth/fetch-user-followings/${userId}`);
+            setLoading(false);
+            return {followings: data.followings};
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            return error
+        }
+    }
+
     const refreshUser = async () => {
         try {
             console.log("User refreshing...");
@@ -82,7 +96,7 @@ const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ loading, state, setState, requiredUser, fetchUser, refreshUser, fetchUserFavorites }}>
+        <AuthContext.Provider value={{ loading, state, setState, requiredUser, fetchUser, refreshUser, fetchUserFavorites, fetchUserFollowings }}>
             {children}
         </AuthContext.Provider>
     )

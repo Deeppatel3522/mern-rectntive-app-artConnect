@@ -75,9 +75,7 @@ const Favorites = ({ navigation }) => {
                         )
                     )}
                 </ScrollView>
-                <View style={styles.footer}>
-                    <FooterMenu />
-                </View>
+                <FooterMenu />
             </View>
         </SafeAreaView>
     );
@@ -86,24 +84,23 @@ const Favorites = ({ navigation }) => {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#121212',
     },
     container: {
         flex: 1,
     },
     scrollViewStyle: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#121212',
         padding: 15,
         paddingBottom: 25,
-        marginBottom: 60
     },
     header: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 15,
-        color: '#333',
+        color: '#fff',
     },
     emptyContainer: {
         alignItems: 'center',
@@ -121,13 +118,13 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#ffffff',
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        height: 60,
+        // backgroundColor: '#ffffff',
+        // elevation: 10,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: -2 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 2,
+        // height: 60,
     },
 });
 

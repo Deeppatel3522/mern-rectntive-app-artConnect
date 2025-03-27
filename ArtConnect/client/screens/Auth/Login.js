@@ -30,6 +30,12 @@ const Login = ({ navigation }) => {
         setLoading(false);
         return;
       }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Alert.alert("Error", "Please enter a valid email address");
+        setLoading(false);
+        return;
+      }
       const { data } = await axios.post('/auth/login', { email, password });
       setState(data);
       await AsyncStorage.setItem('@auth', JSON.stringify(data));

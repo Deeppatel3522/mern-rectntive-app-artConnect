@@ -13,10 +13,10 @@ const PurcahseCard = ({ item }) => {
             <View style={styles.details}>
                 <View style={styles.header}>
                     <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
-                    <Text style={styles.title} numberOfLines={1}>{item.artistID}</Text>
+                    <Text style={styles.artistStyle} numberOfLines={1}>{item.artistID}</Text>
                 </View>
-                <View style={styles.footer}>
-                    <Text style={styles.viewMoreText}>${item.price}</Text>
+                <View style={styles.priceContainer}>
+                    <Text style={styles.priceTag}>${item.price}</Text>
                 </View>
             </View>
         </View>
@@ -25,18 +25,14 @@ const PurcahseCard = ({ item }) => {
 
 const styles = StyleSheet.create({
     exhibitionCard: {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 15,
         flexDirection: 'row',
         padding: 10,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
+
     },
     exhibitionImage: {
         width: 80,
@@ -44,6 +40,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginRight: 10,
         backgroundColor: '#eee',
+        borderColor: 'rgba(100, 100, 100, 0.25)',
+        borderWidth: 1
     },
     details: {
         padding: 10,
@@ -53,54 +51,28 @@ const styles = StyleSheet.create({
     },
     header: {
         alignContent: 'center',
-        marginBottom: 5,
+        width: '60%',
     },
     title: {
         fontSize: 16,
-        width: '75%',
         fontWeight: 'bold',
-        color: '#333',
+        color: '#f9fafb',
     },
-    description: {
-        fontSize: 12,
-        width: '75%',
-        color: 'gray',
-        marginBottom: 5,
+    artistStyle: {
+        color: '#cbd5e1',
+        marginTop: 5,
+        fontSize: 14,
     },
-    footer: {
+    priceContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    viewMoreButton: {
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        backgroundColor: '#f0f0f0',
-        fontSize: 12
-    },
-    viewMoreText: {
-        color: 'blue',
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    addToCartButton: {
-        backgroundColor: 'red',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    addToCartText: {
-        color: 'white',
+    priceTag: {
+        fontSize: 18,
         fontWeight: 'bold',
-        fontSize: 12,
+        color: '#4caf50',
     },
-    heartIcon: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    }
 });
 
 export default PurcahseCard;

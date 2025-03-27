@@ -20,11 +20,11 @@ const EventCard = ({ event, navigation }) => {
             <View style={styles.details}>
                 <Text style={styles.title} numberOfLines={1}>{event.name}</Text>
                 <View style={styles.infoRow}>
-                    <Ionicons name="calendar-outline" size={16} color="#666" />
+                    <Ionicons name="calendar-outline" size={16} color="#cbd5e1" />
                     <Text style={styles.date}>{formatDate(event.date)}</Text>
                 </View>
                 <View style={styles.infoRow}>
-                    <Ionicons name="location-outline" size={16} color="#666" />
+                    <Ionicons name="location-outline" size={16} color="#cbd5e1" />
                     <Text style={styles.location} numberOfLines={1}>{event.location}</Text>
                 </View>
                 <View style={styles.footer}>
@@ -42,15 +42,10 @@ const EventCard = ({ event, navigation }) => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#ffffff',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 15,
         marginBottom: 20,
         overflow: 'hidden',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
     },
     image: {
         width: '100%',
@@ -77,7 +72,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
-        color: '#333',
+        color: '#f9fafb',
     },
     infoRow: {
         flexDirection: 'row',
@@ -86,12 +81,12 @@ const styles = StyleSheet.create({
     },
     date: {
         marginLeft: 5,
-        color: '#666',
+        color: '#cbd5e1',
         fontSize: 14,
     },
     location: {
         marginLeft: 5,
-        color: '#666',
+        color: '#cbd5e1',
         fontSize: 14,
         flex: 1,
     },

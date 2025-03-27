@@ -166,7 +166,7 @@ const updateUserController = async (req, res) => {
 
         res.status(200).send({
             success: true,
-            message: 'Profile updated, Please Login',
+            message: 'Profile updated!',
             updatedUser
         })
     } catch (error) {
@@ -372,9 +372,6 @@ const fetchUserController = async (req, res) => {
 const fetchUserFavoriteController = async (req, res) => {
     try {
         const { userId } = req.params
-        console.log("Chcecking favorites for : ", userId);
-
-
         const user = await userModel.findById(userId)
 
         if (!user) {
@@ -403,9 +400,6 @@ const fetchUserFavoriteController = async (req, res) => {
             }
         }
 
-        console.log("User's Art Favorites: ", arts.length);
-        console.log("User's Event Favorites: ", events.length);
-
         return res.status(200).send({
             success: true,
             message: 'Favorites fetched successfully!',
@@ -422,4 +416,38 @@ const fetchUserFavoriteController = async (req, res) => {
     }
 }
 
-module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController, fetchUserFavoriteController }
+// GET USER FOLLOWINGS
+const fetchUserFollowingsController = async (req, res) => {
+    try {
+        const { userId } = req.params
+        console.log("Chcecking Followings for : ", userId);
+
+        const user = await userModel.findById(userId)
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'User not found!',
+            });
+        }
+
+        const followings = user.following
+
+        console.log("User's Followings: ", followings.length);
+
+        return res.status(200).send({
+            success: true,
+            message: 'Following fetched successfully!',
+            followings
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: 'Error in GET-FOLLOWINGS API',
+            error,
+        })
+    }
+}
+
+module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController, fetchUserFavoriteController, fetchUserFollowingsController }

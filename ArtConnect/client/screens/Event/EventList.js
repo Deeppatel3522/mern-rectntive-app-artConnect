@@ -72,9 +72,7 @@ const EventList = ({ navigation }) => {
           </View>
         </Modal>
 
-        <View style={styles.footer}>
           <FooterMenu />
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -83,7 +81,7 @@ const EventList = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#121212',
   },
   container: {
     flex: 1,
@@ -117,20 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  footer: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#ffffff',
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    height: 60,
-  },
+  
 });
 
 export default EventList;

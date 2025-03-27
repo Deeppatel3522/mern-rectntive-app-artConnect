@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
         height: '90%',
         borderRadius: 15,
         resizeMode: 'cover',
+        borderWidth: 1,
+        borderColor: 'grey',
     },
     heartIcon: {
         position: 'absolute',
@@ -91,7 +93,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 5,
-        // backgroundColor: 'white',
         backgroundColor: 'rgba(60, 60, 60, 1)',
         borderRadius: 15,
     },

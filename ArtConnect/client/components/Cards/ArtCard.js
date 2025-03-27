@@ -47,19 +47,16 @@ const ArtCard = ({ art, navigation }) => {
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: '#ffffff',
+        backgroundColor: 'rgba(100, 100, 100, 0.25)',
         borderRadius: 15,
         flexDirection: 'row',
         marginBottom: 20,
         overflow: 'hidden',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
     },
     artImage: {
         width: 120,
         height: 120,
+        backgroundColor: '#334155',
     },
     infoContainer: {
         flex: 1,
@@ -70,10 +67,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 4,
+        color: '#f9fafb',
     },
     artistName: {
         fontSize: 14,
-        color: '#666',
+        color: '#cbd5e1',
         marginBottom: 8,
     },
     priceContainer: {
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
     availabilityText: {
         marginLeft: 4,
         fontSize: 12,
-        color: '#666',
+        color: '#cbd5e1',
     },
 });
 
