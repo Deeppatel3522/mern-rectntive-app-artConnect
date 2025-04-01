@@ -11,12 +11,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '22.13.0'
+        node-version: '20.13.0' # Using a stable LTS version
 
     - name: Install dependencies
       run: |
@@ -26,26 +26,42 @@ jobs:
         npm install
 
     - name: Install EAS CLI
-      run: npm install -g eas-cli  # Install EAS CLI
+      run: npm install -g eas-cli
 
-    - name: Authenticate with Expo using Token
-      run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+    - name: Authenticate with Expo
+      env:
+        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      run: eas login --non-interactive
 
     - name: Build the app (Production)
+      working-directory: ArtConnect/client
+      env:
+        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       run: |
-        cd ArtConnect/client
-        eas build --platform android --profile production --output ../app.aab
+        # Build the app and output JSON with artifact details
+        eas build --platform android --profile production --non-interactive --json > build-output.json
+        # Extract the artifact URL
+        ARTIFACT_URL=$(cat build-output.json | jq -r '.artifacts.buildUrl')
+        if [ -z "$ARTIFACT_URL" ]; then
+          echo "Error: No artifact URL found in build output"
+          cat build-output.json
+          exit 1
+        fi
+        echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
+
+    - name: Download the .aab file
+      run: |
+        # Download the .aab file from the artifact URL
+        curl -L -o app.aab "$ARTIFACT_URL"
+        # Verify the file exists
+        ls -lh app.aab
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
 
-    # - name: Authenticate Firebase CLI using Firebase Token
-    #   run: firebase auth:import --token ${{ secrets.FIREBASE_TOKEN }} --project <artconnect-mern-app>
-      
-    # Upload to Firebase App Distribution
     - name: Upload to Firebase App Distribution
       run: |
-        firebase appdistribution:distribute ArtConnect/client/app.aab \
+        firebase appdistribution:distribute app.aab \
           --app ${{ secrets.FIREBASE_APP_ID }} \
           --groups beta-tester \
           --release-notes "New automated build from GitHub Actions 🚀" \
