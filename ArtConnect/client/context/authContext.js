@@ -33,6 +33,12 @@ const AuthProvider = ({ children }) => {
 
     }, [])
 
+    useEffect(() => {
+        if (state?.user) {
+            fetchUserFollowings(state?.user?._id)
+        }
+    }, [state])
+
     // get user
     const fetchUser = async (userId) => {
         try {
@@ -65,7 +71,7 @@ const AuthProvider = ({ children }) => {
             setLoading(true)
             const { data } = await axios.get(`/auth/fetch-user-followings/${userId}`);
             setLoading(false);
-            return {followings: data.followings};
+            return { followings: data.followings };
         } catch (error) {
             console.log(error);
             setLoading(false);

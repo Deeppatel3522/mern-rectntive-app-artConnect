@@ -7,10 +7,11 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FooteMenu from '@/components/Menus/FooteMenu';
 import FooterMenu from '@/components/Menus/FooteMenu';
+import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus';
 
 const Profile = ({ navigation }) => {
   // Global state
-  const { state, setState, fetchUserFollowings } = useContext(AuthContext);
+  const { state, setState, fetchUserFollowings, refreshUser } = useContext(AuthContext);
   // extract values from "state"
   const { user, token } = state;
 
@@ -22,6 +23,7 @@ const Profile = ({ navigation }) => {
   const [type, setType] = useState(user?.type);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [followingModalVisible, setFollowingModalVisible] = useState(false);
   const [userFollowings, setUserFollowings] = useState([])
 
   // UPDATE Profile
@@ -134,15 +136,28 @@ const Profile = ({ navigation }) => {
     alert('Logout Successfully');
   };
 
+  // handleFollowing toggle
+  const handleFollow = async (currentUserId, userID) => {
+    try {
+      console.log(toggleFollowStatus);
+      await toggleFollowStatus({ CurrentUserId: currentUserId, userId: userID });
+      console.log("Follow status updated successfully!");
+      await getlUserFollowings()
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+    }
+  };
+
   // Followings
   const getlUserFollowings = async () => {
     const { followings } = await fetchUserFollowings(state?.user?._id)
     setUserFollowings(followings)
-    // console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
+    console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
   }
 
   useEffect(() => {
     getlUserFollowings()
+    console.log(`Total number of User followings: ${userFollowings.length ? userFollowings.length : 0}`,);
   }, [])
 
   //   return (
@@ -314,9 +329,15 @@ const Profile = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>{user?.name}'s Profile</Text>
-        <Image source={{ uri: user?.image }} style={styles.profileImage} />
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: user?.image }} style={styles.profileImage} />
+          <TouchableOpacity style={styles.cameraButton} onPress={selectImage}>
+            <FontAwesome5 name='camera' style={styles.cameraIcon} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.infoText}>Email: {user?.email}</Text>
         <Text style={styles.infoText}>Type: {user?.type}</Text>
+        <Text style={styles.title}>Following: {userFollowings.length}</Text>
         {/* <Text style={styles.infoText}>Followings: {`${userFollowings.length}`}</Text> */}
 
         <View style={styles.buttonContainer}>
@@ -326,7 +347,7 @@ const Profile = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
             <Text style={styles.buttonText}>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={getlUserFollowings}>
+          <TouchableOpacity style={styles.button} onPress={() => setFollowingModalVisible(true)}>
             <Text style={styles.buttonText}>Followings</Text>
           </TouchableOpacity>
           {user?.type === 'Artist' && (
@@ -360,6 +381,32 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+      {/* Following List Modal */}
+      <Modal animationType="slide" transparent={true} visible={followingModalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Following</Text>
+
+            {/* Map through userFollowings */}
+            {userFollowings.length > 0 ? (
+              userFollowings.map((user, index) => (
+                <View style={{ flexDirection: 'row', gap: 20, borderWidth: 1, alignItems: 'center', padding: 5, marginBottom: 5 }}>
+                  <Text key={index} >{user}</Text>
+                  <TouchableOpacity style={{ padding: 5, backgroundColor: 'tomato', width: 80, justifyContent: 'center', alignItems: 'center', borderRadius: 5 }} onPress={() => { handleFollow(state.user._id, user) }}>
+                    <Text style={styles.buttonText}>Following</Text>
+                  </TouchableOpacity>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noFollowingsText}>No followings yet.</Text>
+            )}
+            <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setFollowingModalVisible(false)}>
+              <Text style={styles.buttonText}>close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -373,7 +420,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20
   },
-
+  imageContainer: {
+    position: 'relative',
+    marginBottom: 20,
+  },
+  cameraButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'rgba(100,100,100, 0.8)',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 5,
+  },
+  cameraIcon: {
+    fontSize: 20,
+    color: 'rgba(200,200,200, 0.9)',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
