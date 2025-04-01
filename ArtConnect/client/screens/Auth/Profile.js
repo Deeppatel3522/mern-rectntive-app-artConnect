@@ -17,23 +17,43 @@ const Profile = ({ navigation }) => {
 
   // Local states
   const [name, setName] = useState(user?.name);
-  const [password, setPassword] = useState(user?.password);
+  const [password, setPassword] = useState();
+  const [currentPassword, setCurrentPassword] = useState();
   const [email] = useState(user?.email);
   const [image, setImage] = useState(user?.image);
   const [type, setType] = useState(user?.type);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [followingModalVisible, setFollowingModalVisible] = useState(false);
+  const [updatePasswordModalVisible, setUpdatePasswordModalVisible] = useState(false);
   const [userFollowings, setUserFollowings] = useState([])
 
   // UPDATE Profile
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.put('/auth/update-user', { name, password, email, type });
+      const { data } = await axios.put('/auth/update-user', { name, email, type });
       setLoading(false);
       setState({ ...state, user: data?.updatedUser });
       alert(data && data.message);
+      setModalVisible(false);
+    } catch (error) {
+      alert(error.response.data.message);
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const handlePasswordUpdate = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.put('/auth/update-user-password', { password, currentPassword, email });
+      setLoading(false);
+      setState({ ...state, user: data?.updatedUser });
+      alert(data && data.message);
+      setCurrentPassword("")
+      setPassword("")
+      setUpdatePasswordModalVisible(false);
     } catch (error) {
       alert(error.response.data.message);
       setLoading(false);
@@ -347,6 +367,9 @@ const Profile = ({ navigation }) => {
           <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
             <Text style={styles.buttonText}>Update Profile</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => setUpdatePasswordModalVisible(true)}>
+            <Text style={styles.buttonText}>Update Password</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setFollowingModalVisible(true)}>
             <Text style={styles.buttonText}>Followings</Text>
           </TouchableOpacity>
@@ -365,7 +388,6 @@ const Profile = ({ navigation }) => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Update Profile</Text>
             <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Name" />
-            <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="New Password" secureTextEntry />
             <Picker selectedValue={type} onValueChange={setType} style={styles.picker}>
               <Picker.Item label="User" value="User" />
               <Picker.Item label="Artist" value="Artist" />
@@ -375,6 +397,25 @@ const Profile = ({ navigation }) => {
                 <Text style={styles.buttonText}>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Password update Modal */}
+      <Modal animationType="slide" transparent={true} visible={updatePasswordModalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Update Password</Text>
+            <TextInput style={styles.input} value={currentPassword} onChangeText={setCurrentPassword} placeholder="Current Password" secureTextEntry />
+            <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="New Password" secureTextEntry />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.modalButton} onPress={handlePasswordUpdate}>
+                <Text style={styles.buttonText}>Update</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setUpdatePasswordModalVisible(false)}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
             </View>

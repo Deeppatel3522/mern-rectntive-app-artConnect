@@ -132,20 +132,37 @@ const loginController = async (req, res) => {
     }
 }
 
-// UPDATE USER (name || password)
+// UPDATE USER (name || type)
 const updateUserController = async (req, res) => {
     try {
-        const { name, password, email, type } = req.body
+        const { name, email, type } = req.body
         // user find
         const user = await userModel.findOne({ email })
-        // password validate
-        if (password && password.length < 6) {
-            return res.status(400).send({
+
+        if (!user) {
+            return res.status(404).send({
                 success: false,
-                message: 'Password is required and must be 6 cahracters'
+                message: 'Profile not found!',
             })
         }
-        const hashedPassword = password ? await hashPassword(password) : undefined
+        // // password validate
+        // if (password && password.length < 6) {
+        //     return res.status(400).send({
+        //         success: false,
+        //         message: 'Password is required and must be 6 cahracters'
+        //     })
+        // }
+
+        // // Compare current password with stored hashed password
+        // const isMatch = await comparePassword(currentPassword, user.password);
+        // if (!isMatch) {
+        //     return res.status(400).send({
+        //         success: false,
+        //         message: "Current password is incorrect",
+        //     });
+        // }
+
+        // const hashedPassword = await hashPassword(password);
 
         // type validate 
         if (type && !['Artist', 'User'].includes(type)) {
@@ -158,7 +175,7 @@ const updateUserController = async (req, res) => {
         // updated user
         const updatedUser = await userModel.findOneAndUpdate({ email }, {
             name: name || user.name,
-            password: hashedPassword || user.password,
+            password: user.password,
             type: type || user.type
         }, { new: true })
 
@@ -174,6 +191,62 @@ const updateUserController = async (req, res) => {
         res.status(500).send({
             success: false,
             message: 'Error in User update API',
+            error
+        })
+    }
+}
+
+//UPDATE USER password
+const updateUserPasswordController = async (req, res) => {
+    try {
+        const { password, currentPassword, email } = req.body
+        // user find
+        const user = await userModel.findOne({ email })
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'Profile not found!',
+            })
+        }
+        // password validate
+        if (password && password.length < 6) {
+            return res.status(400).send({
+                success: false,
+                message: 'Password is required and must be 6 cahracters'
+            })
+        }
+
+        // Compare current password with stored hashed password
+        const isMatch = await comparePassword(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).send({
+                success: false,
+                message: "Current password is incorrect",
+            });
+        }
+
+        const hashedPassword = await hashPassword(password);
+
+        // updated user
+        const updatedUser = await userModel.findOneAndUpdate({ email }, {
+            name: user.name,
+            password: hashedPassword || user.password,
+            type: user.type
+        }, { new: true })
+
+        updatedUser.password = undefined;
+
+        res.status(200).send({
+            success: true,
+            message: 'Profile updated!',
+            updatedUser
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            message: 'Error in Password update API',
             error
         })
     }
@@ -450,4 +523,4 @@ const fetchUserFollowingsController = async (req, res) => {
     }
 }
 
-module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController, fetchUserFavoriteController, fetchUserFollowingsController }
+module.exports = { requireSignIn, registerController, loginController, updateUserController, updateUserPasswordController, updateUserFavoriteListController, updateUserProfileController, updateUserFollowingListController, fetchUserController, fetchUserFavoriteController, fetchUserFollowingsController }
