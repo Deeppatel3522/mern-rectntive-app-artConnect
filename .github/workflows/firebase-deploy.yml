@@ -34,22 +34,30 @@ jobs:
     - name: Build the app (Production)
       working-directory: ArtConnect/client
       run: |
-        # Build the app and output JSON with artifact details
-        eas build --platform android --profile production --non-interactive --json > build-output.json
-        # Extract the artifact URL
-        ARTIFACT_URL=$(cat build-output.json | jq -r '.artifacts.buildUrl')
+        # Start the build and get the build ID
+        BUILD_ID=$(eas build --platform android --profile production --non-interactive --auto-submit --json | jq -r '.[0].id')
+        if [ -z "$BUILD_ID" ]; then
+          echo "Error: No build ID found"
+          exit 1
+        fi
+        echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+        # Wait for build to complete and fetch artifact URL
+        echo "Waiting for build to complete..."
+        until eas build:view "$BUILD_ID" --json | jq -r '.status' | grep -q "finished"; do
+          echo "Build in progress..."
+          sleep 10
+        done
+        ARTIFACT_URL=$(eas build:view "$BUILD_ID" --json | jq -r '.artifacts.buildUrl')
         if [ -z "$ARTIFACT_URL" ]; then
-          echo "Error: No artifact URL found in build output"
-          cat build-output.json
+          echo "Error: No artifact URL found"
+          eas build:view "$BUILD_ID" --json
           exit 1
         fi
         echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
-
+        
     - name: Download the .aab file
       run: |
-        # Download the .aab file from the artifact URL
         curl -L -o app.aab "$ARTIFACT_URL"
-        # Verify the file exists
         ls -lh app.aab
 
     - name: Install Firebase CLI
