@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, SafeAreaView, Alert, Platform, Share, Modal } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Alert, Platform, Share, Modal } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AuthContext } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import FooteMenu from '@/components/Menus/FooteMenu';
 import FooterMenu from '@/components/Menus/FooteMenu';
 import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Profile = ({ navigation }) => {
   // Global state
@@ -44,6 +45,7 @@ const Profile = ({ navigation }) => {
     }
   };
 
+  // handle password update
   const handlePasswordUpdate = async () => {
     try {
       setLoading(true);
@@ -180,174 +182,10 @@ const Profile = ({ navigation }) => {
     console.log(`Total number of User followings: ${userFollowings.length ? userFollowings.length : 0}`,);
   }, [])
 
-  //   return (
-  //     <SafeAreaView style={styles.safeArea}>
-  //       <ScrollView style={styles.scrollView}>
-  //         <View style={styles.profileContainer}>
-  //           <Text style={styles.title}>{name}'s Profile</Text>
-  //           <View style={styles.imageContainer}>
-  //             <Image
-  //               source={{ uri: image || "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }}
-  //               style={styles.profileImage}
-  //             />
-  //             <TouchableOpacity style={styles.cameraButton} onPress={selectImage}>
-  //               <FontAwesome5 name='camera' style={styles.cameraIcon} />
-  //             </TouchableOpacity>
-  //           </View>
-
-  //           <View style={styles.inputContainer}>
-  //             <Text style={styles.label}>Name</Text>
-  //             <TextInput
-  //               style={styles.input}
-  //               value={name}
-  //               onChangeText={setName}
-  //               placeholder="Enter your name"
-  //             />
-  //           </View>
-
-  //           <View style={styles.inputContainer}>
-  //             <Text style={styles.label}>Email</Text>
-  //             <TextInput
-  //               style={styles.input}
-  //               value={email}
-  //               editable={false}
-  //             />
-  //           </View>
-
-  //           <View style={styles.inputContainer}>
-  //             <Text style={styles.label}>Password</Text>
-  //             <TextInput
-  //               style={styles.input}
-  //               value={password}
-  //               onChangeText={setPassword}
-  //               placeholder="Enter new password"
-  //               secureTextEntry
-  //             />
-  //           </View>
-
-  //           <View style={styles.inputContainer}>
-  //             <Text style={styles.label}>User Type</Text>
-  //             <Picker
-  //               selectedValue={type}
-  //               onValueChange={setType}
-  //               style={styles.picker}
-  //             >
-  //               <Picker.Item label="User" value="User" />
-  //               <Picker.Item label="Artist" value="Artist" />
-  //             </Picker>
-  //           </View>
-
-  //           <TouchableOpacity style={styles.updateButton} onPress={() => { navigation.navigate('Favorites') }} disabled={loading}>
-  //             {loading ? (
-  //               <ActivityIndicator color="#ffffff" />
-  //             ) : (
-  //               <Text style={styles.updateButtonText}>Favorites</Text>
-  //             )}
-  //           </TouchableOpacity>
-
-  //           <TouchableOpacity style={styles.updateButton} onPress={() => { navigation.navigate('UserPosts') }} disabled={loading}>
-  //             <Text style={styles.updateButtonText}>User Posts</Text>
-  //           </TouchableOpacity>
-
-  //           <TouchableOpacity style={styles.updateButton} onPress={handleUpdate} disabled={loading}>
-  //             {loading ? (
-  //               <ActivityIndicator color="#ffffff" />
-  //             ) : (
-  //               <Text style={styles.updateButtonText}>Update Profile</Text>
-  //             )}
-  //           </TouchableOpacity>
-
-  //           <TouchableOpacity style={styles.updateButton} onPress={logoutFunction}>
-  //             <Text style={styles.updateButtonText}>Log Out</Text>
-  //           </TouchableOpacity>
-
-  //         </View>
-  //       </ScrollView>
-  //         <FooteMenu />
-  //     </SafeAreaView>
-  //   );
-  // };
-
-  // const styles = StyleSheet.create({
-  //   safeArea: {
-  //     flex: 1,
-  //     backgroundColor: '#121212',
-  //   },
-  //   scrollView: {
-  //     flex: 1,
-  //   },
-  //   profileContainer: {
-  //     alignItems: 'center',
-  //     padding: 20,
-  //     paddingBottom: 100, // Add extra padding at the bottom to account for the footer
-  //   },
-  //   title: {
-  //     fontSize: 24,
-  //     fontWeight: 'bold',
-  //     marginBottom: 20,
-  //     color: '#f9fafb',
-  //   },
-  //   imageContainer: {
-  //     position: 'relative',
-  //     marginBottom: 20,
-  //   },
-  //   profileImage: {
-  //     width: 150,
-  //     height: 150,
-  //     borderRadius: 75,
-  //     borderWidth: 3,
-  //     borderColor: '#ffffff',
-  //   },
-  //   cameraButton: {
-  //     position: 'absolute',
-  //     bottom: 0,
-  //     right: 0,
-  //     backgroundColor: '#ffffff',
-  //     borderRadius: 20,
-  //     padding: 10,
-  //     elevation: 5,
-  //   },
-  //   cameraIcon: {
-  //     fontSize: 20,
-  //     color: '#333333',
-  //   },
-  //   inputContainer: {
-  //     width: '100%',
-  //     marginBottom: 15,
-  //   },
-  //   label: {
-  //     fontSize: 16,
-  //     marginBottom: 5,
-  //     color: '#f9fafb',
-  //   },
-  //   input: {
-  //     backgroundColor: '#ffffff',
-  //     paddingHorizontal: 15,
-  //     paddingVertical: 10,
-  //     borderRadius: 5,
-  //     fontSize: 16,
-  //   },
-  //   picker: {
-  //     backgroundColor: '#ffffff',
-  //     borderRadius: 5,
-  //   },
-  //   updateButton: {
-  //     backgroundColor: '#4a90e2',
-  //     paddingVertical: 12,
-  //     paddingHorizontal: 30,
-  //     borderRadius: 25,
-  //     marginTop: 20,
-  //   },
-  //   updateButtonText: {
-  //     color: '#ffffff',
-  //     fontSize: 18,
-  //     fontWeight: 'bold',
-  //   },
-  // });
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.semicircle} />
         <Text style={styles.title}>{user?.name}'s Profile</Text>
         <View style={styles.imageContainer}>
           <Image source={{ uri: user?.image }} style={styles.profileImage} />
@@ -355,29 +193,65 @@ const Profile = ({ navigation }) => {
             <FontAwesome5 name='camera' style={styles.cameraIcon} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.infoText}>Email: {user?.email}</Text>
-        <Text style={styles.infoText}>Type: {user?.type}</Text>
-        <Text style={styles.title}>Following: {userFollowings.length}</Text>
-        {/* <Text style={styles.infoText}>Followings: {`${userFollowings.length}`}</Text> */}
+        <Text style={styles.infoText}>{user?.email}</Text>
+        <Text style={styles.infoText}>{user?.type}</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Favorites')}>
-            <Text style={styles.buttonText}>Favorites</Text>
+
+          <TouchableOpacity
+            style={styles.detailRow}
+            onPress={() => navigation.navigate('Favorites')}
+          >
+            <FontAwesome5 name={"heart"} solid style={[styles.iconText, { color: '#FF4D6D' }]} />
+            <Text style={styles.infoText}>Favorites</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-            <Text style={styles.buttonText}>Update Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => setUpdatePasswordModalVisible(true)}>
-            <Text style={styles.buttonText}>Update Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => setFollowingModalVisible(true)}>
-            <Text style={styles.buttonText}>Followings</Text>
-          </TouchableOpacity>
+
           {user?.type === 'Artist' && (
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('UserPosts')}>
-              <Text style={styles.buttonText}>My Posts</Text>
+            <TouchableOpacity
+              style={styles.detailRow}
+              onPress={() => navigation.navigate('UserPosts')}
+            >
+              <FontAwesome5 name={"list"} style={[styles.iconText, { color: '#F8C537' }]} />
+              <Text style={styles.infoText}>My Posts</Text>
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            style={styles.detailRow}
+            onPress={() => setModalVisible(true)}
+          >
+            <FontAwesome5 name={"user-edit"} style={[styles.iconText, { color: '#34C759' }]} />
+            <Text style={styles.infoText}>Edit Profile</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.detailRow}
+            onPress={() => setFollowingModalVisible(true)}
+          >
+            <FontAwesome5 name={"users"} style={[styles.iconText, { color: '#0A84FF' }]} />
+            <Text style={styles.infoText}>Followings</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.detailRow}
+            onPress={() => setUpdatePasswordModalVisible(true)}
+          >
+            <FontAwesome5 name={"lock"} style={[styles.iconText, { color: '#FF9500' }]} />
+            <Text style={styles.infoText}>Change Password</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{
+          marginTop: 20,
+          width: '100%',
+          alignItems: 'center',
+        }}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={logoutFunction}
+          >
+            <Text style={styles.buttonText}>Log Out</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <FooterMenu />
@@ -455,7 +329,7 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#121212'
+    backgroundColor: '#151515'
   },
   container: {
     alignItems: 'center',
@@ -490,34 +364,16 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     marginBottom: 15
   },
-
   infoText: {
     fontSize: 16,
     color: '#f9fafb',
     marginBottom: 5
   },
-
   buttonContainer: {
     marginTop: 20,
     width: '100%',
-    alignItems: 'center'
+    padding: 10
   },
-
-  button: {
-    backgroundColor: '#4a90e2',
-    padding: 12,
-    borderRadius: 8,
-    marginVertical: 5,
-    width: '80%',
-    alignItems: 'center'
-  },
-
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -538,7 +394,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10
   },
-
   input: {
     width: '100%',
     backgroundColor: '#f0f0f0',
@@ -546,19 +401,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10
   },
-
   picker: {
     width: '100%',
     backgroundColor: '#f0f0f0',
     marginBottom: 10
   },
-
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%'
   },
-
   modalButton: {
     flex: 1,
     backgroundColor: '#4a90e2',
@@ -567,8 +419,52 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     alignItems: 'center'
   },
+  cancelButton: {
+    backgroundColor: '#ff6b6b'
+  },
 
-  cancelButton: { backgroundColor: '#ff6b6b' },
+
+  semicircle: {
+    position: 'absolute',
+    top: -655,
+    // left: -225,
+    width: '250%',
+    height: 800,
+    backgroundColor: '#138', // #60a5fa
+    // borderBottomLeftRadius: 250,
+    // borderBottomRightRadius: 250,
+    borderRadius: '50%'
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  infoText: {
+    fontSize: 16,
+    color: '#f9fafb',
+    marginLeft: 15,
+  },
+  iconText: {
+    fontSize: 24,
+    color: '#4a90e2',
+  },
+  button: {
+    backgroundColor: '#FF6B6B',
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 5,
+    width: '80%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 
 });
 

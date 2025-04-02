@@ -87,6 +87,7 @@ const EventForm = ({ closeModal }) => {
             formData.append("description", description);
             formData.append("date", date.toISOString());
             formData.append("artistID", state?.user?._id);
+            formData.append("artistName", state?.user?.name);
 
             const response = await axios.post(`/event/post-event`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },

@@ -4,7 +4,7 @@ const artModel = require("../models/artModel");
 // add image
 const uploadImageController = async (req, res) => {
     try {
-        const { name, category, price, description, artistID } = req.body;
+        const { name, category, price, description, artistID, artistName } = req.body;
         const images = req.files;
 
         // existing Art
@@ -35,7 +35,7 @@ const uploadImageController = async (req, res) => {
         }
 
         // validate other details
-        if (!name || !category || !description || !price) {
+        if (!name || !category || !description || !price || !artistName) {
             return res.status(400).send({
                 success: false,
                 message: 'Please fill all the fields!'
@@ -65,7 +65,8 @@ const uploadImageController = async (req, res) => {
             category,
             price,
             description,
-            artistID
+            artistID,
+            artistName
         }).save()
 
         return res.status(201).send({
@@ -158,7 +159,7 @@ const fetchAllImageByUserController = async (req, res) => {
 
         if (!artistID) {
             console.log("Id is unavailable!");
-            
+
             return res.status(400).send({
                 success: false,
                 message: 'Artist ID is required',

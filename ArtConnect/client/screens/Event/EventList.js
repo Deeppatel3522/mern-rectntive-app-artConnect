@@ -19,7 +19,7 @@ const EventList = ({ navigation }) => {
     }
   }, [myPostLoading])
 
-  
+
 
   useEffect(() => {
     if (!authLoading && !myPostLoading) {
@@ -51,28 +51,7 @@ const EventList = ({ navigation }) => {
             <EventCard key={index} event={event} navigation={navigation} />
           ))}
         </ScrollView>
-
-
-        {
-          state?.user?.type === "Artist" && (
-            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-              <Text style={styles.addButtonText}>Add New Event</Text>
-            </TouchableOpacity>
-          )
-        }
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalView}>
-            <EventForm closeModal={() => setModalVisible(false)} />
-          </View>
-        </Modal>
-
-          <FooterMenu />
+        <FooterMenu />
       </View>
     </SafeAreaView>
   );
@@ -91,31 +70,8 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     padding: 10,
-    paddingBottom: 100,
   },
-  addButton: {
-    backgroundColor: '#4A90E2',
-    padding: 15,
-    borderRadius: 10,
-    margin: 20,
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    right: 20,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  
+
 });
 
 export default EventList;

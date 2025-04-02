@@ -15,7 +15,6 @@ const ArtDetails = ({ route, navigation }) => {
   const { fetchArt } = useContext(PostContext);
 
 
-  const [isFollowing, setIsFollowing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [artDetails, setArtDetails] = useState(null);
@@ -25,6 +24,7 @@ const ArtDetails = ({ route, navigation }) => {
   const [artIsFavorite, setArtIsFavorite] = useState(
     state?.user?.favorites.some(fav => fav.postId === artId)
   );
+  const [isFollowing, setIsFollowing] = useState(false);
 
 
   const handleFavorite = async () => {
@@ -39,9 +39,8 @@ const ArtDetails = ({ route, navigation }) => {
 
   const handleFollow = async () => {
     try {
-      console.log(toggleFollowStatus);
-
       await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: artDetails?.artistID });
+      await refreshUser();
       setIsFollowing(!isFollowing);
     } catch (error) {
       console.error('Error toggling follow status:', error);
@@ -54,6 +53,9 @@ const ArtDetails = ({ route, navigation }) => {
         const data = await fetchArt(artId);
         if (data) {
           setArtDetails(data);
+          setIsFollowing(
+            state?.user?.following.some(user => user === data?.artistID)
+          )
         } else {
           console.log('No data found');
           setArtDetails(null);
@@ -131,7 +133,7 @@ const ArtDetails = ({ route, navigation }) => {
                 <Text style={styles.artistInfoHeader}>Artist</Text>
                 <View style={styles.artistContainer}>
                   <View style={styles.artistInfo}>
-                    <Text style={styles.artistName}>Artist ID: {artDetails?.artistID}</Text>
+                    <Text style={styles.artistName}>{artDetails?.artistName ? artDetails?.artistName : artDetails?.artistID}</Text>
                   </View>
                   {
                     state?.user?._id && state?.user?._id !== artDetails?.artistID && (

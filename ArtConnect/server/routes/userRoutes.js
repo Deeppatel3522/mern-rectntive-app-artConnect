@@ -34,6 +34,6 @@ router.get('/fetch-user-favorites/:userId', requireSignIn, fetchUserFavoriteCont
 router.put('/update-user-following', updateUserFollowingListController)
 
 // fetch-user-followings
-router.get('/fetch-user-followings/:userId', fetchUserFollowingsController)
+router.get('/fetch-user-followings/:userId', requireSignIn, fetchUserFollowingsController)
 
 module.exports = router

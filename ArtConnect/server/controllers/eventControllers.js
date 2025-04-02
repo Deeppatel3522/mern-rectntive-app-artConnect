@@ -12,7 +12,7 @@ const upload = multer({ storage }).array('image', 10);
 const postEventController = async (req, res) => {
     try {
 
-        const { name, price, category, location, description, date, artistID } = req.body
+        const { name, price, category, location, description, date, artistID, artistName } = req.body
         const images = req.files;
 
         // existing event
@@ -46,7 +46,7 @@ const postEventController = async (req, res) => {
         }
 
         // validate other details
-        if (!name || !category || !description || !price || !location) {
+        if (!name || !category || !description || !price || !location || !artistName) {
             return res.status(400).send({
                 success: false,
                 message: 'Please fill all the fields!'
@@ -90,7 +90,8 @@ const postEventController = async (req, res) => {
             image: imageUrls,
             description,
             date: eventDate,
-            artistID
+            artistID,
+            artistName
         }).save()
 
         return res.status(201).send({

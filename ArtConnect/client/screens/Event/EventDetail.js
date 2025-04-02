@@ -39,15 +39,13 @@ const EventDetails = ({ route, navigation }) => {
 
   const handleFollow = async () => {
     try {
-      console.log(toggleFollowStatus);
-
       await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: eventDetails?.artistID });
+      await refreshUser();
       setIsFollowing(!isFollowing);
     } catch (error) {
       console.error('Error toggling follow status:', error);
     }
   };
-
 
   useEffect(() => {
     const getEvent = async () => {
@@ -55,7 +53,9 @@ const EventDetails = ({ route, navigation }) => {
         const data = await fetchEvent(eventId);
         if (data) {
           setEventDetails(data);
-          // console.log(JSON.stringify(data, null, 4));
+          setIsFollowing(
+            state?.user?.following.some(user => user === data?.artistID)
+          )
         } else {
           console.log('No data found');
           setEventDetails(null);
@@ -68,18 +68,6 @@ const EventDetails = ({ route, navigation }) => {
 
     getEvent();
   }, [eventId]);
-
-  useEffect(() => {
-    if (!authLoading) {
-      console.log("Event Detail:");
-
-      console.log(state.user.name);
-      console.log("Favorites: ", state.user.favorites.length);
-
-
-
-    }
-  }, [authLoading, artIsFavorite])
 
   const toggleDescription = () => setIsDescriptionExpanded(!isDescriptionExpanded);
 
@@ -154,7 +142,7 @@ const EventDetails = ({ route, navigation }) => {
                 <Text style={styles.artistInfoHeader}>Artist</Text>
                 <View style={styles.artistContainer}>
                   <View style={styles.artistInfo}>
-                    <Text style={styles.artistName}>Artist ID: {eventDetails?.artistID}</Text>
+                    <Text style={styles.artistName}>{eventDetails?.artistName ? eventDetails?.artistName : eventDetails?.artistID}</Text>
                   </View>
                   {
                     state?.user?._id && state?.user?._id !== eventDetails?.artistID && (

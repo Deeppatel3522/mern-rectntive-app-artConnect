@@ -24,7 +24,7 @@ const ArtCard = ({ art, navigation }) => {
             />
             <View style={styles.infoContainer}>
                 <Text style={styles.artName} numberOfLines={1}>{art.name}</Text>
-                <Text style={styles.artistName} numberOfLines={1}>by {art.artistID}</Text>
+                <Text style={styles.artistName} numberOfLines={1}>by {art.artistName ? art.artistName : art.artistID}</Text>
                 <View style={styles.priceContainer}>
                     <Text style={styles.artPrice}>${art.price}</Text>
                     {art.isAvailable ? (

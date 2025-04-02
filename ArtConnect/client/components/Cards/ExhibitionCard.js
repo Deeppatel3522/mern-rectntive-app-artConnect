@@ -25,7 +25,7 @@ const ExhibitionCard = ({ event, navigation }) => {
                 <View style={styles.header}>
                     <Text style={styles.title} numberOfLines={1}>{event.name}</Text>
                     <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>
-                        <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "lightgrey"}`} />
+                        <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "#FF6B6B" : "lightgrey"}`} />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.description} numberOfLines={2}>{event.description}</Text>

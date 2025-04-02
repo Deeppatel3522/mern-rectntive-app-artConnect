@@ -12,9 +12,10 @@ const ArtForm = ({ closeModal }) => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [images, setImages] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     const categories = ["Painting", "Sculpture", "Photography", "Digital Art", "Mixed Media"];
-    const { state } = useContext(AuthContext)
+    const { state } = useContext(AuthContext);
+    
 
     const saveImage = async () => {
         try {
@@ -53,6 +54,7 @@ const ArtForm = ({ closeModal }) => {
             formData.append("price", price);
             formData.append("description", description);
             formData.append("artistID", state?.user?._id);
+            formData.append("artistName", state?.user?.name);
 
             const response = await axios.post(`/art/upload-img`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },

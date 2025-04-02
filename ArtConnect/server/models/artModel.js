@@ -31,6 +31,10 @@ const artSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    artistName: {
+        type: String,
+        required: true
+    },
     isAvailable: {
         type: Boolean,
         default: true

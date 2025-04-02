@@ -8,7 +8,7 @@ import { AuthContext } from '@/context/authContext';
 
 const ArtList = ({ navigation }) => {
 
-  const { loading: authLoading,state } = useContext(AuthContext)
+  const { loading: authLoading, state } = useContext(AuthContext)
   const [modalVisible, setModalVisible] = useState(false);
   const { loading: myArtLoading, arts, getAllArts } = useContext(PostContext);
   const [refreshing, setRefreshing] = useState(false);
@@ -38,28 +38,8 @@ const ArtList = ({ navigation }) => {
           ))}
         </ScrollView>
 
-        {
-          state?.user?.type === "Artist" && (
-            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-              <Text style={styles.addButtonText}>Add New Art</Text>
-            </TouchableOpacity>
-          )
-        }
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalView}>
-            <ArtForm closeModal={() => setModalVisible(false)} />
-          </View>
-        </Modal>
-
-        <View style={styles.footer}>
-          <FooterMenu />
-        </View>
+        <FooterMenu />
       </View>
     </SafeAreaView>
   );
@@ -78,31 +58,8 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     padding: 10,
-    paddingBottom: 100,
   },
-  addButton: {
-    backgroundColor: '#4A90E2',
-    padding: 15,
-    borderRadius: 10,
-    margin: 20,
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 50,
-    left: 20,
-    right: 20,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  
+
 });
 
 export default ArtList;

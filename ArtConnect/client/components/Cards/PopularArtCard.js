@@ -35,17 +35,14 @@ const PopularArtCard = ({ art, navigation }) => {
                         <Text
                             style={styles.artistName}
                             numberOfLines={1}
-                            ellipsizeMode="tail">{art.artistID}
+                            ellipsizeMode="tail">{art.artistName ? art.artistName : art.artistID}
                         </Text>
                     </View>
                 </View>
-                {/* <TouchableOpacity style={styles.buyButton}>
-                    <Text style={styles.buyButtonText}>Buy</Text>
-                </TouchableOpacity> */}
             </View>
 
             <TouchableOpacity style={styles.heartIcon} onPress={handleFavorite}>
-                <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "red" : "white"}`} />
+                <Ionicons name={`${isFavorite ? "heart" : "heart-outline"}`} size={20} color={`${isFavorite ? "#FF6B6B" : "lightgrey"}`} />
             </TouchableOpacity>
 
         </TouchableOpacity>
