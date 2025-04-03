@@ -1,3 +1,83 @@
+# name: ArtConnect App Expo Build & Firebase App Distribution
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: '20.13.0' # Using a stable LTS version
+
+#     - name: Install dependencies
+#       run: |
+#         cd ArtConnect/client
+#         npm install
+#         cd ../server
+#         npm install
+
+#     - name: Install EAS CLI
+#       run: npm install -g eas-cli
+
+#     - name: Authenticate with Expo
+#       run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+
+#     # - name: Build the app (Production)
+#     #   working-directory: ArtConnect/client
+#     #   run: |
+#     #     # Start the build and get the build ID
+#     #     BUILD_ID=$(eas build --platform android --profile production --non-interactive --auto-submit --json | jq -r '.[0].id')
+#     #     if [ -z "$BUILD_ID" ]; then
+#     #       echo "Error: No build ID found"
+#     #       exit 1
+#     #     fi
+#     #     echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+#     #     # Wait for build to complete and fetch artifact URL
+#     #     echo "Waiting for build to complete..."
+#     #     until eas build:view "$BUILD_ID" --json | jq -r '.status' | grep -q "finished"; do
+#     #       echo "Build in progress..."
+#     #       sleep 10
+#     #     done
+#     #     ARTIFACT_URL=$(eas build:view "$BUILD_ID" --json | jq -r '.artifacts.buildUrl')
+#     #     if [ -z "$ARTIFACT_URL" ]; then
+#     #       echo "Error: No artifact URL found"
+#     #       eas build:view "$BUILD_ID" --json
+#     #       exit 1
+#     #     fi
+#     #     echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
+
+#     # - name: Download the .aab file
+#     #   run: |
+#     #     curl -L -o app.aab "$ARTIFACT_URL"
+#     #     ls -lh app.aab
+
+#      - name: Build the app (Production)
+#        run: |
+#          cd ArtConnect/client
+#          eas build --platform android --profile production
+
+
+#     - name: Install Firebase CLI
+#       run: npm install -g firebase-tools
+
+#     # - name: Upload to Firebase App Distribution
+#     #   run: |
+#     #     firebase appdistribution:distribute app.aab \
+#     #       --app ${{ secrets.FIREBASE_APP_ID }} \
+#     #       --groups beta-tester \
+#     #       --release-notes "New automated build from GitHub Actions 🚀" \
+#     #       --token ${{ secrets.FIREBASE_TOKEN }}
+
+
 name: ArtConnect App Expo Build & Firebase App Distribution
 
 on:
@@ -31,40 +111,10 @@ jobs:
     - name: Authenticate with Expo
       run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-    # - name: Build the app (Production)
-    #   working-directory: ArtConnect/client
-    #   run: |
-    #     # Start the build and get the build ID
-    #     BUILD_ID=$(eas build --platform android --profile production --non-interactive --auto-submit --json | jq -r '.[0].id')
-    #     if [ -z "$BUILD_ID" ]; then
-    #       echo "Error: No build ID found"
-    #       exit 1
-    #     fi
-    #     echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
-    #     # Wait for build to complete and fetch artifact URL
-    #     echo "Waiting for build to complete..."
-    #     until eas build:view "$BUILD_ID" --json | jq -r '.status' | grep -q "finished"; do
-    #       echo "Build in progress..."
-    #       sleep 10
-    #     done
-    #     ARTIFACT_URL=$(eas build:view "$BUILD_ID" --json | jq -r '.artifacts.buildUrl')
-    #     if [ -z "$ARTIFACT_URL" ]; then
-    #       echo "Error: No artifact URL found"
-    #       eas build:view "$BUILD_ID" --json
-    #       exit 1
-    #     fi
-    #     echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
-
-    # - name: Download the .aab file
-    #   run: |
-    #     curl -L -o app.aab "$ARTIFACT_URL"
-    #     ls -lh app.aab
-
-     - name: Build the app (Production)
-       run: |
-         cd ArtConnect/client
-         eas build --platform android --profile production
-
+    - name: Build the app (Production)
+      run: |
+        cd ArtConnect/client
+        eas build --platform android --profile production
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
