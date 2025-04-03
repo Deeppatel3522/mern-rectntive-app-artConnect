@@ -60,7 +60,7 @@ jobs:
     #     curl -L -o app.aab "$ARTIFACT_URL"
     #     ls -lh app.aab
 
-    - name: Build the app (Production)
+     - name: Build the app (Production)
        run: |
          cd ArtConnect/client
          eas build --platform android --profile production
