@@ -54,11 +54,17 @@ jobs:
     #       exit 1
     #     fi
     #     echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
-        
+
     # - name: Download the .aab file
     #   run: |
     #     curl -L -o app.aab "$ARTIFACT_URL"
     #     ls -lh app.aab
+
+    - name: Build the app (Production)
+       run: |
+         cd ArtConnect/client
+         eas build --platform android --profile production
+
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
