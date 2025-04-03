@@ -10,6 +10,7 @@ const OrderSummary = ({ route, navigation }) => {
     const { item } = route.params;
 
     const [userDetails, setUserDetails] = useState({
+        userId: state?.user?._id,
         name: state?.user?.name || '',
         email: state?.user?.email || '',
         phone: '',
@@ -67,7 +68,7 @@ const OrderSummary = ({ route, navigation }) => {
             };
             console.log("Order to Place:", orderToPlace);
             navigation.navigate('Checkout', { orderToPlace });
-        } 
+        }
     };
 
     return (
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
         padding: 15,
-        
+
     },
     heading: {
         marginVertical: 20,

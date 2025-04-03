@@ -355,7 +355,7 @@ const updateUserFavoriteListController = async (req, res) => {
 // UPDATE || (FOLLOWING LIST) 
 const updateUserFollowingListController = async (req, res) => {
     try {
-        const { CurrentUserId, userId } = req.body
+        const { CurrentUserId, userId, userName } = req.body
 
         console.log(CurrentUserId, userId);
 
@@ -377,7 +377,7 @@ const updateUserFollowingListController = async (req, res) => {
         }
 
         // toggle result
-        const result = await toggleFollowing(CurrentUserId, userId)
+        const result = await toggleFollowing(CurrentUserId, userId, userName)
 
         if (!result.success) {
             return res.status(500).send({

@@ -39,7 +39,7 @@ const ArtDetails = ({ route, navigation }) => {
 
   const handleFollow = async () => {
     try {
-      await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: artDetails?.artistID });
+      await toggleFollowStatus({ CurrentUserId: state?.user?._id, userId: artDetails?.artistID, userName: artDetails?.artistName });
       await refreshUser();
       setIsFollowing(!isFollowing);
     } catch (error) {
@@ -54,7 +54,7 @@ const ArtDetails = ({ route, navigation }) => {
         if (data) {
           setArtDetails(data);
           setIsFollowing(
-            state?.user?.following.some(user => user === data?.artistID)
+            state?.user?.following.some(user => user.creatorId === data?.artistID)
           )
         } else {
           console.log('No data found');

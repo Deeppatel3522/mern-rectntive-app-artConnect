@@ -17,7 +17,6 @@ const AuthProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(false)
     const [requiredUser, setRequiredUser] = useState(null)
-    const [userFollowings, setUserFollowings] = useState([])
 
 
     // initial local storage data
@@ -35,7 +34,8 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (state?.user) {
-            fetchUserFollowings(state?.user?._id)
+            fetchUserFollowings(state?.user?._id);
+            fetchUserOrders(state?.user?.email);
         }
     }, [state])
 
@@ -79,6 +79,20 @@ const AuthProvider = ({ children }) => {
         }
     }
 
+    const fetchUserOrders = async (userId) => {
+        try {
+            setLoading(true)
+            console.log(`"getting order from forntend for:${userId}`);
+            const { data } = await axios.get(`/order/fetch-orders/${userId}`);
+            setLoading(false);
+            return { userOrders: data.userOrders };
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+            return error
+        }
+    }
+
     const refreshUser = async () => {
         try {
             console.log("User refreshing...");
@@ -102,7 +116,7 @@ const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ loading, state, setState, requiredUser, fetchUser, refreshUser, fetchUserFavorites, fetchUserFollowings }}>
+        <AuthContext.Provider value={{ loading, state, setState, requiredUser, fetchUser, refreshUser, fetchUserFavorites, fetchUserFollowings, fetchUserOrders }}>
             {children}
         </AuthContext.Provider>
     )

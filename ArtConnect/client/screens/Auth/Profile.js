@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const Profile = ({ navigation }) => {
   // Global state
-  const { state, setState, fetchUserFollowings, refreshUser } = useContext(AuthContext);
+  const { state, setState, fetchUserFollowings, refreshUser, fetchUserOrders } = useContext(AuthContext);
   // extract values from "state"
   const { user, token } = state;
 
@@ -26,8 +26,10 @@ const Profile = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [followingModalVisible, setFollowingModalVisible] = useState(false);
+  const [ordersModalVisible, setOrdersModalVisible] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] = useState(false);
   const [userFollowings, setUserFollowings] = useState([])
+  const [userOrders, setUserOrders] = useState([])
 
   // UPDATE Profile
   const handleUpdate = async () => {
@@ -159,10 +161,10 @@ const Profile = ({ navigation }) => {
   };
 
   // handleFollowing toggle
-  const handleFollow = async (currentUserId, userID) => {
+  const handleFollow = async (currentUserId, userID, userName) => {
     try {
       console.log(toggleFollowStatus);
-      await toggleFollowStatus({ CurrentUserId: currentUserId, userId: userID });
+      await toggleFollowStatus({ CurrentUserId: currentUserId, userId: userID, userName: userName });
       console.log("Follow status updated successfully!");
       await getlUserFollowings()
     } catch (error) {
@@ -177,9 +179,18 @@ const Profile = ({ navigation }) => {
     console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
   }
 
+  //Orders
+  const getUserOrders = async () => {
+    const { userOrders } = await fetchUserOrders(state?.user?._id)
+    setUserOrders(userOrders)
+    console.log(`Total number of User Orders: ${userOrders.length ? userOrders.length : 0}`,);
+  }
+
   useEffect(() => {
     getlUserFollowings()
+    getUserOrders()
     console.log(`Total number of User followings: ${userFollowings.length ? userFollowings.length : 0}`,);
+    console.log(`Total number of User followings: ${userOrders.length ? userOrders.length : 0}`,);
   }, [])
 
   return (
@@ -230,6 +241,14 @@ const Profile = ({ navigation }) => {
           >
             <FontAwesome5 name={"users"} style={[styles.iconText, { color: '#0A84FF' }]} />
             <Text style={styles.infoText}>Followings</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.detailRow}
+            onPress={() => setOrdersModalVisible(true)}
+          >
+            <FontAwesome5 name={"scroll"} style={[styles.iconText, { color: '#0A84FF' }]} />
+            <Text style={styles.infoText}>My Orders</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -306,9 +325,9 @@ const Profile = ({ navigation }) => {
             {/* Map through userFollowings */}
             {userFollowings.length > 0 ? (
               userFollowings.map((user, index) => (
-                <View style={{ flexDirection: 'row', gap: 20, borderWidth: 1, alignItems: 'center', padding: 5, marginBottom: 5 }}>
-                  <Text key={index} >{user}</Text>
-                  <TouchableOpacity style={{ padding: 5, backgroundColor: 'tomato', width: 80, justifyContent: 'center', alignItems: 'center', borderRadius: 5 }} onPress={() => { handleFollow(state.user._id, user) }}>
+                <View key={index} style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'rgba(100,100,100,0.1)', alignItems: 'center', borderRadius: 8, padding: 10, marginVertical: 5 }}>
+                  <Text style={{width: '55%'}} >{user.creatorName}</Text>
+                  <TouchableOpacity style={{ padding: 5, backgroundColor: 'tomato', width: 80, justifyContent: 'center', alignItems: 'center', borderRadius: 5 }} onPress={() => { handleFollow(state.user._id, user.creatorId, user.creatorName) }}>
                     <Text style={styles.buttonText}>Following</Text>
                   </TouchableOpacity>
                 </View>
@@ -316,9 +335,36 @@ const Profile = ({ navigation }) => {
             ) : (
               <Text style={styles.noFollowingsText}>No followings yet.</Text>
             )}
-            <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setFollowingModalVisible(false)}>
-              <Text style={styles.buttonText}>close</Text>
-            </TouchableOpacity>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setFollowingModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Orders List Modal */}
+      <Modal animationType="slide" transparent={true} visible={ordersModalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Orders</Text>
+
+            {/* Map through userOrders */}
+            {userOrders.length > 0 ? (
+              userOrders.map((order, index) => (
+                <View key={index} style={{paddingVertical: 10, width: "90%", paddingLeft: 10, borderRadius: 8, marginVertical: 5, backgroundColor: "rgba(100,100,100,0.1)"}}>
+                  <Text>{order.itemDetails.name}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.noFollowingsText}>No Orders yet.</Text>
+            )}
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setOrdersModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -382,10 +428,10 @@ const styles = StyleSheet.create({
   },
 
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff', // Dark background for better visibility
     padding: 20,
     borderRadius: 8,
-    width: '80%',
+    width: '80%', // Increased width for better alignment
     alignItems: 'center'
   },
 
@@ -414,15 +460,20 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     backgroundColor: '#4a90e2',
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,
+    borderRadius: 8,
     marginHorizontal: 5,
+    marginTop: 15,
     alignItems: 'center'
   },
   cancelButton: {
-    backgroundColor: '#ff6b6b'
+    backgroundColor: '#FF6B6B',
+    padding: 12, 
+    borderRadius: 8,
+    marginTop: 15,
+    width: '80%',
+    alignItems: 'center',
   },
-
 
   semicircle: {
     position: 'absolute',
@@ -465,6 +516,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+
+
 
 });
 

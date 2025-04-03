@@ -26,7 +26,7 @@ const toggleFavoriteArt = async (userId, artId) => {
         }
 
         const type = isArt ? 'Art' : 'Event';
-        
+
 
         // convert string to Objcet-Id
         const artObjId = new mongoose.Types.ObjectId(artId);
@@ -58,7 +58,7 @@ const toggleFavoriteArt = async (userId, artId) => {
     }
 }
 
-const toggleFollowing = async (CurrentUserId, userId) => {
+const toggleFollowing = async (CurrentUserId, userId, userName) => {
     try {
         const user = await userModel.findById(CurrentUserId)
 
@@ -71,13 +71,16 @@ const toggleFollowing = async (CurrentUserId, userId) => {
 
         // convert string to Objcet-Id (for person whome user gonna follow)
         const userObjId = new mongoose.Types.ObjectId(userId);
-        const isAlreadyFollowed = user.following.some(fav => fav.toString() === userObjId.toString());
+        const isAlreadyFollowed = user.following.some(fav => fav.creatorId.toString() === userObjId.toString());
 
 
         if (isAlreadyFollowed) {
-            user.following = user.following.filter(fav => fav.toString() !== userObjId.toString())
+            user.following = user.following.filter(fav => fav.creatorId.toString() !== userObjId.toString())
         } else {
-            user.following.push(userObjId)
+            user.following.push({
+                creatorId: userObjId,
+                creatorName: userName
+            })
         }
 
         const updatedUser = await user.save();

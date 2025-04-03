@@ -13,27 +13,42 @@ import ArtList from '@/screens/Art/ArtList'
 import ArtDetail from '@/screens/Art/ArtDetails'
 import OrderSummary from '@/screens/Purchase/OrderSummary.js'
 import Checkout from '@/screens/Purchase/Checkout.js'
-import HeaderMenu from './HeaderMenu.js'
 import { AuthContext } from '@/context/authContext.js'
 import { StatusBar } from 'react-native';
 StatusBar
 const ScreenMenu = () => {
     // global state
-    const { state, setState } = useContext(AuthContext)
+    const { state, setState, fetchUser } = useContext(AuthContext)
+
+    const isUserAvailable = async () => {
+        if (!state?.user) return false;
+
+        try {
+            const { data } = await fetchUser(state.user._id)
+            return data.success
+        } catch (error) {
+            return false
+        }
+    }
 
     const isAuthenticated = (token) => {
         if (!token) return false;
 
-        try {
-            const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+        if (isUserAvailable) {
+            try {
+                const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+                const expiryDate = new Date(decoded.exp * 1000).toLocaleString();
+                console.log("Token Expiry Date:", expiryDate);
 
-            const expiryDate = new Date(decoded.exp * 1000).toLocaleString();
-            console.log("Token Expiry Date:", expiryDate);
-
-            return decoded.exp > Math.floor(Date.now() / 1000); // Check expiry
-        } catch (error) {
-            return false; // Invalid token
+                return decoded.exp > Math.floor(Date.now() / 1000); // Check expiry
+            } catch (error) {
+                return false; // Invalid token
+            }
         }
+
+        return false;
+
+
     };
 
     const authenticatedUser = state?.user && isAuthenticated(state?.token)

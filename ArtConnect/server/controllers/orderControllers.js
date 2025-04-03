@@ -15,7 +15,7 @@ const requireSignIn = jwt({
     algorithms: ["HS256"]
 })
 
-// REGISTER
+// SAVE ORDER
 const orderSaveController = async (req, res) => {
     try {
         const { orderData } = req.body
@@ -36,9 +36,9 @@ const orderSaveController = async (req, res) => {
                 message: 'All order details are required!'
             });
         }
-        
+
         // save order
-        const savedOrder = await orderModel( orderData ).save()
+        const savedOrder = await orderModel(orderData).save()
 
         return res.status(201).send({
             success: true,
@@ -92,58 +92,42 @@ const orderSaveController = async (req, res) => {
 //     }
 // }
 
-// // GET USER FAVORITES
-// const fetchUserFavoriteController = async (req, res) => {
-//     try {
-//         const { userId } = req.params
-//         console.log("Chcecking favorites for : ", userId);
+// GET USER ORDERS
+const fetchUserOrdersController = async (req, res) => {
+    try {
+        const { userId } = req.params
+        console.log(`Chcecking User ORders for :${userId} `, userId);
+
+        if (!userId) {
+            return res.status(400).send({
+                success: false,
+                message: "User Email is required!",
+            });
+        }
 
 
-//         const user = await userModel.findById(userId)
+        const userOrders = await orderModel.find({ "userInfo.userId": userId });
 
-//         if (!user) {
-//             return res.status(404).send({
-//                 success: false,
-//                 message: 'User not found!',
-//             });
-//         }
+        if (!userOrders) {
+            return res.status(404).send({
+                success: false,
+                message: 'User orders not found!',
+            });
+        }
 
-//         // Separate Art and Event favorites
-//         const arts = [];
-//         const events = [];
+        return res.status(200).send({
+            success: true,
+            message: `User Orders fetched successfully! TOTAL Orders: ${userOrders.length}`,
+            userOrders,
+        });
 
-//         for (const favorite of user.favorites) {
-//             // Check if the favorite type is Art or Event and fetch details accordingly
-//             if (favorite.type === 'Art') {
-//                 const art = await ArtModel.findById(favorite.postId);
-//                 if (art) {
-//                     arts.push(art);
-//                 }
-//             } else if (favorite.type === 'Event') {
-//                 const event = await EventModel.findById(favorite.postId);
-//                 if (event) {
-//                     events.push(event);
-//                 }
-//             }
-//         }
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: 'Error in GET-USER_ORDERS API',
+            error,
+        })
+    }
+}
 
-//         console.log("User's Art Favorites: ", arts.length);
-//         console.log("User's Event Favorites: ", events.length);
-
-//         return res.status(200).send({
-//             success: true,
-//             message: 'Favorites fetched successfully!',
-//             arts,
-//             events,
-//         });
-
-//     } catch (error) {
-//         res.status(500).send({
-//             success: false,
-//             message: 'Error in GET-FAVORITES API',
-//             error,
-//         })
-//     }
-// }
-
-module.exports = { orderSaveController }
+module.exports = { orderSaveController, fetchUserOrdersController }

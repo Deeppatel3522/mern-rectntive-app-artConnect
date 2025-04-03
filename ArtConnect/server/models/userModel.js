@@ -33,9 +33,15 @@ const userSchema = new mongoose.Schema({
     ],
     following: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            default: []
+            creatorId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
+                default: []
+            }, 
+            creatorName: {
+                type: String,
+                default: ''
+            }
 
         }
     ],

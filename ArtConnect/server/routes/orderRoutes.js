@@ -1,5 +1,5 @@
 const express = require('express')
-const { orderSaveController } = require('../controllers/orderControllers')
+const { orderSaveController, fetchUserOrdersController } = require('../controllers/orderControllers')
 
 // ROUTER OBJ
 const router = express.Router()
@@ -9,6 +9,8 @@ const router = express.Router()
 // save-order
 router.post('/save-order', orderSaveController)
 
+// fetch-orders
+router.get('/fetch-orders/:userId', fetchUserOrdersController)
 
 
 module.exports = router
