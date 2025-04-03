@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '@/context/authContext';
 
 const Explore = ({ navigation }) => {
-    const { loading: authLoading, state } = useContext(AuthContext)
+    const { loading: authLoading, state, refreshUser } = useContext(AuthContext)
     const { loading: myPostLoading, events, arts, getAllEvents, getAllArts } = useContext(PostContext);
     const [artSearchResult, setArtSearchResult] = useState([])
     const [eventSearchResult, setEventSearchResult] = useState([])
@@ -21,7 +21,10 @@ const Explore = ({ navigation }) => {
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
         try {
-            await getAllArts()
+            setArtsToShow([])
+            setEventsToShow([])
+            await refreshUser();
+            await getAllArts();
             await getAllEvents();
             setArtsToShow(arts)
             setEventsToShow(events)
@@ -75,7 +78,7 @@ const Explore = ({ navigation }) => {
                         <View style={styles.greetingContainer}>
                             <Text style={styles.greetingText}>Hello, {state?.user?.name.toUpperCase()} 👋</Text>
                         </View>
-                        <TouchableOpacity onPress={() => {navigation.navigate('Profile')}}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('Profile') }}>
                             <Image source={{ uri: state?.user?.image ? state?.user?.image : "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png" }} style={styles.profileIcon} />
                         </TouchableOpacity>
                     </View>

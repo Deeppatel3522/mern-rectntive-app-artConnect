@@ -6,7 +6,7 @@ import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 
 const PopularArtCard = ({ art, navigation }) => {
 
-    const { state } = useContext(AuthContext)
+    const { state, refreshUser } = useContext(AuthContext)
     const [isFavorite, setIsFavorite] = useState(() => {
         return state.user.favorites.some(fav => fav.postId.toString() === art._id.toString());
     });
@@ -14,6 +14,7 @@ const PopularArtCard = ({ art, navigation }) => {
     const handleFavorite = async () => {
         try {
             await toggleFavorite({ postId: art._id, userId: state?.user?._id });
+            await refreshUser();
         } catch (error) {
             console.error('Error toggling favorite:', error);
         }

@@ -35,9 +35,14 @@ const FooterMenu = () => {
                     <Text style={[styles.menuText, route.name === 'EventList' && styles.activeText]}>Events</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.menuItem, styles.addBtn]} onPress={() => setModalVisible(true)}>
-                    <FontAwesome5 name="plus" style={[styles.iconStyle, styles.plusIcon]} />
-                </TouchableOpacity>
+               
+                {
+                    state?.user?.type === "Artist" && (
+                        <TouchableOpacity style={[styles.menuItem, styles.addBtn]} onPress={() => setModalVisible(true)}>
+                            <FontAwesome5 name="plus" style={[styles.iconStyle, styles.plusIcon]} />
+                        </TouchableOpacity>
+                    )
+                }
 
                 <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ArtList')}>
                     <FontAwesome5 name="palette" style={[styles.iconStyle, route.name === 'ArtList' && styles.activeIcon]} />

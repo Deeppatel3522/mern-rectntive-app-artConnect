@@ -34,6 +34,8 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (state?.user) {
+            console.log(JSON.stringify(state, null, 4));
+            
             fetchUserFollowings(state?.user?._id);
             fetchUserOrders(state?.user?.email);
         }
@@ -75,7 +77,7 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
             setLoading(false);
-            return error
+            return { followings: []}
         }
     }
 
@@ -89,7 +91,7 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
             setLoading(false);
-            return error
+            return { userOrders: [] };
         }
     }
 

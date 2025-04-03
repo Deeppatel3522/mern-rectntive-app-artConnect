@@ -41,6 +41,7 @@ const ArtForm = ({ closeModal }) => {
         try {
             setLoading(true)
             const formData = new FormData();
+
             uris.forEach((uri, index) => {
                 formData.append("image", {
                     uri: uri,
@@ -56,6 +57,9 @@ const ArtForm = ({ closeModal }) => {
             formData.append("artistID", state?.user?._id);
             formData.append("artistName", state?.user?.name);
 
+            console.log(JSON.stringify(formData, null, 4));
+            
+
             const response = await axios.post(`/art/upload-img`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -64,7 +68,7 @@ const ArtForm = ({ closeModal }) => {
             Alert.alert("Success", `Art Posted successfully!`);
             closeModal()
         } catch (error) {
-            console.error("Error Postinh art:", error);
+            console.error("Error Posting art:", error);
             setLoading(false)
             Alert.alert("Error", "Failed to post art");
             closeModal()

@@ -166,7 +166,9 @@ const Profile = ({ navigation }) => {
       console.log(toggleFollowStatus);
       await toggleFollowStatus({ CurrentUserId: currentUserId, userId: userID, userName: userName });
       console.log("Follow status updated successfully!");
+      await refreshUser()
       await getlUserFollowings()
+
     } catch (error) {
       console.error('Error toggling follow status:', error);
     }
@@ -176,21 +178,19 @@ const Profile = ({ navigation }) => {
   const getlUserFollowings = async () => {
     const { followings } = await fetchUserFollowings(state?.user?._id)
     setUserFollowings(followings)
-    console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
+    // console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
   }
 
   //Orders
   const getUserOrders = async () => {
     const { userOrders } = await fetchUserOrders(state?.user?._id)
     setUserOrders(userOrders)
-    console.log(`Total number of User Orders: ${userOrders.length ? userOrders.length : 0}`,);
+    // console.log(`Total number of User Orders: ${userOrders.length ? userOrders.length : 0}`,);
   }
 
   useEffect(() => {
     getlUserFollowings()
     getUserOrders()
-    console.log(`Total number of User followings: ${userFollowings.length ? userFollowings.length : 0}`,);
-    console.log(`Total number of User followings: ${userOrders.length ? userOrders.length : 0}`,);
   }, [])
 
   return (
@@ -199,7 +199,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.semicircle} />
         <Text style={styles.title}>{user?.name}'s Profile</Text>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: user?.image }} style={styles.profileImage} />
+          <Image source={{ uri: user?.image ? user?.image : "https://i.pinimg.com/736x/8b/57/0c/8b570c0676a1dabc40c88e214b2079d1.jpg" }} style={styles.profileImage} />
           <TouchableOpacity style={styles.cameraButton} onPress={selectImage}>
             <FontAwesome5 name='camera' style={styles.cameraIcon} />
           </TouchableOpacity>
@@ -326,7 +326,7 @@ const Profile = ({ navigation }) => {
             {userFollowings.length > 0 ? (
               userFollowings.map((user, index) => (
                 <View key={index} style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'rgba(100,100,100,0.1)', alignItems: 'center', borderRadius: 8, padding: 10, marginVertical: 5 }}>
-                  <Text style={{width: '55%'}} >{user.creatorName}</Text>
+                  <Text style={{ width: '55%' }} >{user.creatorName}</Text>
                   <TouchableOpacity style={{ padding: 5, backgroundColor: 'tomato', width: 80, justifyContent: 'center', alignItems: 'center', borderRadius: 5 }} onPress={() => { handleFollow(state.user._id, user.creatorId, user.creatorName) }}>
                     <Text style={styles.buttonText}>Following</Text>
                   </TouchableOpacity>
@@ -353,7 +353,7 @@ const Profile = ({ navigation }) => {
             {/* Map through userOrders */}
             {userOrders.length > 0 ? (
               userOrders.map((order, index) => (
-                <View key={index} style={{paddingVertical: 10, width: "90%", paddingLeft: 10, borderRadius: 8, marginVertical: 5, backgroundColor: "rgba(100,100,100,0.1)"}}>
+                <View key={index} style={{ paddingVertical: 10, width: "90%", paddingLeft: 10, borderRadius: 8, marginVertical: 5, backgroundColor: "rgba(100,100,100,0.1)" }}>
                   <Text>{order.itemDetails.name}</Text>
                 </View>
               ))
@@ -408,7 +408,8 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    marginBottom: 15
+    marginBottom: 15,
+    backgroundColor: 'rgba(100,100,100, 0.5)'
   },
   infoText: {
     fontSize: 16,
@@ -468,7 +469,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: '#FF6B6B',
-    padding: 12, 
+    padding: 12,
     borderRadius: 8,
     marginTop: 15,
     width: '80%',

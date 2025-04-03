@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         {
             postId: {
                 type: mongoose.Schema.Types.ObjectId,
-                refPath: 'type', 
+                refPath: 'type',
                 required: true
             },
             type: {
@@ -36,8 +36,8 @@ const userSchema = new mongoose.Schema({
             creatorId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User',
-                default: []
-            }, 
+                default: null
+            },
             creatorName: {
                 type: String,
                 default: ''
@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: 'https://png.pngtree.com/png-vector/20210604/ourmid/pngtree-gray-avatar-placeholder-png-image_3416697.jpg'
+        default: 'https://console.cloudinary.com/pm/c-282ea2cb1a566eba60954111f9972d/media-explorer/artConncet_profile_pics?assetId=a472e33452254494191e205ba1a0f2eb'
     }
 }, { timestamps: true })
 
