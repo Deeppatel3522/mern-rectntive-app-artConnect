@@ -83,9 +83,9 @@ const OrderSummary = ({ route, navigation }) => {
 
                     <PurchaseCard item={item} />
 
-                    <Text style={styles.summaryText}>Subtotal: ${item.price.toFixed(2)}</Text>
-                    <Text style={styles.summaryText}>Tax (13%): ${(item.price * 0.13).toFixed(2)}</Text>
-                    <Text style={styles.summaryText}>Total: ${(item.price * 1.13).toFixed(2)}</Text>
+                    <Text style={styles.summaryText}>Subtotal: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(item.price || 0)}</Text>
+                    <Text style={styles.summaryText}>Tax: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(item.price * 0.13 || 0)}</Text>
+                    <Text style={styles.summaryText}>Total: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(item?.price * 1.13 || 0)}</Text>
 
                     <Text style={styles.sectionTitle}>User Details</Text>
 

@@ -32,7 +32,7 @@ const ExhibitionCard = ({ event, navigation }) => {
                 <Text style={styles.description} numberOfLines={2}>{event.description}</Text>
                 <View style={styles.footer}>
                     <View style={styles.priceTag}>
-                        <Text style={styles.priceTagText}>${event.price}</Text>
+                        <Text style={styles.priceTagText}> {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(event?.price || 0)}</Text>
                     </View>
                 </View>
             </View>
@@ -90,9 +90,8 @@ const styles = StyleSheet.create({
     },
     priceTag: {
         paddingVertical: 5,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         borderRadius: 5,
-        // backgroundColor: '#f0f0f0',
         backgroundColor: '#334155',
         fontSize: 12
     },

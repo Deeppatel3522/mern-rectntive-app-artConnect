@@ -110,7 +110,8 @@ const EventDetails = ({ route, navigation }) => {
                 </View>
                 <View style={styles.infoItem}>
                   <Ionicons name="pricetag-outline" size={18} color="#ccc" />
-                  <Text style={styles.price}>Price: ${eventDetails?.price}</Text>
+                  {/* <Text style={styles.price}>Price: ${eventDetails?.price}</Text> */}
+                    <Text style={styles.price}>Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(eventDetails?.price || 0)}</Text>
                 </View>
 
                 <Text style={styles.category}>{eventDetails?.category}</Text>

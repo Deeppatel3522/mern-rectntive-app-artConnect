@@ -16,7 +16,7 @@ const PurcahseCard = ({ item }) => {
                     <Text style={styles.artistStyle} numberOfLines={1}>{item.artistID}</Text>
                 </View>
                 <View style={styles.priceContainer}>
-                    <Text style={styles.priceTag}>${item.price}</Text>
+                    <Text style={styles.priceTag}>{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(item?.price || 0)}</Text>
                 </View>
             </View>
         </View>

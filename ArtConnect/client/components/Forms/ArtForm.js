@@ -122,6 +122,7 @@ const ArtForm = ({ closeModal }) => {
                     {images.length > 0 ? (
                         images.map((img, index) => (
                             <Image key={index} source={{ uri: img }} style={styles.image} />
+                            
                         ))
                     ) : (
 

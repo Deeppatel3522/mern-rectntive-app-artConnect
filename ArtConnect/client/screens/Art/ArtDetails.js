@@ -108,7 +108,10 @@ const ArtDetails = ({ route, navigation }) => {
               </View>
 
               <Text style={styles.category}>{artDetails?.category}</Text>
-              <Text style={styles.price}>Price: ${artDetails?.price}</Text>
+              {/* <Text style={styles.price}>Price: ${artDetails?.price}</Text> */}
+              <Text style={styles.price}>
+                Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(artDetails?.price || 0)}
+              </Text>
 
               <TouchableOpacity onPress={toggleDescription}>
                 <Text

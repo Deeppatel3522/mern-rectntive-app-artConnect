@@ -15,7 +15,8 @@ const EventCard = ({ event, navigation }) => {
         >
             <Image source={{ uri: event.image[0] }} style={styles.image} />
             <View style={styles.overlay}>
-                <Text style={styles.price}>${event.price}</Text>
+                {/* <Text style={styles.price}>${event.price}</Text> */}
+                <Text style={styles.price}>{new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(event?.price || 0)}</Text>
             </View>
             <View style={styles.details}>
                 <Text style={styles.title} numberOfLines={1}>{event.name}</Text>

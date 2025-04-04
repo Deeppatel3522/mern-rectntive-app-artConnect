@@ -108,28 +108,6 @@ const Checkout = ({ route, navigation }) => {
 
 
     return (
-        // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>User Data</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Name: {orderToPlace.userInfo.name}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Email: {orderToPlace.userInfo.email}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Phone: {orderToPlace.userInfo.phone}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Address: {orderToPlace.userInfo.phone}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Data</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Name: {orderToPlace.itemDetails.name}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>SubTotal: {orderToPlace.subtotal}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Tax: {orderToPlace.tax}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Total: {orderToPlace.total}</Text>
-        //     <Text style={{ fontSize: 20, marginVertical: 5 }}>Item Purchase Date: {orderToPlace.date.toLocaleString()}</Text>
-        //     <Button
-        //         variant="primary"
-        //         disabled={!loading}
-        //         title="Checkout"
-        //         onPress={openPaymentSheet}
-        //     />
-
-        // </View>
-
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Final Order Review</Text>
 
@@ -148,9 +126,9 @@ const Checkout = ({ route, navigation }) => {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Item Data</Text>
                 <Text style={styles.text}>Item Name: {orderToPlace.itemDetails.name}</Text>
-                <Text style={styles.text}>SubTotal: {orderToPlace.subtotal}</Text>
-                <Text style={styles.text}>Tax: {orderToPlace.tax}</Text>
-                <Text style={styles.text}>Total: {orderToPlace.total}</Text>
+                <Text style={styles.text}>SubTotal: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(orderToPlace?.subtotal || 0)}</Text>
+                <Text style={styles.text}>Tax: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(orderToPlace?.tax || 0)}</Text>
+                <Text style={styles.text}>Total: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(orderToPlace?.total || 0)}</Text>
                 <Text style={styles.text}>Item Purchase Date: {orderToPlace.date}</Text>
             </View>
 
