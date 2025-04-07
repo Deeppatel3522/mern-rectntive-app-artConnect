@@ -55,11 +55,11 @@ const Favorites = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
+                <Text style={styles.header}>Your Favorites</Text>
                 <ScrollView
                     style={styles.scrollViewStyle}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 >
-                    <Text style={styles.header}>Your Favorites</Text>
 
                     {favorites.length === 0 ? (
                         <View style={styles.emptyContainer}>
@@ -88,19 +88,24 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        paddingTop: 20,
     },
     scrollViewStyle: {
         flex: 1,
         backgroundColor: '#121212',
-        padding: 15,
+        padding: 10,
         paddingBottom: 25,
     },
     header: {
         fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 15,
+        fontWeight: '700',
         color: '#fff',
+        paddingVertical: 5,
+        letterSpacing: 1.5,
+        paddingHorizontal: 16,
+        borderRadius: 10,
+        marginBottom: 5,
+        overflow: 'hidden',
     },
     emptyContainer: {
         alignItems: 'center',

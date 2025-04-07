@@ -26,10 +26,8 @@ const Profile = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [followingModalVisible, setFollowingModalVisible] = useState(false);
-  const [ordersModalVisible, setOrdersModalVisible] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] = useState(false);
   const [userFollowings, setUserFollowings] = useState([])
-  const [userOrders, setUserOrders] = useState([])
 
   // UPDATE Profile
   const handleUpdate = async () => {
@@ -131,28 +129,6 @@ const Profile = ({ navigation }) => {
     }
   };
 
-  // SHARE
-  const shareInfo = async () => {
-    try {
-      const shareContent = {
-        title: 'Youtube',
-        message: `Check out this cool app! User: ${user.image} (${user.email}) - Type: ${user.type}\nhttps://www.youtube.com/`,
-        url: 'https://www.youtube.com/'
-      };
-
-      const shareOptions = {
-        dialogTitle: 'Share via'
-      };
-
-      // The correct syntax is to pass two separate arguments
-      const result = await Share.share(shareContent, shareOptions);
-
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   //LogOut
   const logoutFunction = async () => {
     setState({ user: null, token: "" });
@@ -181,31 +157,24 @@ const Profile = ({ navigation }) => {
     // console.log(`Total number of User followings: ${followings.length ? followings.length : 0}`,);
   }
 
-  //Orders
-  const getUserOrders = async () => {
-    const { userOrders } = await fetchUserOrders(state?.user?._id)
-    setUserOrders(userOrders)
-    // console.log(`Total number of User Orders: ${userOrders.length ? userOrders.length : 0}`,);
-  }
-
   useEffect(() => {
     getlUserFollowings()
-    getUserOrders()
   }, [])
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.semicircle} />
-        <Text style={styles.title}>{user?.name}'s Profile</Text>
         <View style={styles.imageContainer}>
           <Image source={{ uri: user?.image ? user?.image : "https://i.pinimg.com/736x/8b/57/0c/8b570c0676a1dabc40c88e214b2079d1.jpg" }} style={styles.profileImage} />
           <TouchableOpacity style={styles.cameraButton} onPress={selectImage}>
             <FontAwesome5 name='camera' style={styles.cameraIcon} />
           </TouchableOpacity>
         </View>
-        <Text style={styles.infoText}>{user?.email}</Text>
-        <Text style={styles.infoText}>{user?.type}</Text>
+        <View style={styles.userProfileInfoContainer}>
+          <Text style={styles.emailStyle}>{user?.name.toUpperCase()}</Text>
+          <Text style={styles.accountTypeStyle}>{user?.type}</Text>
+        </View>
 
         <View style={styles.buttonContainer}>
 
@@ -245,7 +214,8 @@ const Profile = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.detailRow}
-            onPress={() => setOrdersModalVisible(true)}
+            // onPress={() => setOrdersModalVisible(true)}
+            onPress={() => { navigation.navigate('OrderList') }}
           >
             <FontAwesome5 name={"scroll"} style={[styles.iconText, { color: '#0A84FF' }]} />
             <Text style={styles.infoText}>My Orders</Text>
@@ -344,30 +314,6 @@ const Profile = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* Orders List Modal */}
-      <Modal animationType="slide" transparent={true} visible={ordersModalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Orders</Text>
-
-            {/* Map through userOrders */}
-            {userOrders.length > 0 ? (
-              userOrders.map((order, index) => (
-                <View key={index} style={{ paddingVertical: 10, width: "90%", paddingLeft: 10, borderRadius: 8, marginVertical: 5, backgroundColor: "rgba(100,100,100,0.1)" }}>
-                  <Text>{order.itemDetails.name}</Text>
-                </View>
-              ))
-            ) : (
-              <Text style={styles.noFollowingsText}>No Orders yet.</Text>
-            )}
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setOrdersModalVisible(false)}>
-                <Text style={styles.buttonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
@@ -380,10 +326,31 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     padding: 20
+  }, semicircle: {
+    position: 'absolute',
+    top: -675,
+    width: '250%',
+    height: 800,
+    backgroundColor: '#138',
+    borderRadius: '50%'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#f9fafb',
+    marginBottom: 20
   },
   imageContainer: {
+    marginTop: 35,
     position: 'relative',
     marginBottom: 20,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 15,
+    backgroundColor: 'rgba(100,100,100, 0.5)'
   },
   cameraButton: {
     position: 'absolute',
@@ -398,28 +365,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'rgba(200,200,200, 0.9)',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#f9fafb',
-    marginBottom: 20
+  userProfileInfoContainer: {
+    alignItems: 'center',
   },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 15,
-    backgroundColor: 'rgba(100,100,100, 0.5)'
+  emailStyle: {
+    fontSize: 16,
+    color: '#f9fafb',
+    letterSpacing: 1,
+    marginBottom: 5,
+    fontWeight: 500,
+  },
+  accountTypeStyle: {
+    fontSize: 16,
+    color: '#cbd5e1',
+    letterSpacing: 1,
+    marginBottom: 5,
+    fontWeight: 400,
+  },
+  buttonContainer: {
+    marginTop: 15,
+    width: '100%',
+    padding: 10
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  iconText: {
+    fontSize: 24,
+    color: '#4a90e2',
   },
   infoText: {
     fontSize: 16,
     color: '#f9fafb',
-    marginBottom: 5
-  },
-  buttonContainer: {
-    marginTop: 20,
-    width: '100%',
-    padding: 10
+    marginLeft: 15,
   },
   modalContainer: {
     flex: 1,
@@ -427,7 +410,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)'
   },
-
   modalContent: {
     backgroundColor: '#ffffff', // Dark background for better visibility
     padding: 20,
@@ -475,35 +457,6 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
-
-  semicircle: {
-    position: 'absolute',
-    top: -655,
-    // left: -225,
-    width: '250%',
-    height: 800,
-    backgroundColor: '#138', // #60a5fa
-    // borderBottomLeftRadius: 250,
-    // borderBottomRightRadius: 250,
-    borderRadius: '50%'
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#f9fafb',
-    marginLeft: 15,
-  },
-  iconText: {
-    fontSize: 24,
-    color: '#4a90e2',
-  },
   button: {
     backgroundColor: '#FF6B6B',
     padding: 12,
@@ -517,9 +470,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-
-
-
+  
 });
 
 export default Profile;

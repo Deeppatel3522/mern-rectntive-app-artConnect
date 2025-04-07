@@ -7,6 +7,7 @@ import SignUp from '@/screens/Auth/SignUp'
 import Profile from '@/screens/Auth/Profile'
 import Favorites from '@/screens/User/Favorites.js'
 import UserPosts from '@/screens/User/UserPosts.js'
+import OrderLIst from '@/screens/User/OrderLIst.js'
 import EventList from '@/screens/Event/EventList'
 import EventDetail from '@/screens/Event/EventDetail'
 import ArtList from '@/screens/Art/ArtList'
@@ -78,6 +79,14 @@ const ScreenMenu = () => {
                     <stack.Screen
                         name='Favorites'
                         component={Favorites}
+                        options={{
+                            headerShown: false
+                        }}
+                    />
+
+                    <stack.Screen
+                        name='OrderList'
+                        component={OrderLIst}
                         options={{
                             headerShown: false
                         }}

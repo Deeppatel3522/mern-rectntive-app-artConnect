@@ -30,6 +30,7 @@ const ArtList = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
+        <Text style={styles.header}>Arts</Text>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
@@ -52,6 +53,18 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingTop: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#fff',
+    paddingVertical: 5,
+    letterSpacing: 1.5,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginBottom: 5,
+    overflow: 'hidden',
   },
   scrollView: {
     flex: 1,

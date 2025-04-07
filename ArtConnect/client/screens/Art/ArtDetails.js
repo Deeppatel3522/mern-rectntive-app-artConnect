@@ -107,11 +107,14 @@ const ArtDetails = ({ route, navigation }) => {
                 </TouchableOpacity>
               </View>
 
+              <View style={styles.infoItem}>
+                <Ionicons name="pricetag-outline" size={18} color="#ccc" />
+                  <Text style={styles.price}>
+                    Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(artDetails?.price || 0)}
+                  </Text>
+              </View>
+
               <Text style={styles.category}>{artDetails?.category}</Text>
-              {/* <Text style={styles.price}>Price: ${artDetails?.price}</Text> */}
-              <Text style={styles.price}>
-                Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(artDetails?.price || 0)}
-              </Text>
 
               <TouchableOpacity onPress={toggleDescription}>
                 <Text
@@ -223,9 +226,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     flex: 1,
     marginRight: 10,
+    marginBottom: 5
   },
   favoriteButton: {
     padding: 10,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   category: {
     fontSize: 16,
@@ -235,6 +244,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     color: '#fff',
+    marginLeft: 5,
     marginBottom: 15,
   },
   description: {

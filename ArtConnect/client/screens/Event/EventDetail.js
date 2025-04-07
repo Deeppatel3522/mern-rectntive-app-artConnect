@@ -135,7 +135,10 @@ const EventDetails = ({ route, navigation }) => {
                 <Ionicons name="pin" size={18} color="#FF6B6B" />
                 <Text style={{ marginBottom: 20, color: '#6BFF6B', fontSize: 16, fontWeight: '500' }}>{eventDetails?.location}</Text>
               </View>
-              <TouchableOpacity style={styles.bookButton} onPress={() => { navigation.navigate('OrderSummary', { item: eventDetails }) }}>
+              <TouchableOpacity 
+                  style={[styles.bookButton, !eventDetails.isOpen && { backgroundColor: '#aaa' }]} 
+                  onPress={() => { navigation.navigate('OrderSummary', { item: eventDetails }) }}
+                  disabled={!eventDetails.isOpen}>
                 <Text style={styles.bookButtonText}>BOOK NOW</Text>
               </TouchableOpacity>
 
@@ -229,6 +232,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     flex: 1,
     marginRight: 10,
+    marginBottom: 5
   },
   favoriteButton: {
     padding: 10,
