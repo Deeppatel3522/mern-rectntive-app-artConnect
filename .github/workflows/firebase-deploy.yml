@@ -420,14 +420,14 @@ jobs:
         run: |
           firebase use --add --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
-      - name: Set up Google Cloud credentials from secret
-        run: |
-          cd ArtConnect/client
+      # - name: Set up Google Cloud credentials from secret
+      #   run: |
+      #     cd ArtConnect/client
 
-          # Save the service account key to a file
-          echo "${{ secrets.CREDENTIAL_FILE_CONTENT }}" > google-service-account.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-service-account.json
-          echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
+      #     # Save the service account key to a file
+      #     echo "${{ secrets.CREDENTIAL_FILE_CONTENT }}" > google-service-account.json
+      #     export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-service-account.json
+      #     echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
 
       - name: Upload to Firebase App Distribution
         run: |
@@ -440,10 +440,10 @@ jobs:
             exit 1
           fi
 
-          if [ ! -f "google-service-account.json" ]; then
-            echo "❌ google-service-account.json not found!"
-            exit 1
-          fi
+          # if [ ! -f "google-service-account.json" ]; then
+          #   echo "❌ google-service-account.json not found!"
+          #   exit 1
+          # fi
 
           echo "✅ app.aab && google-service-account.json found, proceeding with Firebase upload..."
 
@@ -451,4 +451,4 @@ jobs:
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
             --release-notes "New automated build from GitHub Actions 🚀"
-
+            --token ${{ secrets.FIREBASE_TOKEN }}
