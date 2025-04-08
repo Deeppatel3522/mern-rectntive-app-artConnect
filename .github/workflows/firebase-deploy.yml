@@ -198,18 +198,19 @@ jobs:
         run: |
           cd ArtConnect/client
 
-          echo "Checking Expo login:"
-          eas whoami || exit 1
+          echo "🔐 Checking Expo login..."
+          eas whoami
 
-          echo "Fetching build list:"
-          eas build:list --limit 1 --platform android --json > output.json || {
+          echo "📦 Fetching latest build (JSON + non-interactive)..."
+          eas build:list --limit 1 --platform android --json --non-interactive > output.json || {
             echo "❌ Failed to get build list"
             cat output.json
             exit 1
           }
 
-          echo "Parsing build URL:"
+          echo "📄 Build JSON:"
           cat output.json
+
           BUILD_URL=$(jq -r '.[0].artifacts.buildUrl' output.json)
           
           if [ "$BUILD_URL" == "null" ] || [ -z "$BUILD_URL" ]; then
@@ -217,8 +218,9 @@ jobs:
             exit 1
           fi
 
-          echo "✅ Downloading AAB from $BUILD_URL"
+          echo "⬇️ Downloading AAB from: $BUILD_URL"
           curl -o app.aab "$BUILD_URL"
+
 
 
       - name: Debug build list output
