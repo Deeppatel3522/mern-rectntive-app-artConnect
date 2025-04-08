@@ -290,9 +290,9 @@ jobs:
           # Debugging environment variable
           echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
 
-      - name: Set Firebase project
-        run: |
-          firebase use --project ${{ secrets.FIREBASE_PROJECT_ID }}
+      # - name: Set Firebase project
+      #   run: |
+      #     firebase use --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Upload to Firebase App Distribution
         run: |
@@ -313,3 +313,4 @@ jobs:
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
             --release-notes "New automated build from GitHub Actions 🚀"
+            --token ${{ secrets.FIREBASE_TOKEN }}
