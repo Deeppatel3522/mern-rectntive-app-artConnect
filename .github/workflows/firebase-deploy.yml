@@ -416,18 +416,18 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      - name: Set up Google Cloud credentials from secret
+        run: |
+          cd ArtConnect/client
+
+          # Save the service account key to a file
+          echo "${{ secrets.CREDENTIAL_FILE_CONTENT }}" > google-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-service-account.json
+          echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
+
       - name: Set Firebase project
         run: |
-          firebase use --add --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
-
-      # - name: Set up Google Cloud credentials from secret
-      #   run: |
-      #     cd ArtConnect/client
-
-      #     # Save the service account key to a file
-      #     echo "${{ secrets.CREDENTIAL_FILE_CONTENT }}" > google-service-account.json
-      #     export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-service-account.json
-      #     echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
+          firebase use --add --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Upload to Firebase App Distribution
         run: |
