@@ -179,12 +179,12 @@ jobs:
         with:
           node-version: '20.13.0'
 
-      - name: Install dependencies
-        run: |
-          cd ArtConnect/client
-          npm install
-          cd ../server
-          npm install
+      # - name: Install dependencies
+      #   run: |
+      #     cd ArtConnect/client
+      #     npm install
+      #     cd ../server
+      #     npm install
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
@@ -193,6 +193,33 @@ jobs:
       #   run: |
       #     cd ArtConnect/client
       #     eas build --platform android --profile production --non-interactive
+
+      - name: Fetch and Parse Latest Build URL
+        run: |
+          cd ArtConnect/client
+
+          echo "Checking Expo login:"
+          eas whoami || exit 1
+
+          echo "Fetching build list:"
+          eas build:list --limit 1 --platform android --json > output.json || {
+            echo "❌ Failed to get build list"
+            cat output.json
+            exit 1
+          }
+
+          echo "Parsing build URL:"
+          cat output.json
+          BUILD_URL=$(jq -r '.[0].artifacts.buildUrl' output.json)
+          
+          if [ "$BUILD_URL" == "null" ] || [ -z "$BUILD_URL" ]; then
+            echo "❌ No build URL found."
+            exit 1
+          fi
+
+          echo "✅ Downloading AAB from $BUILD_URL"
+          curl -o app.aab "$BUILD_URL"
+
 
       - name: Debug build list output
         run: |
