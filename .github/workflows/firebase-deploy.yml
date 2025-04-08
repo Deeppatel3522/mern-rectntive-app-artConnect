@@ -221,6 +221,13 @@ jobs:
           echo "⬇️ Downloading AAB from: $BUILD_URL"
           curl -o app.aab "$BUILD_URL"
 
+          # Debugging AAB file download
+          ls -l app.aab
+          if [ ! -f app.aab ]; then
+            echo "❌ AAB file not found."
+            exit 1
+          fi
+
       # - name: Debug build list output
       #   run: |
       #     cd ArtConnect/client
