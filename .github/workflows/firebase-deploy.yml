@@ -253,6 +253,7 @@ jobs:
 
       - name: Upload to Firebase App Distribution
         run: |
+          cd ArtConnect/client
           # Verify the directory and list files to ensure 'app.aab' exists
           echo "🔍 Checking directory contents:"
           ls -al
