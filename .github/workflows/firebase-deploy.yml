@@ -202,7 +202,7 @@ jobs:
           eas whoami
 
           echo "📦 Fetching latest build (JSON + non-interactive)..."
-          eas build:list --limit 1 --platform android --json --non-interactive > output.json || {
+          eas build:list --limit 1 --json --non-interactive > output.json || {
             echo "❌ Failed to get build list"
             cat output.json
             exit 1
