@@ -416,6 +416,10 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      - name: Set Firebase project
+        run: |
+          firebase use --add --project ${{ secrets.FIREBASE_PROJECT_ID }}
+
       - name: Set up Google Cloud credentials from secret
         run: |
           cd ArtConnect/client
