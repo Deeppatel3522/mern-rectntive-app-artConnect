@@ -290,10 +290,9 @@ jobs:
           # Debugging environment variable
           echo "✅ GOOGLE_APPLICATION_CREDENTIALS is set."
 
-      - name: Authenticate Firebase CLI
+      - name: Set Firebase project
         run: |
-          cd ArtConnect/client
-          firebase use --add --token "${{ secrets.FIREBASE_TOKEN }}"
+          firebase use --project ${{ secrets.FIREBASE_APP_ID }}
 
       - name: Upload to Firebase App Distribution
         run: |
