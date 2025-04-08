@@ -457,3 +457,6 @@ jobs:
             --groups beta-tester \
             --release-notes "New automated build from GitHub Actions 🚀"
             --debug
+        shell: /usr/bin/bash -e {0}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
