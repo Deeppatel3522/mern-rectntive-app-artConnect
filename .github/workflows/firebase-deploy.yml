@@ -307,10 +307,14 @@ jobs:
             exit 1
           fi
 
-          echo "✅ app.aab found, proceeding with Firebase upload..."
+          if [ ! -f "google-service-account.json" ]; then
+            echo "❌ google-service-account.json not found!"
+            exit 1
+          fi
+
+          echo "✅ app.aab && google-service-account.json found, proceeding with Firebase upload..."
 
           firebase appdistribution:distribute $(pwd)/app.aab \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
             --release-notes "New automated build from GitHub Actions 🚀"
-            --token ${{ secrets.FIREBASE_TOKEN }}
