@@ -293,7 +293,7 @@ jobs:
       - name: Authenticate Firebase CLI
         run: |
           cd ArtConnect/client
-          firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
+          firebase use --add --token "${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Upload to Firebase App Distribution
         run: |
