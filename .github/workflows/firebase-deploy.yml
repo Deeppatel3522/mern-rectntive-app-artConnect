@@ -241,9 +241,7 @@ jobs:
       #     curl -o app.aab "$BUILD_URL"
 
       - name: Install Firebase CLI
-        run: 
-          cd ArtConnect/client
-          npm install -g firebase-tools
+        run: npm install -g firebase-tools
 
       # - name: Upload to Firebase App Distribution
       #   run: |
@@ -286,7 +284,7 @@ jobs:
       - name: Set up Google Cloud credentials from secret
         run: |
           cd ArtConnect/client
-          
+
           echo "${{ secrets.CREDENTIAL_FILE_CONTENT }}" > google-service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-service-account.json
           # Debugging environment variable
