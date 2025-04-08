@@ -113,8 +113,8 @@ const AuthProvider = ({ children }) => {
 
     //defualt axios setting
     axios.defaults.headers.common["Authorization"] = `Bearer ${state?.token}`
-    axios.defaults.baseURL = "http://10.0.0.172:6969/api/g2"
-    // axios.defaults.baseURL = "https://react-ntive-artconnect-server.onrender.com/api/g2"
+    // axios.defaults.baseURL = "http://10.0.0.172:6969/api/g2"
+    axios.defaults.baseURL = "https://react-ntive-artconnect-server.onrender.com/api/g2"
 
 
     return (

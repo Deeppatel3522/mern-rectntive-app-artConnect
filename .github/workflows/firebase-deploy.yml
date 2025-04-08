@@ -111,10 +111,17 @@ jobs:
     - name: Authenticate with Expo
       run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-    - name: Build the app (Production)
+    # - name: Build the app (Production)
+    #   run: |
+    #     cd ArtConnect/client
+    #     eas build --platform android --profile production
+
+    - name: Download build artifact
       run: |
         cd ArtConnect/client
-        eas build --platform android --profile production
+        BUILD_URL=$(eas build:list --limit 1 --json | jq -r '.[0].artifacts.buildUrl')
+        curl -o app.aab "$BUILD_URL"
+
 
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
