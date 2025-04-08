@@ -243,10 +243,31 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      # - name: Upload to Firebase App Distribution
+      #   run: |
+      #     firebase appdistribution:distribute app.aab \
+      #       --app ${{ secrets.FIREBASE_APP_ID }} \
+      #       --groups beta-tester \
+      #       --release-notes "New automated build from GitHub Actions 🚀" \
+      #       --token ${{ secrets.FIREBASE_TOKEN }}
+
       - name: Upload to Firebase App Distribution
         run: |
+          # Verify the directory and list files to ensure 'app.aab' exists
+          echo "🔍 Checking directory contents:"
+          ls -al
+
+          # Make sure 'app.aab' exists in the current directory
+          if [ ! -f "app.aab" ]; then
+            echo "❌ app.aab not found!"
+            exit 1
+          fi
+
+          echo "✅ app.aab found, proceeding with Firebase upload..."
+
           firebase appdistribution:distribute app.aab \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
             --release-notes "New automated build from GitHub Actions 🚀" \
             --token ${{ secrets.FIREBASE_TOKEN }}
+
