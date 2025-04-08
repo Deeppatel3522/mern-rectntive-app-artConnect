@@ -30,6 +30,14 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
+      - name: Authenticate with Expo
+        run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Build the app (Production)
+        run: |
+          cd ArtConnect/client
+          eas build --platform android --profile production
+
       - name: Fetch and Parse Latest Build URL
         run: |
           cd ArtConnect/client
@@ -106,7 +114,7 @@ jobs:
           firebase appdistribution:distribute $(pwd)/app.aab \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
-            --release-notes "New automated build from GitHub Actions 🚀"
+            --release-notes "New automated build from GitHub Actions 🚀" \
             --debug
         shell: /usr/bin/bash -e {0}
         env:
