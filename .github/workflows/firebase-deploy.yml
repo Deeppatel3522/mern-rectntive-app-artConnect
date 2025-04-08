@@ -292,7 +292,7 @@ jobs:
 
       - name: Set Firebase project
         run: |
-          firebase use --project ${{ secrets.FIREBASE_APP_ID }}
+          firebase use --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Upload to Firebase App Distribution
         run: |
