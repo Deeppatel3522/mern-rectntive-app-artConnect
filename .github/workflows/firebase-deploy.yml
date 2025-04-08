@@ -314,6 +314,12 @@ jobs:
 
           echo "✅ app.aab && google-service-account.json found, proceeding with Firebase upload..."
 
+      - name: Debug Service Account Key
+        run: |
+          cd ArtConnect/client
+          echo "Contents of google-service-account.json:"
+          cat google-service-account.json
+
           firebase appdistribution:distribute $(pwd)/app.aab \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --groups beta-tester \
