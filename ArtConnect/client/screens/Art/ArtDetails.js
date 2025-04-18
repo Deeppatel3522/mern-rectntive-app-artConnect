@@ -7,6 +7,7 @@ import { toggleFavorite } from '@/HelperFunc/ToggleFavorite.js'
 import { toggleFollowStatus } from '@/HelperFunc/ToggleFollowStatus.js'
 import { AuthContext } from '@/context/authContext.js';
 import FlightsSwiper from '@/components/Cards/Swiper.js';
+import AlertModal from '../../components/Menus/AlertModal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +26,7 @@ const ArtDetails = ({ route, navigation }) => {
     state?.user?.favorites.some(fav => fav.postId === artId)
   );
   const [isFollowing, setIsFollowing] = useState(false);
+  const [alertModal, setAlertModal] = useState(false);
 
 
   const handleFavorite = async () => {
@@ -32,6 +34,7 @@ const ArtDetails = ({ route, navigation }) => {
       await toggleFavorite({ postId: artId, userId: state?.user?._id });
       await refreshUser();
       setArtIsFavorite(!artIsFavorite);
+      setAlertModal(true);
     } catch (error) {
       console.error('Error toggling favorite:', error);
     }
@@ -109,9 +112,9 @@ const ArtDetails = ({ route, navigation }) => {
 
               <View style={styles.infoItem}>
                 <Ionicons name="pricetag-outline" size={18} color="#ccc" />
-                  <Text style={styles.price}>
-                    Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(artDetails?.price || 0)}
-                  </Text>
+                <Text style={styles.price}>
+                  Price: {new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(artDetails?.price || 0)}
+                </Text>
               </View>
 
               <Text style={styles.category}>{artDetails?.category}</Text>
@@ -151,6 +154,20 @@ const ArtDetails = ({ route, navigation }) => {
                 </View>
               </View>
             </View>
+
+
+            {/* ALert MEssage */}
+
+            <AlertModal
+              visible={alertModal}
+              title="Delete Item?"
+              message="Are you sure you want to delete this item? This action cannot be undone."
+              onClose={() => setAlertModal(false)}
+              onConfirm={() => {console.log("Okay btn Clicked.!");
+              }}
+              confirmText="Yes, Delete"
+              cancelText="Cancel"
+            />
 
             <Modal
               animationType="fade"
