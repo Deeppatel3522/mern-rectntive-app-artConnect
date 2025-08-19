@@ -1,334 +1,365 @@
-# 🎨 ArtConnect - Art Marketplace & Social Platform
+# ArtConnect - MERN Stack Art Marketplace & Social Platform
 
 
   
   
-ArtConnect is a comprehensive art marketplace and social platform that bridges the gap between artists and art enthusiasts. Built with React Native and powered by a robust MERN stack backend, the app enables artists to showcase their work, organize exhibitions, and connect with a community of art lovers.
+  **A comprehensive art marketplace and social platform built with React Native and Node.js**
+  
+ArtConnect is a full-stack MERN application that serves as both an art marketplace and social platform. Artists can showcase and sell their artwork, create events, and connect with art enthusiasts. Users can discover art, purchase pieces, follow artists, and participate in art events.
 
 ## ✨ Key Features
 
-- 🎨 **Artist Portfolio Management** - Artists can upload and manage their artwork collections
-- 🎪 **Event Creation & Management** - Organize art exhibitions and events
-- 💝 **Favorites System** - Users can save and organize their favorite pieces
-- 👥 **Social Following** - Follow favorite artists and stay updated
-- 🛒 **Integrated Marketplace** - Secure purchasing with Stripe payment processing
-- 📱 **Cross-Platform Mobile App** - Built with React Native and Expo
-- 🔐 **Secure Authentication** - JWT-based user authentication
-- ☁️ **Cloud Storage** - Cloudinary integration for image management
+### 🎨 For Artists
+- **Art Portfolio**: Upload and showcase artwork with multiple images
+- **Event Creation**: Organize art exhibitions and workshops
+- **Sales Management**: Track sales and manage inventory
+- **Profile Management**: Build artist profiles with followers
 
-## 🏗️ Project Structure
+### 🛒 For Art Enthusiasts  
+- **Art Discovery**: Browse and search through diverse artwork
+- **Purchase System**: Secure payment processing with Stripe
+- **Social Features**: Follow favorite artists and save favorites
+- **Event Booking**: Register for art events and exhibitions
+- **Order Tracking**: View purchase history and order status
+
+### 🔧 Technical Features
+- **Real-time Updates**: Live data synchronization
+- **Image Management**: Cloudinary integration for optimized media
+- **Secure Authentication**: JWT-based user authentication
+- **Payment Processing**: Stripe integration for secure transactions
+- **Push Notifications**: Firebase for app distribution
+- **Responsive Design**: Optimized for various screen sizes
+
+## 🏗️ Architecture
+
+### Frontend (React Native + Expo)
+- **Navigation**: React Navigation with stack and tab navigators
+- **State Management**: React Context API
+- **UI Components**: Custom components with consistent theming
+- **Image Handling**: Expo ImagePicker with Cloudinary upload
+- **Payment**: Stripe React Native SDK
+
+### Backend (Node.js + Express)
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT tokens with express-jwt middleware
+- **File Upload**: Multer with Cloudinary storage
+- **Payment**: Stripe server-side integration
+- **Cron Jobs**: Automated cleanup of expired events
+- **API Structure**: RESTful API design
+
+## 📁 Project Structure
 
 ```
 ArtConnect/
-├── client/                 # React Native mobile application
-│   ├── app/               # Expo Router navigation
-│   ├── components/        # Reusable UI components
-│   ├── screens/          # Application screens
-│   ├── context/          # React Context for state management
-│   ├── assets/           # Images, fonts, and static assets
-│   └── ...
-├── server/                # Node.js backend API
-│   ├── controllers/      # Route controllers
-│   ├── models/          # MongoDB models
-│   ├── routes/          # API route definitions
-│   ├── config/          # Database and service configurations
-│   ├── middleware/      # Custom middleware
-│   └── ...
-└── .github/              # GitHub Actions CI/CD workflows
+├── 📱 client/                           # React Native Frontend
+│   ├── 🎨 assets/                       # Images, icons, fonts
+│   ├── 🧩 components/                   # Reusable UI components
+│   │   ├── Cards/                       # Art, Event, and UI cards
+│   │   ├── Forms/                       # Input forms
+│   │   └── Menus/                       # Navigation components
+│   ├── 📱 screens/                      # Application screens
+│   │   ├── Auth/                        # Authentication screens
+│   │   ├── Art/                         # Art-related screens
+│   │   ├── Event/                       # Event management
+│   │   ├── Purchase/                    # Shopping and checkout
+│   │   └── User/                        # User profile screens
+│   ├── 🎛️ context/                      # React Context providers
+│   ├── ⚡ HelperFunc/                   # Utility functions
+│   └── 📦 Configuration files           # package.json, app.json, etc.
+├── 🖥️ server/                           # Node.js Backend
+│   ├── 🎮 controllers/                  # Business logic
+│   ├── 📊 models/                       # MongoDB schemas
+│   ├── 🛣️ routes/                       # API endpoints
+│   ├── ⚙️ config/                       # Database and service configs
+│   ├── 🔧 helper/                       # Utility functions
+│   ├── ⏰ cronJobs/                     # Scheduled tasks
+│   └── 🔥 functions/                    # Firebase functions
+├── 🔄 .github/workflows/                # CI/CD pipelines
+└── 📚 Documentation files
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
-- MongoDB Atlas account or local MongoDB
-- Expo CLI
-- Android Studio/Xcode (for device testing)
+- **Node.js** (version 18 or higher)
+- **MongoDB** (local or cloud instance)
+- **Expo CLI**: `npm install -g @expo/cli`
+- **EAS CLI**: `npm install -g eas-cli` (for building)
 
-### 🔧 Backend Setup
+### Environment Variables
 
-1. **Navigate to server directory**
+Create `.env` files in both client and server directories:
+
+#### Server `.env`:
+```env
+PORT=6969
+MONGO_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_PUBLISH_KEY=your_stripe_publishable_key
+```
+
+### Installation
+
+1. **Clone the repository**
    ```bash
-   cd ArtConnect/server
+   git clone https://github.com/yourusername/artconnect.git
+   cd artconnect
    ```
 
-2. **Install dependencies**
+2. **Install server dependencies**
    ```bash
+   cd ArtConnect/server
    npm install
    ```
 
-3. **Environment Configuration**
-   
-   Create a `.env` file in the server directory:
-   ```env
-   PORT=6969
-   MONGO_URL=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   STRIPE_PUBLISH_KEY=your_stripe_publishable_key
-   STRIPE_SECRET_KEY=your_stripe_secret_key
+3. **Install client dependencies**
+   ```bash
+   cd ../client
+   npm install
    ```
 
-4. **Start the development server**
+4. **Start the development servers**
+   
+   **Backend (Terminal 1):**
    ```bash
+   cd ArtConnect/server
    npm run server
    ```
    
-   The backend will be running on `http://localhost:6969`
-
-### 📱 Frontend Setup
-
-1. **Navigate to client directory**
+   **Frontend (Terminal 2):**
    ```bash
    cd ArtConnect/client
+   npm start
    ```
 
-2. **Install dependencies**
+5. **Run on device/simulator**
    ```bash
-   npm install
-   ```
-
-3. **Configure API Base URL**
+   # iOS
+   npm run ios
    
-   Update the base URL in `context/authContext.js`:
-   ```javascript
-   // For local development
-   axios.defaults.baseURL = "http://10.0.0.172:6969/api/g2"
+   # Android
+   npm run android
    
-   // For production
-   axios.defaults.baseURL = "https://your-production-url.com/api/g2"
+   # Web
+   npm run web
    ```
 
-4. **Start the Expo development server**
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Technologies Used
 
-5. **Run on device/emulator**
-   - Press `a` for Android emulator
-   - Press `i` for iOS simulator
-   - Scan QR code with Expo Go app for physical device
-
-## 🎯 App Features & Screens
-
-### 🔐 Authentication
-- **Welcome Screen** - App introduction and navigation
-- **Login/Register** - Secure user authentication
-- **Profile Management** - User profile customization
-
-### 🎨 Art Management
-- **Art Gallery** - Browse all available artwork
-- **Art Details** - Detailed view with artist information
-- **Upload Art** - Artists can add new pieces to their portfolio
-
-### 🎪 Events & Exhibitions
-- **Event Listings** - Discover upcoming art events
-- **Event Details** - Complete event information and booking
-- **Event Creation** - Artists can organize exhibitions
-
-### 👤 User Experience
-- **Explore Feed** - Personalized content discovery
-- **Favorites** - Saved artwork and events
-- **Following** - Updates from followed artists
-- **Order History** - Purchase tracking and history
-
-### 💳 Commerce
-- **Order Summary** - Review purchase details
-- **Secure Checkout** - Stripe-powered payment processing
-- **Order Management** - Track purchases and deliveries
-
-## 🛠️ Technology Stack
-
-### Frontend (Mobile)
+### Frontend Stack
 - **React Native** - Cross-platform mobile development
 - **Expo** - Development platform and tools
-- **Expo Router** - File-based navigation
+- **React Navigation** - Navigation library
 - **React Context** - State management
-- **Axios** - HTTP client for API requests
-- **React Native Vector Icons** - Icon library
-- **Expo Image Picker** - Media selection
+- **Expo ImagePicker** - Image selection
+- **Stripe React Native** - Payment processing
 
-### Backend (API)
-- **Node.js** - JavaScript runtime
+### Backend Stack
+- **Node.js** - Runtime environment
 - **Express.js** - Web application framework
-- **MongoDB** - NoSQL database with Mongoose ODM
-- **JWT** - JSON Web Token authentication
-- **Bcrypt** - Password hashing
+- **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB object modeling
+- **JWT** - Authentication tokens
 - **Multer** - File upload handling
-- **Cloudinary** - Cloud image storage and optimization
-
-### Payment & Services
+- **Cloudinary** - Image storage and optimization
 - **Stripe** - Payment processing
-- **Cloudinary** - Image storage and delivery
-- **Firebase** - App distribution and hosting
-- **MongoDB Atlas** - Cloud database
 
 ### DevOps & Deployment
 - **GitHub Actions** - CI/CD pipeline
-- **Firebase App Distribution** - Beta testing distribution
-- **EAS Build** - Expo Application Services for building
+- **Firebase App Distribution** - App deployment
+- **EAS Build** - Expo build service
 
-## 🔄 API Endpoints
-
-### Authentication Routes (`/api/g2/auth`)
-- `POST /register` - User registration
-- `POST /login` - User authentication
-- `GET /fetch-user/:id` - Get user details
-- `PUT /update-user` - Update user profile
-- `PUT /update-user-favorites` - Manage favorites
-- `PUT /update-user-following` - Manage following
-
-### Art Routes (`/api/g2/art`)
-- `POST /upload-img` - Upload new artwork
-- `GET /fetch-img/:id` - Get specific artwork
-- `GET /fetch-all-img` - Get all artwork
-- `POST /fetch-all-img-by-user` - Get artwork by artist
-- `PUT /update-img/:id` - Update artwork details
-
-### Event Routes (`/api/g2/event`)
-- `POST /post-event` - Create new event
-- `GET /fetch-event/:id` - Get specific event
-- `GET /fetch-all-event` - Get all events
-- `POST /fetch-all-event-by-user` - Get events by artist
-
-### Order Routes (`/api/g2/order`)
-- `POST /save-order` - Save new order
-- `GET /fetch-orders/:userId` - Get user order history
-
-### Payment Routes (`/api/g2/payment`)
-- `POST /purchase-item` - Process payment with Stripe
-
-## 🚀 Deployment
-
-### Backend Deployment
-The backend is deployed on Render:
-```
-Production URL: https://react-ntive-artconnect-server.onrender.com
-```
-
-### Mobile App Distribution
-The app uses Firebase App Distribution for beta testing and GitHub Actions for automated builds:
-
-#### Automated Build Process
-1. Push to main branch triggers build
-2. EAS builds Android AAB
-3. Firebase App Distribution deploys to testers
-
-#### Manual Deployment
-```bash
-cd ArtConnect/client
-eas build --platform android --profile production
-```
-
-## 📄 Environment Variables
-
-### Server Environment Variables
-```env
-PORT=6969
-MONGO_URL=mongodb_connection_string
-JWT_SECRET=jwt_secret_key
-CLOUDINARY_CLOUD_NAME=cloudinary_cloud_name
-CLOUDINARY_API_KEY=cloudinary_api_key
-CLOUDINARY_API_SECRET=cloudinary_api_secret
-STRIPE_PUBLISH_KEY=stripe_publishable_key
-STRIPE_SECRET_KEY=stripe_secret_key
-```
-
-### GitHub Secrets (for CI/CD)
-- `EXPO_TOKEN` - Expo authentication token
-- `FIREBASE_PROJECT_ID` - Firebase project identifier
-- `FIREBASE_APP_ID` - Firebase app identifier
-- `CREDENTIAL_FILE_CONTENT` - Firebase service account credentials
-
-## 🎨 UI/UX Features
-
-- **Dark Theme** - Modern dark color scheme throughout
-- **Responsive Design** - Optimized for various screen sizes
-- **Smooth Animations** - React Native Reanimated for fluid interactions
-- **Image Carousel** - Swipeable artwork galleries
-- **Pull-to-Refresh** - Intuitive content updates
-- **Loading States** - Clear feedback during operations
-
-## 🔧 Development Scripts
-
-### Server Scripts
-```bash
-npm start          # Start production server
-npm run server     # Start development server with nodemon
-```
+## 📜 Available Scripts
 
 ### Client Scripts
 ```bash
-npm start          # Start Expo development server
-npx expo start     # Alternative Expo start command
-npm run android    # Run on Android emulator
-npm run ios        # Run on iOS simulator
-npm run web        # Run in web browser
+npm start              # Start Expo development server
+npm run ios           # Run on iOS simulator
+npm run android       # Run on Android emulator
+npm run web           # Run in web browser
+npm test              # Run test suite
+npm run lint          # Lint code
+```
+
+### Server Scripts
+```bash
+npm start             # Start production server
+npm run server        # Start development server with nodemon
+npm test              # Run server tests
+```
+
+### Build & Deploy
+```bash
+# Build for production
+eas build --platform ios
+eas build --platform android
+
+# Deploy to Firebase App Distribution (via GitHub Actions)
+git push origin main
+```
+
+## 🔐 Authentication & Security
+
+- **JWT-based authentication** with secure token storage
+- **Password hashing** using bcrypt
+- **Route protection** with middleware
+- **Input validation** and sanitization
+- **CORS configuration** for API security
+
+## 💳 Payment Integration
+
+- **Stripe integration** for secure payments
+- **Multiple payment methods** support
+- **Order management** with transaction history
+- **Automatic receipt generation**
+
+## 📊 API Endpoints
+
+### Authentication
+- `POST /api/g2/auth/register` - User registration
+- `POST /api/g2/auth/login` - User login
+- `GET /api/g2/auth/fetch-user/:id` - Get user profile
+
+### Art Management
+- `POST /api/g2/art/upload-img` - Upload artwork
+- `GET /api/g2/art/fetch-all-img` - Get all artworks
+- `GET /api/g2/art/fetch-img/:id` - Get specific artwork
+
+### Event Management
+- `POST /api/g2/event/post-event` - Create event
+- `GET /api/g2/event/fetch-all-event` - Get all events
+- `GET /api/g2/event/fetch-event/:id` - Get specific event
+
+### Orders & Payments
+- `POST /api/g2/payment/purchase-item` - Process payment
+- `POST /api/g2/order/save-order` - Save order
+- `GET /api/g2/order/fetch-orders/:userId` - Get user orders
+
+## 🧪 Testing
+
+```bash
+# Run client tests
+cd ArtConnect/client
+npm test
+
+# Run server tests
+cd ArtConnect/server
+npm test
+```
+
+## 📱 Platform Support
+
+| Platform | Status | Version |
+|----------|---------|---------|
+| iOS | ✅ Supported | iOS 13+ |
+| Android | ✅ Supported | API 21+ |
+| Web | ✅ Supported | Modern browsers |
+
+## 🚀 Deployment
+
+### Automated Deployment (GitHub Actions)
+The project includes automated CI/CD pipeline that:
+1. Builds the React Native app using EAS
+2. Deploys to Firebase App Distribution
+3. Notifies beta testers
+
+### Manual Deployment
+```bash
+# Build for production
+eas build --platform all --profile production
+
+# Deploy server to your hosting provider
+# Configure MongoDB connection
+# Set up environment variables
 ```
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'Add amazing feature'`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
 
-1. Fork the repository
-2. Create a feature branch
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. Commit your changes
-   ```bash
-   git commit -m 'Add some amazing feature'
-   ```
-4. Push to the branch
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. Open a Pull Request
+### Contribution Guidelines
+- Follow the existing code style
+- Write comprehensive tests
+- Update documentation as needed
+- Ensure all tests pass before submitting
 
-## 🐛 Known Issues & Troubleshooting
+## 🐛 Known Issues & Limitations
 
-### Common Issues
+- Image upload size limits (handled by Cloudinary)
+- Offline functionality limited to cached data
+- Push notifications require Firebase setup
 
-**Metro bundler cache issues**
-```bash
-npx expo start --clear
-```
+## 🔮 Future Enhancements
 
-**Android build issues**
-```bash
-cd android && ./gradlew clean && cd ..
-npx expo run:android
-```
+- [ ] Real-time chat between artists and buyers
+- [ ] Advanced search and filtering
+- [ ] AR visualization for artwork
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboard
+- [ ] Social media integration
 
-**iOS build issues**
-```bash
-cd ios && rm -rf Pods Podfile.lock && pod install && cd ..
-npx expo run:ios
-```
+## 📄 License
 
-## 📜 License
-
-This project is licensed under the ISC License - see the LICENSE file for details.
-
-## 👨💻 Author
-
-**Deep Patel**
-- GitHub: [@Deeppatel3522](https://github.com/Deeppatel3522)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- React Native community for excellent documentation
-- Expo team for amazing development tools
-- MongoDB for reliable database solutions
-- Stripe for seamless payment integration
-- Cloudinary for image management services
+- **Expo Team** for the excellent development platform
+- **React Native Community** for continuous improvements
+- **MongoDB** for reliable database services
+- **Stripe** for secure payment processing
+- **Cloudinary** for image optimization services
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+- **GitHub Issues**: [Create an issue](https://github.com/yourusername/artconnect/issues)
+- **Documentation**: Check the project wiki
+- **Community**: Join our discussions
+
+## 📈 Project Status
+
+**Current Version**: 1.0.0  
+**Status**: Active Development  
+**Last Updated**: August 2025
+
+
+  Built with ❤️ by the ArtConnect Team
+  © 2025 ArtConnect. All rights reserved.
+  
+  **Ready to revolutionize the art world? Join ArtConnect today! 🎨**
+
 
 ***
 
+## 🚀 Quick Start Commands
 
-  Built with ❤️ using React Native & Node.js
-  ⭐ Star this repo if you found it helpful!
+```bash
+# Full setup
+git clone https://github.com/Deeppatel3522/artconnect.git
+cd artconnect
+
+# Install dependencies
+cd ArtConnect/server && npm install
+cd ../client && npm install
+
+# Start development
+cd ../server && npm run server  # Terminal 1
+cd ../client && npm start       # Terminal 2
+
+# Run on device
+npm run ios     # iOS
+npm run android # Android
+```
+
+[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/54228082/6b728111-8fed-4aed-9638-0a10eaeb7e4b/paste.txt
